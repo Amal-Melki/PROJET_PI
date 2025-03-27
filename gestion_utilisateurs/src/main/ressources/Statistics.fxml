@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import java.lang.String?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.esprit.controllers.StatisticsController"
+            prefHeight="600.0" prefWidth="800.0" styleClass="background">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="10" styleClass="header">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <Text styleClass="header-text" text="Statistiques"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="userInfoLabel" styleClass="user-info"/>
+            <Button fx:id="logoutButton" text="Déconnexion" onAction="#handleLogout" styleClass="button-secondary"/>
+        </HBox>
+    </top>
+
+    <left>
+        <VBox spacing="10" styleClass="sidebar">
+            <padding>
+                <Insets top="20" right="10" bottom="20" left="10"/>
+            </padding>
+            <Button text="Tableau de bord" onAction="#showDashboard" styleClass="sidebar-button"/>
+            <Button text="Gestion Utilisateurs" onAction="#showUserManagement" styleClass="sidebar-button"/>
+            <Button text="Statistiques" onAction="#showStatistics" styleClass="sidebar-button"/>
+            <Button text="Paramètres" onAction="#showSettings" styleClass="sidebar-button"/>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox spacing="20" styleClass="content-area">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+
+            <PieChart fx:id="userTypePieChart" VBox.vgrow="ALWAYS"/>
+
+            <BarChart fx:id="userRoleBarChart" VBox.vgrow="ALWAYS">
+                <xAxis>
+                    <CategoryAxis label="Rôles"/>
+                </xAxis>
+                <yAxis>
+                    <NumberAxis label="Nombre d'utilisateurs"/>
+                </yAxis>
+            </BarChart>
+        </VBox>
+    </center>
+
+   </BorderPane>

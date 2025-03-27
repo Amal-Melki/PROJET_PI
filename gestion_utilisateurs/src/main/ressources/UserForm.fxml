@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.esprit.controllers.UserFormController"
+            prefHeight="500.0" prefWidth="600.0" styleClass="background">
+
+    <top>
+        <HBox alignment="CENTER" spacing="10" styleClass="header">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <Text fx:id="formTitle" styleClass="header-text"/>
+        </HBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="transparent-background">
+            <VBox spacing="15" styleClass="form-container">
+                <padding>
+                    <Insets top="20" right="20" bottom="20" left="20"/>
+                </padding>
+
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="Type d'utilisateur:" styleClass="label-field" minWidth="150"/>
+                    <ComboBox fx:id="userTypeComboBox" promptText="Sélectionnez un type" HBox.hgrow="ALWAYS"/>
+                </HBox>
+
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="Nom d'utilisateur:" styleClass="label-field" minWidth="150"/>
+                    <TextField fx:id="usernameField" promptText="Entrez le nom d'utilisateur" HBox.hgrow="ALWAYS"/>
+                </HBox>
+
+                <HBox spacing="10" alignment="CENTER_LEFT" fx:id="passwordContainer">
+                    <Label text="Mot de passe:" styleClass="label-field" minWidth="150"/>
+                    <PasswordField fx:id="passwordField" promptText="Entrez le mot de passe" HBox.hgrow="ALWAYS"/>
+                </HBox>
+
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="Email:" styleClass="label-field" minWidth="150"/>
+                    <TextField fx:id="emailField" promptText="Entrez l'email" HBox.hgrow="ALWAYS"/>
+                </HBox>
+
+                <HBox spacing="10" alignment="CENTER_LEFT" fx:id="clientFieldsContainer" visible="false" managed="false">
+                    <Label text="Adresse:" styleClass="label-field" minWidth="150"/>
+                    <TextField fx:id="addressField" promptText="Entrez l'adresse" HBox.hgrow="ALWAYS"/>
+                </HBox>
+
+                <HBox spacing="10" alignment="CENTER_LEFT" fx:id="fournisseurFieldsContainer" visible="false" managed="false">
+                    <Label text="Nom Entreprise:" styleClass="label-field" minWidth="150"/>
+                    <TextField fx:id="companyNameField" promptText="Entrez le nom de l'entreprise" HBox.hgrow="ALWAYS"/>
+                </HBox>
+
+                <HBox spacing="10" alignment="CENTER_LEFT" fx:id="organisateurFieldsContainer" visible="false" managed="false">
+                    <Label text="Nom Organisation:" styleClass="label-field" minWidth="150"/>
+                    <TextField fx:id="organizationNameField" promptText="Entrez le nom de l'organisation" HBox.hgrow="ALWAYS"/>
+                </HBox>
+
+                <Label fx:id="errorLabel" styleClass="error-label" visible="false"/>
+            </VBox>
+        </ScrollPane>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER_RIGHT" spacing="10" styleClass="form-footer">
+            <padding>
+                <Insets top="10" right="20" bottom="20" left="20"/>
+            </padding>
+            <Button text="Annuler" onAction="#handleCancel" styleClass="button-secondary"/>
+            <Button fx:id="saveButton" text="Enregistrer" onAction="#handleSave" styleClass="button-primary"/>
+        </HBox>
+    </bottom>
+
+  </BorderPane>
