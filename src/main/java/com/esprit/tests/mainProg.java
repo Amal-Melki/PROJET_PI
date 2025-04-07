@@ -8,12 +8,13 @@ import com.esprit.services.EspaceService;
 public class mainProg {
     public static void main(String[] args) {
         EquipementService equipementService = new EquipementService();
-        Equipement eq1 = new Equipement(1, "Type 1", "car", 1, "aaaa", true);
+        Equipement eq1 = new Equipement(1, "Type 3", "car", 1, "aaaa", true);
         Equipement eq2 = new Equipement( 2, "Type 2", "moto", 2, "bbbb", false);
-        //equipementService.add(eq1);
-        //equipementService.add(eq2);
-        //System.out.println(equipementService.get());
-        equipementService.delete(eq1);
+
+        // quipementService.add(eq1);
+       // equipementService.update(eq2);
+      //  System.out.println(equipementService.get());
+       // equipementService.delete(eq2);
 
         EspaceService espaceService = new EspaceService();
         Espace es1 = new Espace(1, "espace 1", "salon", 1500, 50, "Hammamet");
@@ -21,7 +22,7 @@ public class mainProg {
         //espaceService.add(es1);
         //espaceService.add(es2);
         //System.out.println(espaceService.get());
-        espaceService.delete(es1);
+        //espaceService.delete(es1);
 
 
     }

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="com.esprit.controllers.EspaceController">
+    <children>
+        <Label layoutX="20" layoutY="20" text="Nom Espace" />
+        <TextField fx:id="tfNomEspace" layoutX="150" layoutY="20" />
+
+        <Label layoutX="20" layoutY="60" text="Capacité" />
+        <TextField fx:id="tfCapacite" layoutX="150" layoutY="60" />
+
+        <Button layoutX="150" layoutY="100" onAction="#updateEspace" text="Mettre à jour" />
+        <Button layoutX="250" layoutY="100" onAction="#deleteEspace" text="Supprimer" />
+    </children>
+</AnchorPane>

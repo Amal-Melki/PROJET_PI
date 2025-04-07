@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="350.0" prefWidth="400.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="com.esprit.controllers.AjouteEspace">
+    <children>
+        <VBox alignment="CENTER" spacing="15.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="30.0">
+            <children>
+                <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Ajout d'un Espace" />
+                <HBox spacing="10">
+                    <Label text="Nom :" />
+                    <TextField fx:id="tfNom" />
+                </HBox>
+                <HBox spacing="10">
+                    <Label text="Localisation :" />
+                    <TextField fx:id="tfLocalisation" />
+                </HBox>
+                <HBox spacing="10">
+                    <Label text="Capacité :" />
+                    <TextField fx:id="tfCapacite" />
+                </HBox>
+                <Button onAction="#addEspace" text="Ajouter" />
+                <Button onAction="#onRetourClicked" text="Retour" />
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>

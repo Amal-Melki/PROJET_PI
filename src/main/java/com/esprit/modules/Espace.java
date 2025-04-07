@@ -17,6 +17,14 @@ public class Espace {
         this.localisation = localisation;
     }
 
+    public Espace(String nom, String type, double prix, int capacite, String localisation) {
+        this.nom = nom;
+        this.type = type;
+        this.prix = prix;
+        this.capacite = capacite;
+        this.localisation = localisation;
+    }
+
     // Getters et Setters
     public int getId() {
         return id;

@@ -47,7 +47,7 @@ public class EquipementService implements Iservice {
     @Override
     public void update(Object o) {
         Equipement equipement = (Equipement) o;  // Cast the object to Equipement
-        String sql = "UPDATE Equipement SET nom=?, type=?, quantite=?, description=?, estDisponible=? WHERE id=?";
+        String sql = "UPDATE Equipement SET nom=?, type=?, quantite=?, description=?, estDisponible=? WHERE ideq=?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, equipement.getNom());
