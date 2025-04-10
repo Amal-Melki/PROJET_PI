@@ -1,9 +1,11 @@
 package com.esprit.controllers;
 
+import com.esprit.models.Admin;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 
 public class SidebarController {
 
@@ -18,11 +20,22 @@ public class SidebarController {
 
     @FXML
     private Button btnReservations;
+    
+    @FXML
+    private Label lblAdminName;
 
     private MainLayoutController mainController;
+    private Admin currentAdmin;
 
     public void setMainController(MainLayoutController mainController) {
         this.mainController = mainController;
+    }
+    
+    public void setCurrentAdmin(Admin admin) {
+        this.currentAdmin = admin;
+        if (admin != null && lblAdminName != null) {
+            lblAdminName.setText(admin.getNom_suser() + " " + admin.getPrenom_user());
+        }
     }
 
     @FXML
@@ -58,6 +71,27 @@ public class SidebarController {
             mainController.loadContent("/Reservations.fxml");
         } else {
             showError("Erreur de navigation", "Le contrôleur principal n'est pas initialisé.");
+        }
+    }
+    
+    @FXML
+    void handleDeconnexion(ActionEvent event) {
+        try {
+            // Load login view
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/Login.fxml"));
+            javafx.scene.Parent root = loader.load();
+            
+            // Get the current stage
+            javafx.stage.Stage stage = (javafx.stage.Stage) btnDashboard.getScene().getWindow();
+            
+            // Set the new scene
+            javafx.scene.Scene scene = new javafx.scene.Scene(root);
+            stage.setScene(scene);
+            stage.setTitle("Connexion");
+            stage.show();
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+            showError("Erreur", "Impossible de se déconnecter");
         }
     }
 

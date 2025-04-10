@@ -147,4 +147,28 @@ public class ClientService implements IService<Client> {
         }
         return null;
     }
+
+    public Client rechercherParId(int userId) {
+        String req = "SELECT c.*, u.* FROM client c JOIN user u ON c.id_user = u.id_user WHERE u.id_user = ?";
+        try {
+            PreparedStatement pst = connection.prepareStatement(req);
+            pst.setInt(1, userId);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                return new Client(
+                    rs.getInt("id_client"),
+                    rs.getInt("numero_tel"),
+                    rs.getString("image_path"),
+                    rs.getInt("id_user"),
+                    rs.getString("nom_suser"),
+                    rs.getString("prenom_user"),
+                    rs.getString("email_user"),
+                    rs.getString("password_user")
+                );
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
 } 

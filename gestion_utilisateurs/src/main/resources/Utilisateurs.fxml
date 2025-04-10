@@ -10,21 +10,28 @@
       xmlns:fx="http://javafx.com/fxml/1" 
       fx:controller="com.esprit.controllers.UtilisateursController"
       spacing="20" 
-      style="-fx-background-color: white; -fx-background-radius: 10;">
+      style="-fx-background-color: white;">
+    
     <padding>
         <Insets top="20" right="20" bottom="20" left="20"/>
     </padding>
 
-    <!-- Title -->
-    <Text text="Gestion des Utilisateurs" 
-          style="-fx-fill: #ff7fa8; -fx-font-weight: bold;">
-        <font>
-            <Font name="Segoe UI Bold" size="24.0"/>
-        </font>
-    </Text>
+    <VBox spacing="10">
+        <HBox alignment="CENTER_LEFT" style="-fx-background-color: #ff7fa8;" spacing="20">
+            <padding>
+                <Insets top="10" right="20" bottom="10" left="20"/>
+            </padding>
+            <Label text="Gestion des Utilisateurs" style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;"/>
+        </HBox>
+
+        <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 10;">
+            <TextField fx:id="searchField" promptText="Rechercher un utilisateur..." prefWidth="300"/>
+            <ComboBox fx:id="roleFilter" promptText="Filtrer par rôle" prefWidth="150"/>
+        </HBox>
+    </VBox>
 
     <!-- TableView -->
-    <TableView fx:id="tableView" VBox.vgrow="ALWAYS">
+    <TableView fx:id="tableView" VBox.vgrow="ALWAYS" styleClass="custom-table">
         <columns>
             <TableColumn fx:id="colNom" text="Nom" prefWidth="150"/>
             <TableColumn fx:id="colPrenom" text="Prénom" prefWidth="150"/>

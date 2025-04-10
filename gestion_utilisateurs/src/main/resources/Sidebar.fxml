@@ -5,6 +5,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
 
 <VBox alignment="CENTER_LEFT" prefHeight="600.0" prefWidth="200.0" spacing="15" 
       style="-fx-background-color: #ff7fa8;" 
@@ -23,6 +24,10 @@
             <Font name="Segoe UI Bold" size="20.0"/>
         </font>
     </Text>
+
+    <!-- Admin Name -->
+    <Label fx:id="lblAdminName" 
+           style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-font-family: 'Segoe UI Semibold';"/>
 
     <!-- Dashboard Button -->
     <Button fx:id="btnDashboard" 
@@ -54,6 +59,14 @@
             prefHeight="45.0" 
             text="📋 Reservations"
             onAction="#handleReservations"
+            style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 25; -fx-font-family: 'Segoe UI Semibold'; -fx-cursor: hand;" />
+
+    <!-- Logout Button -->
+    <Button fx:id="btnLogout" 
+            prefWidth="180.0" 
+            prefHeight="45.0" 
+            text="🚪 Déconnexion"
+            onAction="#handleDeconnexion"
             style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 25; -fx-font-family: 'Segoe UI Semibold'; -fx-cursor: hand;" />
 
 </VBox> 

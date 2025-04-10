@@ -48,51 +48,75 @@ public class LoginController {
         }
 
         try {
+            System.out.println("Attempting admin login for email: " + email);
             // First try to authenticate as admin
             Admin admin = adminService.authenticate(email, password);
             if (admin != null) {
-                openMainApplication();
+                System.out.println("Admin login successful for: " + admin.getNom_suser() + " " + admin.getPrenom_user());
+                openAdminDashboard(admin);
                 return;
             }
 
+            System.out.println("Attempting client login for email: " + email);
             // If not admin, try to authenticate as client
             Client client = clientService.authenticate(email, password);
             if (client != null) {
-                openClientNavBar(client);
+                System.out.println("Client login successful for: " + client.getNom_suser() + " " + client.getPrenom_user());
+                openNavigationView(client);
                 return;
             }
 
+            System.out.println("Login failed for email: " + email);
             showAlert(Alert.AlertType.ERROR, "Erreur", "Email ou mot de passe incorrect");
         } catch (Exception e) {
-            showAlert(Alert.AlertType.ERROR, "Erreur", "Une erreur est survenue lors de la connexion");
+            System.err.println("Login error: " + e.getMessage());
             e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Une erreur est survenue lors de la connexion");
         }
     }
 
-    private void openClientNavBar(Client client) {
+    private void openAdminDashboard(Admin admin) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ClientNavBar.fxml"));
+            System.out.println("Opening admin dashboard for: " + admin.getNom_suser() + " " + admin.getPrenom_user());
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/MainLayout.fxml"));
             Parent root = loader.load();
             
-            ClientNavBarController controller = loader.getController();
-            controller.setClient(client);
+            MainLayoutController controller = loader.getController();
+            controller.setCurrentAdmin(admin);
             
             Stage stage = (Stage) txtEmail.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Espace Client");
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setTitle("Admin Dashboard - EventHub");
+            stage.show();
+            
+            System.out.println("Admin dashboard opened successfully");
         } catch (IOException e) {
+            System.err.println("Error opening admin dashboard: " + e.getMessage());
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible de charger l'interface client");
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible de charger le tableau de bord administrateur");
         }
     }
 
-    private void openMainApplication() {
+    private void openNavigationView(Client client) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/MainLayout.fxml"));
+            System.out.println("Opening navigation view for client: " + client.getNom_suser() + " " + client.getPrenom_user());
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Navigation.fxml"));
+            Parent root = loader.load();
+            
+            NavigationController controller = loader.getController();
+            controller.setAdminMode(false);
+            controller.setCurrentUser(client);
+            
             Stage stage = (Stage) txtEmail.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Administration");
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setTitle("EventHub");
+            stage.show();
+            
+            System.out.println("Navigation view opened successfully");
         } catch (IOException e) {
+            System.err.println("Error opening navigation view: " + e.getMessage());
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible de charger l'application");
         }
