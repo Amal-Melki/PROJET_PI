@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx/17" 
+      xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="com.esprit.controllers.UtilisateursController"
+      spacing="20" 
+      style="-fx-background-color: white;">
+    
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <VBox spacing="10">
+        <HBox alignment="CENTER_LEFT" style="-fx-background-color: #ff7fa8;" spacing="20">
+            <padding>
+                <Insets top="10" right="20" bottom="10" left="20"/>
+            </padding>
+            <Label text="Gestion des Utilisateurs" style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;"/>
+        </HBox>
+
+        <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 10;">
+            <TextField fx:id="searchField" promptText="Rechercher un utilisateur..." prefWidth="300"/>
+            <ComboBox fx:id="roleFilter" promptText="Filtrer par rôle" prefWidth="150"/>
+        </HBox>
+    </VBox>
+
+    <!-- TableView -->
+    <TableView fx:id="tableView" VBox.vgrow="ALWAYS" styleClass="custom-table">
+        <columns>
+            <TableColumn fx:id="colNom" text="Nom" prefWidth="150"/>
+            <TableColumn fx:id="colPrenom" text="Prénom" prefWidth="150"/>
+            <TableColumn fx:id="colEmail" text="Email" prefWidth="200"/>
+            <TableColumn fx:id="colRole" text="Rôle" prefWidth="150"/>
+            <TableColumn fx:id="colActions" text="Actions" prefWidth="150"/>
+        </columns>
+    </TableView>
+
+    <!-- Add Admin Button -->
+    <HBox alignment="CENTER">
+        <Button fx:id="btnAjouterAdmin" 
+                text="➕ Ajouter Admin"
+                onAction="#handleAjouterAdmin"
+                style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 25; -fx-font-family: 'Segoe UI Semibold'; -fx-cursor: hand; -fx-padding: 8 20 8 20;"/>
+    </HBox>
+</VBox> 

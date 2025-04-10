@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.text.Font?>
+
+<HBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.esprit.controllers.ClientNavBarController"
+      style="-fx-background-color: pink;" spacing="20" alignment="CENTER_LEFT">
+    
+    <padding>
+        <Insets top="10" right="20" bottom="10" left="20"/>
+    </padding>
+
+    <!-- Logo/Home Button -->
+    <Button fx:id="btnAccueil" 
+            text="Accueil" 
+            onAction="#handleAccueil"
+            style="-fx-background-color: white; -fx-text-fill: #ff7fa8; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 20; -fx-cursor: hand;"/>
+
+    <!-- Events Button -->
+    <Button fx:id="btnEvenements" 
+            text="Événements" 
+            onAction="#handleEvenements"
+            style="-fx-background-color: white; -fx-text-fill: #ff7fa8; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 20; -fx-cursor: hand;"/>
+
+    <!-- Spacer -->
+    <Region HBox.hgrow="ALWAYS"/>
+
+    <!-- Client Profile Section -->
+    <HBox alignment="CENTER" spacing="10">
+        <!-- Client Image -->
+        <ImageView fx:id="imgClient" 
+                  fitWidth="40" 
+                  fitHeight="40" 
+                  style="-fx-background-color: white; -fx-background-radius: 20;"/>
+        
+        <!-- Client Name -->
+        <Label fx:id="lblClientName" 
+               style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;"/>
+    </HBox>
+</HBox> 
