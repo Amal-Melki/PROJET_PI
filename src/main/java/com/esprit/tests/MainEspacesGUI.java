@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-    public class MainProgGUI extends Application {
+    public class MainEspacesGUI extends Application {
 
         public static void main(String[] args) {
             launch(args);
@@ -17,11 +17,11 @@ import java.io.IOException;
 
         @Override
         public void start(Stage primaryStage) throws IOException {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouteEspace.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/esprit/views/AjouteEspace.fxml"));
             Parent root = loader.load();
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
-            primaryStage.setTitle("Projet_PI");
+            primaryStage.setTitle("Ajoute Espace");
             primaryStage.show();
         }
     }
