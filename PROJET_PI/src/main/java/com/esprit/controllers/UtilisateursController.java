@@ -311,7 +311,9 @@ public class UtilisateursController implements AdminAware {
                     loadData();
                     showAlert("Utilisateur supprimé avec succès", Alert.AlertType.INFORMATION);
                 } catch (Exception e) {
-                    showAlert("Erreur lors de la suppression: " + e.getMessage(), Alert.AlertType.ERROR);
+                    System.err.println("Erreur lors de la suppression: " + e.getMessage());
+                    e.printStackTrace();
+                    showAlert("Erreur lors de la suppression de l'utilisateur", Alert.AlertType.ERROR);
                 }
             }
         });

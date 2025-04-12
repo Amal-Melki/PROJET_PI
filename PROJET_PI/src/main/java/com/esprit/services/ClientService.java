@@ -74,30 +74,32 @@ public class ClientService implements IService<Client> {
     }
 
     @Override
-    public void supprimer(Client client) throws SQLException {
+    public void supprimer(Client client) {
         String reqClient = "DELETE FROM client WHERE id_client=?";
         String reqUser = "DELETE FROM user WHERE id_user=?";
-        
         try {
-            connection.setAutoCommit(false); // Start transaction
-            
             // First delete from client table
             PreparedStatement pstClient = connection.prepareStatement(reqClient);
             pstClient.setInt(1, client.getId_client());
-            pstClient.executeUpdate();
+            int clientResult = pstClient.executeUpdate();
 
-            // Then delete from user table
-            PreparedStatement pstUser = connection.prepareStatement(reqUser);
-            pstUser.setInt(1, client.getId_user());
-            pstUser.executeUpdate();
-            
-            connection.commit(); // Commit transaction
-            System.out.println("Client supprimé");
+            if (clientResult > 0) {
+                // Then delete from user table
+                PreparedStatement pstUser = connection.prepareStatement(reqUser);
+                pstUser.setInt(1, client.getId_user());
+                int userResult = pstUser.executeUpdate();
+                
+                if (userResult > 0) {
+                    System.out.println("Client supprimé avec succès");
+                } else {
+                    System.out.println("Erreur lors de la suppression de l'utilisateur");
+                }
+            } else {
+                System.out.println("Erreur lors de la suppression du client");
+            }
         } catch (SQLException e) {
-            connection.rollback(); // Rollback in case of error
-            throw e;
-        } finally {
-            connection.setAutoCommit(true); // Reset auto-commit
+            System.out.println("Erreur SQL lors de la suppression: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 

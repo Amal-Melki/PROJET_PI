@@ -188,7 +188,7 @@ public class EvenementsController {
         }
     }
     
-    private void handleSupprimer(Evenement evenement) {
+    private void    handleSupprimer(Evenement evenement) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmation");
         alert.setHeaderText(null);
