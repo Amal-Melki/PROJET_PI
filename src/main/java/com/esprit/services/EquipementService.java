@@ -19,7 +19,7 @@ public class EquipementService implements Iservice {
     @Override
     public void add(Object o) {
         Equipement equipement = (Equipement) o;
-        String sql = "INSERT INTO Equipement(nom, type, quantite, description, estDisponible) VALUES(?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Equipement(nomEquipement, type, quantite, description, estDisponible) VALUES(?, ?, ?, ?, ?)";
 
         try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, equipement.getNom());
@@ -47,7 +47,7 @@ public class EquipementService implements Iservice {
     @Override
     public void update(Object o) {
         Equipement equipement = (Equipement) o;  // Cast the object to Equipement
-        String sql = "UPDATE Equipement SET nom=?, type=?, quantite=?, description=?, estDisponible=? WHERE ideq=?";
+        String sql = "UPDATE Equipement SET nomEquipement=?, type=?, quantite=?, description=?, estDisponible=? WHERE equipementId=?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, equipement.getNom());
@@ -70,7 +70,7 @@ public class EquipementService implements Iservice {
     @Override
     public void delete(Object o) {
         Equipement equipement = (Equipement) o;  // Cast the object to Equipement
-        String sql = "DELETE FROM Equipement WHERE ideq=?";
+        String sql = "DELETE FROM Equipement WHERE equipementId=?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, equipement.getId());
@@ -91,7 +91,7 @@ public class EquipementService implements Iservice {
             PreparedStatement pst = connection.prepareStatement(req);
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
-                equipement.add(new Equipement(rs.getInt("ideq"), rs.getString("nom"), rs.getString("type"), rs.getInt("quantite"), rs.getString("description"), rs.getBoolean("estDisponible")));
+                equipement.add(new Equipement(rs.getInt("equipementId"), rs.getString("nomEquipement"), rs.getString("type"), rs.getInt("quantite"), rs.getString("description"), rs.getBoolean("estDisponible")));
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());

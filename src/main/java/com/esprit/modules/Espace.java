@@ -1,7 +1,7 @@
 package com.esprit.modules;
 public class Espace {
-    private int id;
-    private String nom;
+    private int espaceId;
+    private String nomEspace;
     private String type;  // Ex: Salle, Extérieur, etc.
     private double prix;  // Prix par jour ou par heure
     private int capacite; // Nombre maximal de personnes que l'espace peut accueillir
@@ -9,37 +9,40 @@ public class Espace {
 
     // Constructeur
     public Espace(int id, String nom, String type, double prix, int capacite, String localisation) {
-        this.id = id;
-        this.nom = nom;
+        this.espaceId = id;
+        this.nomEspace = nom;
+        this.type = type;
+        this.prix = prix;
+        this.capacite = capacite;
+        this.localisation = localisation;
+    }
+    public Espace(String nom, String type, double prix, int capacite, String localisation) {
+        this.nomEspace= nom;
         this.type = type;
         this.prix = prix;
         this.capacite = capacite;
         this.localisation = localisation;
     }
 
-    public Espace(String nom, String type, double prix, int capacite, String localisation) {
-        this.nom = nom;
-        this.type = type;
-        this.prix = prix;
-        this.capacite = capacite;
-        this.localisation = localisation;
-    }
+    //constructor vide
+    public Espace() {}
+
 
     // Getters et Setters
     public int getId() {
-        return id;
+        return espaceId;
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.espaceId = id;
     }
 
     public String getNom() {
-        return nom;
+        return nomEspace;
     }
 
     public void setNom(String nom) {
-        this.nom = nom;
+        this.nomEspace = nom;
     }
 
     public String getType() {

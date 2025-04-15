@@ -2,13 +2,14 @@ package com.esprit.services;
 
 import com.esprit.modules.Equipement;
 import com.esprit.modules.Espace;
+import com.esprit.modules.ReservationEspace;
 import com.esprit.utils.DataSource;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EspaceService implements Iservice {
+public class ReservationService implements Iservice {
 
     private Connection connection;
 
@@ -19,14 +20,14 @@ public class EspaceService implements Iservice {
 
     @Override
     public void add(Object o) {
-        Espace espace = (Espace) o;
-        String sql = "INSERT INTO Espace(nomEspace, type, capacite, localisation, prix) VALUES(?, ?, ?, ?, ?)";
+            reservationEspace reservationespace = (ReservationEspace) o;
+        String sql = "INSERT INTO Espace(nom, type, capacite, localisation, prix) VALUES(?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            ps.setString(1, espace.getNom());
-            ps.setString(2, espace.getType());
-            ps.setInt(3, espace.getCapacite());
-            ps.setString(4, espace.getLocalisation());
-            ps.setDouble(5, espace.getPrix());
+            ps.setString(1, reservationespace.getNom());
+            ps.setString(2, reservationespace.getType());
+            ps.setInt(3, reservationespace.getCapacite());
+            ps.setString(4, reservationespace.getLocalisation());
+            ps.setDouble(5, reservationespace.getPrix());   
 
             int affectedRows = ps.executeUpdate();
             if (affectedRows == 0) {
@@ -47,7 +48,7 @@ public class EspaceService implements Iservice {
     @Override
     public void update(Object o) {
         Espace espace = (Espace) o;  // Cast the object to Espace
-        String sql = "UPDATE Espace SET nomEspace=?, type=?, capacite=?, localisation=?, prix=? WHERE espaceId=?";
+        String sql = "UPDATE Espace SET nom=?, type=?, capacite=?, localisation=?, prix=? WHERE id=?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, espace.getNom());
@@ -70,7 +71,7 @@ public class EspaceService implements Iservice {
     @Override
     public void delete(Object o) {
         Espace espace = (Espace) o;  // Cast the object to Espace
-        String sql = "DELETE FROM Espace WHERE espaceId=?";
+        String sql = "DELETE FROM Espace WHERE id=?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, espace.getId());
@@ -90,18 +91,18 @@ public class EspaceService implements Iservice {
             PreparedStatement pst = connection.prepareStatement(req);
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
-                    espace.add(new Espace(rs.getInt("espaceId"),
-                            rs.getString("nomEspace"),
-                            rs.getString("type"),
-                            rs.getDouble("prix"),
-                            rs.getInt("capacite"),
-                            rs.getString("localisation")));
-                }
-            } catch(SQLException e){
-                System.out.println(e.getMessage());
+                espace.add(new Espace(rs.getInt("espaceId"),
+                        rs.getString("nom"),
+                        rs.getString("type"),
+                        rs.getDouble("prix"),
+                        rs.getInt("capacite"),
+                        rs.getString("localisation")));
             }
-            return espace;
+        } catch(SQLException e){
+            System.out.println(e.getMessage());
         }
+        return espace;
+    }
 }
 
 
