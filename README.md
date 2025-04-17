@@ -1,7 +1,7 @@
 
 # Evencia Event Planner - Projet PI
 
-Evencia Event Planner est une application de gestion d'événements qui permet aux utilisateurs de planifier, gérer et suivre des événements. L'application est composée de 6 modules interconnectés qui permettent une gestion complète et fluide des aspects liés à l'organisation d'événements.
+Evencia Event Planner est une application de gestion d'événements qui permet aux utilisateurs de planifier, gérer et suivre des événements. L'application est composée de SIX modules interconnectés qui permettent une gestion complète et fluide des aspects liés à l'organisation d'événements.
 
 ## Table des matières
 - [Description du projet](#description-du-projet)
@@ -38,7 +38,7 @@ Avant de pouvoir exécuter le projet sur votre machine, assurez-vous d'avoir les
     
 2. **Configurer la base de données MySQL** :
     - Ouvrez XAMPP et démarrez le serveur MySQL.
-    - Créez une base de données dans MySQL .
+    - Créez une base de données dans MySQL.
     - Importez les tables nécessaires depuis le fichier SQL fourni.
 3. **Configurer les fichiers de connexion** :
     - Modifiez les fichiers de configuration ( `application.properties` ou `database.properties`) pour y ajouter vos informations de connexion MySQL (adresse, utilisateur, mot de passe).
@@ -50,9 +50,9 @@ Avant de pouvoir exécuter le projet sur votre machine, assurez-vous d'avoir les
 Le projet est organisé de la manière suivante :
 
 - **controllers** : Contient les classes qui gèrent les interactions entre l'interface utilisateur et la logique de l'application.
-- **models** : Contient les classes représentant les entités de l'application ( utilisateur, événement, matériel, espace ,produit derviée,blog).
-- **services** : Contient la logique métier de l'application ( gestion des utilisateurs, des événements,des matériels ,espaces, des blogs et media , des réservations ).
-- **utils** : Contient les classes utilitaires ( pour la gestion des erreurs, la connexion à la base de données, etc.).
+- **models** : Contient les classes représentant les entités de l'application (utilisateur, événement, matériel, espace, produit derviée, blog).
+- **services** : Contient la logique métier de l'application (gestion des utilisateurs, des événements, des matériels, espaces, des blogs et medias, des réservations).
+- **utils** : Contient les classes utilitaires (pour la gestion des erreurs, la connexion à la base de données, etc.).
 
 ## Technologies utilisées
 - **Java 17** pour le développement de l'application.

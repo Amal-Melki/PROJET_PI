@@ -7,12 +7,12 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EquipementService implements Iservice {
+public class <MateService implements Iservice {
 
     private Connection connection;
 
     // Constructor
-    public EquipementService() {
+    public MaterielService() {
         connection = DataSource.getInstance().getConnection();
     }
 
