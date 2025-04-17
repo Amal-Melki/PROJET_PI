@@ -1,17 +1,19 @@
 package com.esprit.modules;
 
-public class Equipement {
+public class Materiel {
     private int equipementId;
-    private String nom_equipement;
-    private String type; //
+    private String nomEquipement;
+    private String type;
     private int quantite;
     private String description;
-    private boolean estDisponible; // Pour savoir si l'équipement est actuellement disponible
+    private boolean estDisponible;
 
-    // Constructeur
+    // Constructeurs
+    public Equipement() {}
+
     public Equipement(int id, String nom, String type, int quantite, String description, boolean estDisponible) {
-        this.equipementId= id;
-        this.nom_equipement = nom;
+        this.equipementId = id;
+        this.nomEquipement = nom;
         this.type = type;
         this.quantite = quantite;
         this.description = description;
@@ -19,7 +21,7 @@ public class Equipement {
     }
 
     public Equipement(String nom, String type, int quantite, String description, boolean estDisponible) {
-        this.nom_equipement = nom;
+        this.nomEquipement = nom;
         this.type = type;
         this.quantite = quantite;
         this.description = description;
@@ -36,11 +38,11 @@ public class Equipement {
     }
 
     public String getNom() {
-        return nom_equipement;
+        return nomEquipement;
     }
 
     public void setNom(String nom) {
-        this.nom_equipement = nom;
+        this.nomEquipement = nom;
     }
 
     public String getType() {
@@ -77,7 +79,13 @@ public class Equipement {
 
     @Override
     public String toString() {
-        return "Equipement [equipementId=" + equipementId + ", nom=" + nom_equipement+ ", type=" + type + ", quantite=" + quantite + ", description="
-                + description + ", estDisponible=" + estDisponible + "]";
+        return "Equipement{" +
+                "equipementId=" + equipementId +
+                ", nomEquipement='" + nomEquipement + '\'' +
+                ", type='" + type + '\'' +
+                ", quantite=" + quantite +
+                ", description='" + description + '\'' +
+                ", estDisponible=" + estDisponible +
+                '}';
     }
 }

@@ -1,13 +1,16 @@
 package com.esprit.modules;
+
 public class Espace {
     private int espaceId;
     private String nomEspace;
-    private String type;  // Ex: Salle, Extérieur, etc.
-    private double prix;  // Prix par jour ou par heure
-    private int capacite; // Nombre maximal de personnes que l'espace peut accueillir
-    private String localisation; // Lieu de l'espace (adresse)
+    private String type;
+    private double prix;
+    private int capacite;
+    private String localisation;
 
-    // Constructeur
+    // Constructeurs
+    public Espace() {}
+
     public Espace(int id, String nom, String type, double prix, int capacite, String localisation) {
         this.espaceId = id;
         this.nomEspace = nom;
@@ -16,17 +19,14 @@ public class Espace {
         this.capacite = capacite;
         this.localisation = localisation;
     }
+
     public Espace(String nom, String type, double prix, int capacite, String localisation) {
-        this.nomEspace= nom;
+        this.nomEspace = nom;
         this.type = type;
         this.prix = prix;
         this.capacite = capacite;
         this.localisation = localisation;
     }
-
-    //constructor vide
-    public Espace() {}
-
 
     // Getters et Setters
     public int getId() {
@@ -75,5 +75,17 @@ public class Espace {
 
     public void setLocalisation(String localisation) {
         this.localisation = localisation;
+    }
+
+    @Override
+    public String toString() {
+        return "Espace{" +
+                "espaceId=" + espaceId +
+                ", nomEspace='" + nomEspace + '\'' +
+                ", type='" + type + '\'' +
+                ", prix=" + prix +
+                ", capacite=" + capacite +
+                ", localisation='" + localisation + '\'' +
+                '}';
     }
 }

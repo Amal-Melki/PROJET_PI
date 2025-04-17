@@ -1,6 +1,5 @@
 package com.esprit.services;
 
-import com.esprit.modules.Equipement;
 import com.esprit.modules.Espace;
 import com.esprit.utils.DataSource;
 
@@ -10,7 +9,7 @@ import java.util.List;
 
 public class EspaceService implements Iservice {
 
-    private Connection connection;
+    private final Connection connection;
 
     // Constructor
     public EspaceService() {
