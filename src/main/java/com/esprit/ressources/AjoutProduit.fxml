@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.esprit.Controllers.AjouterProduit" prefWidth="400" prefHeight="400">
+    <children>
+        <VBox spacing="10" alignment="CENTER" layoutX="50" layoutY="50">
+            <Label text="Ajouter un Produit" />
+            <TextField fx:id="nomField" promptText="Nom" />
+            <TextField fx:id="descriptionField" promptText="Description" />
+            <TextField fx:id="prixField" promptText="Prix" />
+            <TextField fx:id="quantiteField" promptText="Quantité" />
+            <TextField fx:id="categorieField" promptText="Catégorie" />
+            <Button text="Ajouter" onAction="#AjouterProduit" />
+        </VBox>
+    </children>
+</AnchorPane>
