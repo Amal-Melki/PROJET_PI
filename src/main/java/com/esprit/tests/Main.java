@@ -34,8 +34,8 @@ public class Main {
 
         ReservationMateriel r = new ReservationMateriel(1,
                 1, // ID d’un matériel déjà existant
-                Date.valueOf("2024-04-01"),
-                Date.valueOf("2024-04-03"),
+                Date.valueOf("2024-04-01").toLocalDate(),
+                Date.valueOf("2024-04-03").toLocalDate(),
                 3,
                 "rahma testing"
         );

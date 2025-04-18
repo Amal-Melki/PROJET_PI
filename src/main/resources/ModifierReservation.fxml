@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.esprit.controllers.ModifierReservation"
+      prefHeight="500.0" prefWidth="790.0"
+      style="-fx-background-color: pink;">
+
+    <children>
+        <TableView fx:id="tableReservations"
+                   layoutX="10.0" layoutY="10.0"
+                   prefWidth="750.0" prefHeight="480.0"
+                   style="-fx-background-color: #ffe6eb;">
+            <columns>
+                <TableColumn fx:id="colNomMateriel" prefWidth="120.0" text="Matériel" />
+                <TableColumn fx:id="colDateDebut" prefWidth="120.0" text="Date Début" />
+                <TableColumn fx:id="colDateFin" prefWidth="120.0" text="Date Fin" />
+                <TableColumn fx:id="colQuantite" prefWidth="100.0" text="Quantité" />
+                <TableColumn fx:id="colStatut" prefWidth="100.0" text="Statut" />
+                <TableColumn fx:id="colAction" prefWidth="200.0" text="Action" />
+            </columns>
+        </TableView>
+    </children>
+</Pane>

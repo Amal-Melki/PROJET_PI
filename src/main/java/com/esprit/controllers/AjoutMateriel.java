@@ -42,6 +42,15 @@ public class AjoutMateriel implements Initializable {
         cbType.getItems().addAll("Informatique", "Électrique", "Bureau", "Médical");
         cbEtat.getItems().addAll("DISPONIBLE", "EN_MAINTENANCE", "HORS_SERVICE");
         cbEtat.setValue("DISPONIBLE");
+
+        btnAjouter.setStyle(
+                "-fx-background-color: #ff8cb3;" +
+                        "-fx-text-fill: white;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-background-radius: 15;" +
+                        "-fx-cursor: hand;" +
+                        "-fx-padding: 4 10 4 10;"
+        );
     }
 
     @FXML
@@ -62,7 +71,7 @@ public class AjoutMateriel implements Initializable {
             alert.setContentText("Matériel ajouté avec succès !");
             alert.show();
 
-            // ✅ Rediriger vers ModifierMateriel.fxml après l’ajout
+            // Rediriger vers ModifierMateriel.fxml après l’ajout
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierMateriel.fxml"));
             Parent root = loader.load();
             btnAjouter.getScene().setRoot(root);

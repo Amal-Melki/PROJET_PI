@@ -46,6 +46,6 @@
       <ComboBox fx:id="cbType" layoutX="218.0" layoutY="110.0" prefWidth="150.0" />
       <TextField fx:id="tfQuantite" layoutX="219.0" layoutY="179.0" />
       <ComboBox fx:id="cbEtat" layoutX="219.0" layoutY="244.0" prefWidth="150.0" />
-      <TextArea fx:id="taDescription" layoutX="210.0" layoutY="322.0" prefHeight="83.0" prefWidth="342.0" />
+      <TextArea fx:id="taDescription" layoutX="210.0" layoutY="322.0" prefHeight="83.0" prefWidth="342.0"   />
    </children>
 </Pane>

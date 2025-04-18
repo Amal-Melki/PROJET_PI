@@ -52,15 +52,18 @@ public class ServiceReservationMateriel implements IService<ReservationMateriel>
     }
 
     @Override
-    public void supprimer(ReservationMateriel r) {
-        String req = "DELETE FROM reservation_materiel WHERE id=" + r.getId();
+    public void supprimer(ReservationMateriel reservationMateriel) {
 
-        try {
-            Statement st = connection.createStatement();
-            st.executeUpdate(req);
+    }
+
+    public void supprimer2(int id) {
+        String sql = "DELETE FROM reservation_materiel WHERE id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ps.executeUpdate();
             System.out.println("Réservation supprimée !");
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.err.println("Erreur lors de la suppression : " + e.getMessage());
         }
     }
 
@@ -77,8 +80,8 @@ public class ServiceReservationMateriel implements IService<ReservationMateriel>
                 list.add(new ReservationMateriel(
                         rs.getInt("id"),
                         rs.getInt("materiel_id"),
-                        rs.getDate("dateDebut"),
-                        rs.getDate("dateFin"),
+                        rs.getDate("dateDebut").toLocalDate(),
+                        rs.getDate("dateFin").toLocalDate(),
                         rs.getInt("quantiteReservee"),
                         rs.getString("statut")
                 ));
