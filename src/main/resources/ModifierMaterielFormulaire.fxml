@@ -43,7 +43,12 @@
         <TextArea fx:id="taDescription" layoutX="210.0" layoutY="322.0" prefHeight="83.0" prefWidth="342.0" />
 
         <!-- Le bouton "Enregistrer" -->
-        <Button fx:id="btnModifier" layoutX="283.0" layoutY="446.0" mnemonicParsing="false" onAction="#modifierMateriel" text="Enregistrer">
+        <Button fx:id="btnModifier" layoutX="283.0" layoutY="446.0" mnemonicParsing="false" onAction="#modifierMateriel" text="Enregistrer"  style="-fx-background-color: #ff8cb3;
+                     -fx-text-fill: white;
+                     -fx-font-weight: bold;
+                     -fx-background-radius: 15;
+                     -fx-cursor: hand;
+                     -fx-padding: 4 10 4 10;">
             <font><Font size="14.0" /></font>
         </Button>
     </children>

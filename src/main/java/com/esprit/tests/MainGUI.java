@@ -15,20 +15,36 @@ public class MainGUI extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            // ⚠ Ancienne interface : AjoutMateriel
+            // ⚠ Ancienne interface : Ajout Matériel
             // FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjoutMateriel.fxml"));
 
-            // ✅ Nouvelle interface : ModifierMateriel (liste avec boutons)
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierMateriel.fxml"));
+            // ⚠ Liste des matériels avec bouton "Modifier"
+            // FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierMateriel.fxml"));
+
+            // ⚠ Formulaire d’ajout de fournisseur
+            // FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjoutFournisseur.fxml"));
+
+            // ⚠ Liste des fournisseurs avec bouton Modifier
+            // FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierFournisseur.fxml"));
+
+            // ⚠ Formulaire d'ajout de réservation
+            // FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjoutReservation.fxml"));
+
+            // ⚠ Liste des réservations avec bouton Modifier
+            // FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierReservation.fxml"));
+
+            // ✅ Interface d'accueil principale
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Accueil.fxml"));
 
             Parent root = loader.load();
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
-            primaryStage.setTitle("Liste des Matériels");
+            primaryStage.setTitle("🏠 Accueil - Gestion des Ressources");
             primaryStage.show();
 
         } catch (Exception e) {
             System.out.println("Erreur au démarrage : " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }

@@ -79,7 +79,7 @@ public class Materiels {
     }
 
     // Méthode toString()
-    @Override
+   /* @Override
     public String toString() {
         return "Materiel{" +
                 "id=" + id +
@@ -89,6 +89,12 @@ public class Materiels {
                 ", etat='" + etat + '\'' +
                 ", description='" + description + '\'' +
                 '}';
+    }*/
+
+    @Override
+    public String toString() {
+        return nom; // Affiche uniquement le nom dans la ComboBox
     }
+
 }
 

@@ -1,7 +1,7 @@
 package com.esprit.controllers;
 
-import com.esprit.modules.Materiels;
-import com.esprit.services.ServiceMateriel;
+import com.esprit.modules.Fournisseur;
+import com.esprit.services.ServiceFournisseur;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -20,38 +20,32 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class ModifierMateriel implements Initializable {
+public class ModifierFournisseur implements Initializable {
 
     @FXML
-    private TableView<Materiels> tableMateriels;
+    private TableView<Fournisseur> tableFournisseurs;
 
     @FXML
-    private TableColumn<Materiels, String> colNom;
-    @FXML
-    private TableColumn<Materiels, String> colType;
-    @FXML
-    private TableColumn<Materiels, Integer> colQuantite;
-    @FXML
-    private TableColumn<Materiels, String> colEtat;
-    @FXML
-    private TableColumn<Materiels, String> colDescription;
-    @FXML
-    private TableColumn<Materiels, Void> colAction;
+    private TableColumn<Fournisseur, String> colNom;
 
-    private final ObservableList<Materiels> data = FXCollections.observableArrayList();
+    @FXML
+    private TableColumn<Fournisseur, String> colEmail;
+
+    @FXML
+    private TableColumn<Fournisseur, Void> colAction;
+
+    private final ObservableList<Fournisseur> data = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         colNom.setCellValueFactory(new PropertyValueFactory<>("nom"));
-        colType.setCellValueFactory(new PropertyValueFactory<>("type"));
-        colQuantite.setCellValueFactory(new PropertyValueFactory<>("quantite"));
-        colEtat.setCellValueFactory(new PropertyValueFactory<>("etat"));
-        colDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
+        colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
 
-        ServiceMateriel sm = new ServiceMateriel();
-        List<Materiels> liste = sm.recuperer();
+        // Charger les fournisseurs
+        ServiceFournisseur sf = new ServiceFournisseur();
+        List<Fournisseur> liste = sf.recuperer();
         data.addAll(liste);
-        tableMateriels.setItems(data);
+        tableFournisseurs.setItems(data);
 
         ajouterColonneAction();
     }
@@ -63,7 +57,7 @@ public class ModifierMateriel implements Initializable {
             private final HBox box = new HBox(10, btnModifier, btnEffacer);
 
             {
-                box.setAlignment(Pos.CENTER);
+                box.setAlignment(Pos.CENTER); // Centrage des boutons
 
                 String commonStyle = "-fx-text-fill: white;" +
                         "-fx-font-weight: bold;" +
@@ -75,19 +69,17 @@ public class ModifierMateriel implements Initializable {
                 btnEffacer.setStyle("-fx-background-color: #e57373;" + commonStyle);
 
                 btnModifier.setOnAction(event -> {
-                    Materiels m = getTableView().getItems().get(getIndex());
+                    Fournisseur f = getTableView().getItems().get(getIndex());
                     try {
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierMaterielFormulaire.fxml"));
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierFournisseurFormulaire.fxml"));
                         Parent root = loader.load();
-
-                        ModifierMaterielFormulaire controller = loader.getController();
-                        controller.initData(m);
+                        ModifierFournisseurFormulaire controller = loader.getController();
+                        controller.initData(f);
 
                         Stage stage = new Stage();
-                        stage.setTitle("Modifier Matériel");
+                        stage.setTitle("Modifier Fournisseur");
                         stage.setScene(new Scene(root));
                         stage.show();
-
                     } catch (IOException e) {
                         e.printStackTrace();
                         showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible d’ouvrir le formulaire.");
@@ -95,17 +87,16 @@ public class ModifierMateriel implements Initializable {
                 });
 
                 btnEffacer.setOnAction(event -> {
-                    Materiels m = getTableView().getItems().get(getIndex());
-
+                    Fournisseur f = getTableView().getItems().get(getIndex());
                     Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
                     confirm.setTitle("Confirmation");
                     confirm.setHeaderText(null);
-                    confirm.setContentText("Voulez-vous vraiment supprimer ce matériel ?");
+                    confirm.setContentText("Voulez-vous vraiment supprimer ce fournisseur ?");
                     confirm.showAndWait().ifPresent(response -> {
                         if (response == ButtonType.OK) {
-                            ServiceMateriel service = new ServiceMateriel();
-                            service.supprimer(m); // Suppression depuis la base
-                            data.remove(m); // Suppression depuis la liste affichée
+                            ServiceFournisseur sf = new ServiceFournisseur();
+                            sf.supprimer(f); // méthode qui supprime de la base
+                            data.remove(f);  // mise à jour de l'affichage
                         }
                     });
                 });
@@ -119,9 +110,10 @@ public class ModifierMateriel implements Initializable {
         });
     }
 
-    private void showAlert(Alert.AlertType type, String title, String message) {
+    private void showAlert(Alert.AlertType type, String titre, String message) {
         Alert alert = new Alert(type);
-        alert.setTitle(title);
+        alert.setTitle(titre);
+        alert.setHeaderText(null);
         alert.setContentText(message);
         alert.show();
     }

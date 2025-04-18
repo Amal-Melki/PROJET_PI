@@ -1,7 +1,9 @@
 package com.esprit.controllers;
 
 import com.esprit.modules.Materiels;
+import com.esprit.modules.ReservationMateriel;
 import com.esprit.services.ServiceMateriel;
+import com.esprit.services.ServiceReservationMateriel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -17,41 +19,53 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class ModifierMateriel implements Initializable {
+public class ModifierReservation implements Initializable {
 
     @FXML
-    private TableView<Materiels> tableMateriels;
+    private TableView<ReservationMateriel> tableReservations;
 
     @FXML
-    private TableColumn<Materiels, String> colNom;
+    private TableColumn<ReservationMateriel, String> colNomMateriel;
     @FXML
-    private TableColumn<Materiels, String> colType;
+    private TableColumn<ReservationMateriel, String> colDateDebut;
     @FXML
-    private TableColumn<Materiels, Integer> colQuantite;
+    private TableColumn<ReservationMateriel, String> colDateFin;
     @FXML
-    private TableColumn<Materiels, String> colEtat;
+    private TableColumn<ReservationMateriel, Integer> colQuantite;
     @FXML
-    private TableColumn<Materiels, String> colDescription;
+    private TableColumn<ReservationMateriel, String> colStatut;
     @FXML
-    private TableColumn<Materiels, Void> colAction;
+    private TableColumn<ReservationMateriel, Void> colAction;
 
-    private final ObservableList<Materiels> data = FXCollections.observableArrayList();
+    private final ObservableList<ReservationMateriel> data = FXCollections.observableArrayList();
 
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        colNom.setCellValueFactory(new PropertyValueFactory<>("nom"));
-        colType.setCellValueFactory(new PropertyValueFactory<>("type"));
-        colQuantite.setCellValueFactory(new PropertyValueFactory<>("quantite"));
-        colEtat.setCellValueFactory(new PropertyValueFactory<>("etat"));
-        colDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        colNomMateriel.setCellValueFactory(new PropertyValueFactory<>("nomMateriel"));
+        colDateDebut.setCellValueFactory(new PropertyValueFactory<>("dateDebut"));
+        colDateFin.setCellValueFactory(new PropertyValueFactory<>("dateFin"));
+        colQuantite.setCellValueFactory(new PropertyValueFactory<>("quantiteReservee"));
+        colStatut.setCellValueFactory(new PropertyValueFactory<>("statut"));
+
+        ServiceReservationMateriel srm = new ServiceReservationMateriel();
+        List<ReservationMateriel> reservations = srm.recuperer();
 
         ServiceMateriel sm = new ServiceMateriel();
-        List<Materiels> liste = sm.recuperer();
-        data.addAll(liste);
-        tableMateriels.setItems(data);
+        HashMap<Integer, String> mapMateriel = new HashMap<>();
+        for (Materiels m : sm.recuperer()) {
+            mapMateriel.put(m.getId(), m.getNom());
+        }
+
+        for (ReservationMateriel r : reservations) {
+            r.setNomMateriel(mapMateriel.getOrDefault(r.getMaterielId(), "Inconnu"));
+        }
+
+        data.addAll(reservations);
+        tableReservations.setItems(data);
 
         ajouterColonneAction();
     }
@@ -63,8 +77,10 @@ public class ModifierMateriel implements Initializable {
             private final HBox box = new HBox(10, btnModifier, btnEffacer);
 
             {
+                // Centrage du HBox
                 box.setAlignment(Pos.CENTER);
 
+                // Style partagé
                 String commonStyle = "-fx-text-fill: white;" +
                         "-fx-font-weight: bold;" +
                         "-fx-background-radius: 15;" +
@@ -75,37 +91,35 @@ public class ModifierMateriel implements Initializable {
                 btnEffacer.setStyle("-fx-background-color: #e57373;" + commonStyle);
 
                 btnModifier.setOnAction(event -> {
-                    Materiels m = getTableView().getItems().get(getIndex());
+                    ReservationMateriel reservation = getTableView().getItems().get(getIndex());
                     try {
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierMaterielFormulaire.fxml"));
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierReservationFormulaire.fxml"));
                         Parent root = loader.load();
-
-                        ModifierMaterielFormulaire controller = loader.getController();
-                        controller.initData(m);
+                        ModifierReservationFormulaire controller = loader.getController();
+                        controller.setReservation(reservation);
 
                         Stage stage = new Stage();
-                        stage.setTitle("Modifier Matériel");
                         stage.setScene(new Scene(root));
+                        stage.setTitle("Modifier Réservation");
                         stage.show();
 
                     } catch (IOException e) {
-                        e.printStackTrace();
                         showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible d’ouvrir le formulaire.");
                     }
                 });
 
                 btnEffacer.setOnAction(event -> {
-                    Materiels m = getTableView().getItems().get(getIndex());
+                    ReservationMateriel r = getTableView().getItems().get(getIndex());
 
                     Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
                     confirm.setTitle("Confirmation");
                     confirm.setHeaderText(null);
-                    confirm.setContentText("Voulez-vous vraiment supprimer ce matériel ?");
+                    confirm.setContentText("Voulez-vous vraiment supprimer cette réservation ?");
                     confirm.showAndWait().ifPresent(response -> {
                         if (response == ButtonType.OK) {
-                            ServiceMateriel service = new ServiceMateriel();
-                            service.supprimer(m); // Suppression depuis la base
-                            data.remove(m); // Suppression depuis la liste affichée
+                            ServiceReservationMateriel service = new ServiceReservationMateriel();
+                            service.supprimer2(r.getId());
+                            data.remove(r); // Supprimer de l'affichage
                         }
                     });
                 });

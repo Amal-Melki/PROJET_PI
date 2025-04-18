@@ -1,8 +1,20 @@
 package com.esprit.modules;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 public class ReservationMateriel {
+
+    private String nomMateriel;
+
+    public String getNomMateriel() {
+        return nomMateriel;
+    }
+
+    public void setNomMateriel(String nomMateriel) {
+        this.nomMateriel = nomMateriel;
+    }
+
     private int id;
     private int materielId;
     private Date dateDebut;
@@ -13,22 +25,20 @@ public class ReservationMateriel {
     // Constructeurs
     public ReservationMateriel() {}
 
-    public ReservationMateriel(int id, int materielId, Date dateDebut, Date dateFin, int quantiteReservee, String statut) {
+    // ✅ Ce constructeur permet d'utiliser LocalDate directement depuis le contrôleur
+    public ReservationMateriel(int id, int materielId, LocalDate dateDebut, LocalDate dateFin, int quantiteReservee, String statut) {
         this.id = id;
         this.materielId = materielId;
-        this.dateDebut = dateDebut;
-        this.dateFin = dateFin;
+        this.dateDebut = Date.valueOf(dateDebut); // conversion
+        this.dateFin = Date.valueOf(dateFin);     // conversion
         this.quantiteReservee = quantiteReservee;
         this.statut = statut;
     }
 
-    public ReservationMateriel(int materielId, Date dateDebut, Date dateFin, int quantiteReservee, String statut) {
-        this.materielId = materielId;
-        this.dateDebut = dateDebut;
-        this.dateFin = dateFin;
-        this.quantiteReservee = quantiteReservee;
-        this.statut = statut;
-    }
+
+
+
+
 
     // Getters et Setters
     public int getId() { return id; }

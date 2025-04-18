@@ -4,20 +4,28 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #ffe6f0;"
-      xmlns="http://javafx.com/javafx/17"
+<Pane xmlns="http://javafx.com/javafx/17"
       xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.esprit.controllers.ModifierMateriel"> <!-- Fond rose clair de tout le Pane -->
+      fx:controller="com.esprit.controllers.ModifierMateriel"
+      prefHeight="500.0" prefWidth="900.0"
+      style="-fx-background-color: pink;">
 
     <children>
-        <TableView fx:id="tableMateriels" layoutX="10.0" layoutY="10.0" prefHeight="380.0" prefWidth="580.0" style="                        -fx-background-color: #ffffff;                        -fx-border-color: #ccc;                        -fx-border-radius: 10;                        -fx-background-radius: 10;                        -fx-table-cell-border-color: transparent;                    ">
+        <TableView fx:id="tableMateriels"
+                   layoutX="10.0" layoutY="10.0"
+                   prefHeight="480.0" prefWidth="850.0"
+                   style="-fx-background-color: #ffffff;
+                          -fx-border-color: #ccc;
+                          -fx-border-radius: 10;
+                          -fx-background-radius: 10;
+                          -fx-table-cell-border-color: transparent;">
             <columns>
-                <TableColumn fx:id="colNom" prefWidth="100.0" text="Nom" />
-                <TableColumn fx:id="colType" prefWidth="90.0" text="Type" />
-                <TableColumn fx:id="colQuantite" prefWidth="90.0" text="Quantité" />
-                <TableColumn fx:id="colEtat" prefWidth="90.0" text="État" />
-                <TableColumn fx:id="colDescription" prefWidth="130.0" text="Description" />
-                <TableColumn fx:id="colAction" prefWidth="76.0" text="Action" />
+                <TableColumn fx:id="colNom" prefWidth="120.0" text="Nom" />
+                <TableColumn fx:id="colType" prefWidth="120.0" text="Type" />
+                <TableColumn fx:id="colQuantite" prefWidth="100.0" text="Quantité" />
+                <TableColumn fx:id="colEtat" prefWidth="100.0" text="État" />
+                <TableColumn fx:id="colDescription" prefWidth="170.0" text="Description" />
+                <TableColumn fx:id="colAction" prefWidth="300.0" text="Action" />
             </columns>
         </TableView>
     </children>
