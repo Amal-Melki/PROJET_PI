@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+      prefHeight="600.0" prefWidth="700.0"
+      style="-fx-background-color: pink;"
+      xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.esprit.Controllers.AjoutProduitDerive">
+
+    <children>
+        <Label layoutX="76.0" layoutY="50.0" text="Nom">
+            <font><Font size="14.0" /></font>
+        </Label>
+        <Label layoutX="76.0" layoutY="113.0" text="Catégorie">
+            <font><Font size="14.0" /></font>
+        </Label>
+        <Label layoutX="76.0" layoutY="183.0" text="Prix">
+            <font><Font size="14.0" /></font>
+        </Label>
+        <Label layoutX="76.0" layoutY="253.0" text="Stock">
+            <font><Font size="14.0" /></font>
+        </Label>
+        <Label layoutX="80.0" layoutY="323.0" text="Description">
+            <font><Font size="14.0" /></font>
+        </Label>
+        <Label layoutX="80.0" layoutY="393.0" text="Image URL">
+            <font><Font size="14.0" /></font>
+        </Label>
+
+        <TextField fx:id="tfNom" layoutX="219.0" layoutY="50.0" />
+        <ComboBox fx:id="cbCategorie" layoutX="219.0" layoutY="110.0" prefWidth="150.0" />
+        <TextField fx:id="tfPrix" layoutX="219.0" layoutY="180.0" />
+        <TextField fx:id="tfStock" layoutX="219.0" layoutY="250.0" />
+        <TextArea fx:id="taDescription" layoutX="219.0" layoutY="320.0" prefHeight="60.0" prefWidth="300.0" />
+        <TextField fx:id="tfImageUrl" layoutX="219.0" layoutY="390.0" prefWidth="300.0" />
+
+        <Button fx:id="btnAjouter" layoutX="300.0" layoutY="450.0" mnemonicParsing="false" onAction="#addProduit" text="Ajouter">
+            <font><Font size="14.0" /></font>
+        </Button>
+    </children>
+</Pane>

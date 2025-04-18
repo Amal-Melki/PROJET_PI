@@ -5,36 +5,36 @@ import java.util.Date;
 public class ProduitDerive {
     private int id;
     private String nom;
-    private String description;
-    private double prix;
-    private int quantite;
     private String categorie;
-    private Date dateAjout;
+    private double prix;
+    private int stock;
+    private String description;
+    private String imageUrl;
 
-    // ✅ Constructeurs
+
     public ProduitDerive() {
     }
 
-    public ProduitDerive(int id, String nom, String description, double prix, int quantite, String categorie, Date dateAjout) {
+    public ProduitDerive(int id, String nom, String categorie, double prix, int stock, String description, String imageUrl) {
         this.id = id;
         this.nom = nom;
-        this.description = description;
-        this.prix = prix;
-        this.quantite = quantite;
         this.categorie = categorie;
-        this.dateAjout = dateAjout;
+        this.prix = prix;
+        this.stock = stock;
+        this.description = description;
+        this.imageUrl = imageUrl;
     }
 
-    public ProduitDerive(String nom, String description, double prix, int quantite, String categorie, Date dateAjout) {
+    public ProduitDerive(String nom, String categorie, double prix, int stock, String description, String imageUrl) {
         this.nom = nom;
-        this.description = description;
-        this.prix = prix;
-        this.quantite = quantite;
         this.categorie = categorie;
-        this.dateAjout = dateAjout;
+        this.prix = prix;
+        this.stock = stock;
+        this.description = description;
+        this.imageUrl = imageUrl;
     }
 
-    // ✅ Getters et Setters
+
     public int getId() {
         return id;
     }
@@ -51,12 +51,12 @@ public class ProduitDerive {
         this.nom = nom;
     }
 
-    public String getDescription() {
-        return description;
+    public String getCategorie() {
+        return categorie;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setCategorie(String categorie) {
+        this.categorie = categorie;
     }
 
     public double getPrix() {
@@ -67,41 +67,40 @@ public class ProduitDerive {
         this.prix = prix;
     }
 
-    public int getQuantite() {
-        return quantite;
+    public int getStock() {
+        return stock;
     }
 
-    public void setQuantite(int quantite) {
-        this.quantite = quantite;
+    public void setStock(int stock) {
+        this.stock = stock;
     }
 
-    public String getCategorie() {
-        return categorie;
+    public String getDescription() {
+        return description;
     }
 
-    public void setCategorie(String categorie) {
-        this.categorie = categorie;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public Date getDateAjout() {
-        return dateAjout;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setDateAjout(Date dateAjout) {
-        this.dateAjout = dateAjout;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
-    // ✅ toString
     @Override
     public String toString() {
         return "ProduitDerive{" +
                 "id=" + id +
                 ", nom='" + nom + '\'' +
-                ", description='" + description + '\'' +
-                ", prix=" + prix +
-                ", quantite=" + quantite +
                 ", categorie='" + categorie + '\'' +
-                ", dateAjout=" + dateAjout +
+                ", prix=" + prix +
+                ", stock=" + stock +
+                ", description='" + description + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
                 '}';
     }
 }
