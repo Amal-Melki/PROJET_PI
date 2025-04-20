@@ -5,6 +5,8 @@ import com.esprit.models.Evenement;
 import com.esprit.models.Reservation;
 import com.esprit.services.EvenementService;
 import com.esprit.services.ReservationService;
+import com.esprit.services.EmailService;
+import com.esprit.services.PDFService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -15,10 +17,16 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Optional;
+import javafx.collections.FXCollections;
+import javafx.scene.control.ListCell;
+import java.awt.Desktop;
 
 public class EvenementsFrontController implements Initializable {
     @FXML
@@ -26,12 +34,17 @@ public class EvenementsFrontController implements Initializable {
     
     private EvenementService evenementService;
     private ReservationService reservationService;
+    private EmailService emailService;
+    private PDFService pdfService;
     private Client currentClient;
+    private List<Evenement> evenements;
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         evenementService = new EvenementService();
         reservationService = new ReservationService();
+        emailService = new EmailService();
+        pdfService = new PDFService();
         System.out.println("EvenementsFrontController initialized. Current client: " + (currentClient != null ? currentClient.getId_user() : "null"));
         loadEvents();
     }
@@ -45,10 +58,10 @@ public class EvenementsFrontController implements Initializable {
     
     private void loadEvents() {
         System.out.println("Loading events. Current client: " + (currentClient != null ? currentClient.getId_user() : "null"));
-        List<Evenement> events = evenementService.rechercher();
+        evenements = evenementService.rechercher();
         eventsContainer.getChildren().clear();
         
-        for (Evenement event : events) {
+        for (Evenement event : evenements) {
             VBox card = createEventCard(event);
             eventsContainer.getChildren().add(card);
         }
@@ -159,16 +172,39 @@ public class EvenementsFrontController implements Initializable {
             event.setNbr_places_dispo(event.getNbr_places_dispo() - 1);
             evenementService.modifier(event);
             
+            // Send confirmation email
+            try {
+                emailService.sendReservationConfirmation(
+                    currentClient.getEmail_user(),
+                    event.getTitle(),
+                    event.getDate_debut().toString(),
+                    event.getLatitude() + ", " + event.getLongitude()
+                );
+                System.out.println("Email de confirmation envoyé à : " + currentClient.getEmail_user());
+            } catch (Exception e) {
+                System.err.println("Erreur lors de l'envoi de l'email : " + e.getMessage());
+                // Continue with the reservation even if email fails
+            }
+            
+            // Generate PDF confirmation
+            try {
+                pdfService.generateReservationPDF(reservation, currentClient, event);
+                System.out.println("PDF de confirmation généré avec succès");
+            } catch (Exception e) {
+                System.err.println("Erreur lors de la génération du PDF : " + e.getMessage());
+                // Continue with the reservation even if PDF generation fails
+            }
+            
             // Update UI
             placesLabel.setText("Places disponibles: " + event.getNbr_places_dispo());
             actionButton.setText("Annuler la réservation");
             actionButton.setStyle("-fx-background-color: #FFA500; -fx-text-fill: white; -fx-font-weight: bold;");
             actionButton.setOnAction(e -> handleCancelReservation(reservation, event, actionButton, placesLabel));
             
-            showAlert("Succès", "Réservation effectuée avec succès!", Alert.AlertType.INFORMATION);
-        } catch (Exception ex) {
-            showAlert("Erreur", "Une erreur est survenue lors de la réservation: " + ex.getMessage(), Alert.AlertType.ERROR);
-            ex.printStackTrace();
+            showAlert("Succès", "Réservation effectuée avec succès. Un email de confirmation a été envoyé et un PDF a été généré.", Alert.AlertType.INFORMATION);
+        } catch (Exception e) {
+            showAlert("Erreur", "Une erreur est survenue lors de la réservation: " + e.getMessage(), Alert.AlertType.ERROR);
+            e.printStackTrace();
         }
     }
     
@@ -210,5 +246,122 @@ public class EvenementsFrontController implements Initializable {
         alert.setHeaderText(null);
         alert.setContentText(content);
         alert.showAndWait();
+    }
+
+    @FXML
+    private void handleCalendarView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/CalendarView.fxml"));
+            Parent calendarView = loader.load();
+            
+            // Get the current stage
+            Stage stage = (Stage) eventsContainer.getScene().getWindow();
+            
+            // Set the new scene
+            Scene scene = new Scene(calendarView);
+            stage.setScene(scene);
+            stage.setTitle("Calendrier des Événements");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Erreur", "Erreur lors du chargement du calendrier: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
+    }
+
+    @FXML
+    private void handleMapView() {
+        // Create a dialog to select an event
+        Dialog<Evenement> dialog = new Dialog<>();
+        dialog.setTitle("Sélectionner un événement");
+        dialog.setHeaderText("Choisissez un événement pour voir son emplacement sur la carte");
+        dialog.getDialogPane().setStyle("-fx-background-color: white;");
+
+        // Set the button types
+        ButtonType selectButtonType = new ButtonType("Voir sur la carte", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(selectButtonType, ButtonType.CANCEL);
+
+        // Style the buttons
+        dialog.getDialogPane().lookupButton(selectButtonType).setStyle(
+            "-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 16; -fx-background-radius: 5;"
+        );
+        dialog.getDialogPane().lookupButton(ButtonType.CANCEL).setStyle(
+            "-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 16; -fx-background-radius: 5;"
+        );
+
+        // Create the ComboBox for event selection
+        ComboBox<Evenement> eventComboBox = new ComboBox<>();
+        eventComboBox.setItems(FXCollections.observableArrayList(evenements));
+        eventComboBox.setStyle("-fx-background-color: white; -fx-border-color: #2196F3; -fx-border-radius: 5; -fx-padding: 5;");
+        eventComboBox.setPrefWidth(300);
+        
+        eventComboBox.setCellFactory(param -> new ListCell<Evenement>() {
+            @Override
+            protected void updateItem(Evenement event, boolean empty) {
+                super.updateItem(event, empty);
+                if (empty || event == null) {
+                    setText(null);
+                } else {
+                    setText(event.getTitle() + " - " + event.getDate_debut());
+                }
+                setStyle("-fx-background-color: white; -fx-text-fill: black; -fx-padding: 8;");
+            }
+        });
+        
+        eventComboBox.setButtonCell(new ListCell<Evenement>() {
+            @Override
+            protected void updateItem(Evenement event, boolean empty) {
+                super.updateItem(event, empty);
+                if (empty || event == null) {
+                    setText(null);
+                } else {
+                    setText(event.getTitle() + " - " + event.getDate_debut());
+                }
+                setStyle("-fx-background-color: white; -fx-text-fill: black;");
+            }
+        });
+
+        // Create a styled label
+        Label label = new Label("Sélectionnez un événement:");
+        label.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #333333;");
+
+        // Create a styled container
+        VBox content = new VBox(15);
+        content.setStyle("-fx-background-color: white; -fx-padding: 20;");
+        content.getChildren().addAll(label, eventComboBox);
+
+        // Add the content to the dialog
+        dialog.getDialogPane().setContent(content);
+
+        // Convert the result to an event when the select button is clicked
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == selectButtonType) {
+                return eventComboBox.getValue();
+            }
+            return null;
+        });
+
+        // Show the dialog and handle the result
+        Optional<Evenement> result = dialog.showAndWait();
+        result.ifPresent(event -> {
+            if (event != null) {
+                try {
+                    // Parse latitude and longitude as doubles
+                    double latitude = Double.parseDouble(event.getLatitude());
+                    double longitude = Double.parseDouble(event.getLongitude());
+                    
+                    // Create the Google Maps URL with the event's coordinates
+                    String mapsUrl = String.format("https://www.google.com/maps?q=%.6f,%.6f",
+                        latitude, longitude);
+                    
+                    // Open the URL in the default browser
+                    Desktop.getDesktop().browse(new URI(mapsUrl));
+                } catch (NumberFormatException e) {
+                    showAlert("Erreur", "Les coordonnées de l'événement sont invalides", Alert.AlertType.ERROR);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showAlert("Erreur", "Impossible d'ouvrir Google Maps: " + e.getMessage(), Alert.AlertType.ERROR);
+                }
+            }
+        });
     }
 } 

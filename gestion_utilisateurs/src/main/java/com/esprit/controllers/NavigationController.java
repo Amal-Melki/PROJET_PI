@@ -70,9 +70,14 @@ public class NavigationController {
             // Set default admin image
             try {
                 Image adminImage = new Image(getClass().getResourceAsStream("/images/admin-avatar.png"));
+                if (adminImage.isError()) {
+                    loadDefaultAvatar();
+                } else {
                 userImageView.setImage(adminImage);
+                }
             } catch (Exception e) {
                 System.err.println("Error loading admin avatar: " + e.getMessage());
+                loadDefaultAvatar();
             }
         } else if (!isAdmin && currentClient != null) {
             userNameLabel.setText(currentClient.getNom_suser() + " " + currentClient.getPrenom_user());
@@ -82,7 +87,11 @@ public class NavigationController {
                     File imageFile = new File(currentClient.getImage_path());
                     if (imageFile.exists()) {
                         Image clientImage = new Image(imageFile.toURI().toString());
+                        if (clientImage.isError()) {
+                            loadDefaultAvatar();
+                        } else {
                         userImageView.setImage(clientImage);
+                        }
                     } else {
                         loadDefaultAvatar();
                     }
@@ -103,9 +112,16 @@ public class NavigationController {
     private void loadDefaultAvatar() {
         try {
             Image defaultImage = new Image(getClass().getResourceAsStream("/images/default-avatar.png"));
+            if (defaultImage.isError()) {
+                // If even the default avatar fails to load, create a simple colored circle
+                userImageView.setStyle("-fx-background-color: #cccccc; -fx-background-radius: 20;");
+            } else {
             userImageView.setImage(defaultImage);
+            }
         } catch (Exception e) {
             System.err.println("Error loading default avatar: " + e.getMessage());
+            // Create a simple colored circle as fallback
+            userImageView.setStyle("-fx-background-color: #cccccc; -fx-background-radius: 20;");
         }
     }
     

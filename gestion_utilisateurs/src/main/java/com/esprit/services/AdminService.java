@@ -142,4 +142,27 @@ public class AdminService implements IService<Admin> {
         }
         return null;
     }
+
+    public Admin findByEmail(String email) {
+        String query = "SELECT a.*, u.* FROM admin a JOIN user u ON a.id_user = u.id_user WHERE u.email_user = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setString(1, email);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                return new Admin(
+                    rs.getInt("id_admin"),
+                    rs.getInt("role"),
+                    rs.getInt("id_user"),
+                    rs.getString("nom_suser"),
+                    rs.getString("prenom_user"),
+                    rs.getString("email_user"),
+                    rs.getString("password_user")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 } 

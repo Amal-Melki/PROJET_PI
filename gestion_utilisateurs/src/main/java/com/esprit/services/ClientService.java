@@ -171,4 +171,28 @@ public class ClientService implements IService<Client> {
         }
         return null;
     }
+
+    public Client findByEmail(String email) {
+        String query = "SELECT c.*, u.* FROM client c JOIN user u ON c.id_user = u.id_user WHERE u.email_user = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setString(1, email);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                return new Client(
+                    rs.getInt("id_client"),
+                    rs.getInt("numero_tel"),
+                    rs.getString("image_path"),
+                    rs.getInt("id_user"),
+                    rs.getString("nom_suser"),
+                    rs.getString("prenom_user"),
+                    rs.getString("email_user"),
+                    rs.getString("password_user")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 } 
