@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
@@ -13,7 +14,7 @@
       style="-fx-background-color: pink;"
       xmlns="http://javafx.com/javafx/17"
       xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.esprit.Controllers.ModifierProduitDeriveFormulaire">
+      fx:controller="com.esprit.Controllers.AjoutProduitDerive">
 
     <children>
         <Label layoutX="76.0" layoutY="50.0" text="Nom">
@@ -31,7 +32,7 @@
         <Label layoutX="80.0" layoutY="323.0" text="Description">
             <font><Font size="14.0" /></font>
         </Label>
-        <Label layoutX="80.0" layoutY="393.0" text="Image URL">
+        <Label layoutX="80.0" layoutY="393.0" text="Image">
             <font><Font size="14.0" /></font>
         </Label>
 
@@ -40,9 +41,14 @@
         <TextField fx:id="tfPrix" layoutX="219.0" layoutY="180.0" />
         <TextField fx:id="tfStock" layoutX="219.0" layoutY="250.0" />
         <TextArea fx:id="taDescription" layoutX="219.0" layoutY="320.0" prefHeight="60.0" prefWidth="300.0" />
-        <TextField fx:id="tfImageUrl" layoutX="219.0" layoutY="390.0" prefWidth="300.0" />
 
-        <Button fx:id="btnModifier" layoutX="300.0" layoutY="450.0" mnemonicParsing="false" onAction="#modifierProduit" text="Enregistrer">
+        <!-- Remplacement du TextField par un ImageView et un bouton de sélection -->
+        <ImageView fx:id="imagePreview" fitHeight="150.0" fitWidth="150.0" layoutX="219.0" layoutY="390.0" preserveRatio="true" />
+        <Button fx:id="btnSelectImage" layoutX="380.0" layoutY="390.0" mnemonicParsing="false" onAction="#selectImage" text="Sélectionner">
+            <font><Font size="14.0" /></font>
+        </Button>
+
+        <Button fx:id="btnAjouter" layoutX="300.0" layoutY="550.0" mnemonicParsing="false" onAction="#addProduit" text="Ajouter">
             <font><Font size="14.0" /></font>
         </Button>
     </children>

@@ -20,6 +20,7 @@
                 <TableColumn fx:id="colPrix" prefWidth="80.0" text="Prix" />
                 <TableColumn fx:id="colStock" prefWidth="80.0" text="Stock" />
                 <TableColumn fx:id="colDescription" prefWidth="200.0" text="Description" />
+                <TableColumn fx:id="colImageUrl" prefWidth="200.0" text="URL Image" />
                 <TableColumn fx:id="colAction" prefWidth="100.0" text="Action" />
             </columns>
         </TableView>

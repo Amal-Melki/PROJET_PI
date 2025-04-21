@@ -35,6 +35,8 @@ public class ModifierProduitDerive implements Initializable {
     private TableColumn<ProduitDerive, String> colDescription;
     @FXML
     private TableColumn<ProduitDerive, Void> colAction;
+    @FXML
+    private TableColumn<ProduitDerive, String> colImageUrl;
 
     private final ObservableList<ProduitDerive> data = FXCollections.observableArrayList();
 
@@ -46,6 +48,7 @@ public class ModifierProduitDerive implements Initializable {
         colPrix.setCellValueFactory(new PropertyValueFactory<>("prix"));
         colStock.setCellValueFactory(new PropertyValueFactory<>("stock"));
         colDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
+        colImageUrl.setCellValueFactory(new PropertyValueFactory<>("imageUrl"));
 
 
         ServiceProduitDerive spd = new ServiceProduitDerive();
