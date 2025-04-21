@@ -1,0 +1,135 @@
+.calendar-container {
+    -fx-background-color: #f5f5f5;
+}
+
+.calendar-header {
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
+}
+
+.calendar-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.month-label {
+    -fx-font-size: 18px;
+    -fx-text-fill: #34495e;
+}
+
+.calendar-button {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 8 15;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+}
+
+.calendar-button:hover {
+    -fx-background-color: #2980b9;
+}
+
+.calendar-main {
+    -fx-background-color: white;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
+    -fx-background-radius: 5;
+}
+
+.calendar-grid {
+    -fx-hgap: 1;
+    -fx-vgap: 1;
+    -fx-padding: 10;
+}
+
+.calendar-grid .label {
+    -fx-font-size: 14px;
+    -fx-padding: 5;
+}
+
+.calendar-grid .day-header {
+    -fx-font-weight: bold;
+    -fx-text-fill: #7f8c8d;
+    -fx-background-color: #f8f9fa;
+    -fx-alignment: center;
+}
+
+.calendar-grid .day-cell {
+    -fx-background-color: white;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 0.5;
+    -fx-min-height: 80;
+    -fx-alignment: top-left;
+    -fx-padding: 5;
+}
+
+.calendar-grid .day-cell:hover {
+    -fx-background-color: #f8f9fa;
+}
+
+.calendar-grid .day-cell.today {
+    -fx-background-color: #e3f2fd;
+}
+
+.calendar-grid .day-cell.has-event {
+    -fx-background-color: #e8f5e9;
+}
+
+.calendar-grid .day-cell.selected {
+    -fx-background-color: #bbdefb;
+}
+
+.calendar-sidebar {
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
+    -fx-background-radius: 5;
+}
+
+.sidebar-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+    -fx-padding: 0 0 10 0;
+}
+
+.events-scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-border-color: transparent;
+}
+
+.events-container {
+    -fx-background-color: transparent;
+}
+
+.event-box {
+    -fx-background-color: #f8f9fa;
+    -fx-padding: 10;
+    -fx-background-radius: 5;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 1;
+    -fx-border-radius: 5;
+}
+
+.event-box:hover {
+    -fx-background-color: #e3f2fd;
+}
+
+.event-title {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.event-details {
+    -fx-font-size: 12px;
+    -fx-text-fill: #7f8c8d;
+}
+
+.event-time {
+    -fx-font-size: 12px;
+    -fx-text-fill: #3498db;
+    -fx-font-weight: bold;
+} 

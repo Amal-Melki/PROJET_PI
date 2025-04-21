@@ -18,7 +18,16 @@
                     <Insets top="20" right="20" bottom="20" left="20"/>
                 </padding>
                 
-                <Label text="Découvrez nos événements" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #333333;"/>
+                <HBox alignment="CENTER_LEFT" spacing="20">
+                    <Label text="Découvrez nos événements" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #333333;"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="btnCalendar" text="Voir le Calendrier" 
+                            onAction="#handleCalendarView"
+                            style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20;"/>
+                    <Button fx:id="btnMap" text="Voir sur la Carte" 
+                            onAction="#handleMapView"
+                            style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20;"/>
+                </HBox>
                 
                 <FlowPane fx:id="eventsContainer" hgap="20" vgap="20" prefWrapLength="1000">
                     <!-- Event cards will be added here dynamically -->

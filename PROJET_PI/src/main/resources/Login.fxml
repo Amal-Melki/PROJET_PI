@@ -51,6 +51,14 @@
             onAction="#handleLogin"
             style="-fx-background-color: #ff7fa8; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px; -fx-background-radius: 25; -fx-cursor: hand;"/>
 
+    <!-- Google Sign-In Button -->
+    <Button fx:id="btnGoogleSignIn" 
+            text="Se connecter avec Google" 
+            prefWidth="200" 
+            prefHeight="45"
+            onAction="#handleGoogleSignIn"
+            style="-fx-background-color: #4285F4; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px; -fx-background-radius: 25; -fx-cursor: hand;"/>
+
     <!-- Forgot Password Link -->
     <Hyperlink fx:id="lnkForgotPassword" 
                text="Mot de passe oublié ?" 

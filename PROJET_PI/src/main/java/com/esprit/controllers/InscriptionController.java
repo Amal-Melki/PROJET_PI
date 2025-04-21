@@ -5,6 +5,9 @@ import com.esprit.models.User;
 import com.esprit.services.ClientService;
 import com.esprit.services.UserService;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -167,9 +170,23 @@ public class InscriptionController {
 
             showAlert("Inscription réussie !", Alert.AlertType.INFORMATION);
             
-            // Close the registration window
-            Stage stage = (Stage) txtNom.getScene().getWindow();
-            stage.close();
+            // Load the login view
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Login.fxml"));
+                Parent root = loader.load();
+                
+                // Get the current stage
+                Stage stage = (Stage) txtNom.getScene().getWindow();
+                
+                // Set the new scene
+                Scene scene = new Scene(root);
+                stage.setScene(scene);
+                stage.setTitle("Connexion");
+                stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+                showAlert("Erreur lors du chargement de la page de connexion: " + e.getMessage(), Alert.AlertType.ERROR);
+            }
         } catch (Exception e) {
             showAlert("Erreur lors de l'inscription: " + e.getMessage(), Alert.AlertType.ERROR);
         }
