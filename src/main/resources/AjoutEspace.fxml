@@ -4,30 +4,31 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.DetailsEspaceController">
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.AjouterEspaceController">
     <top>
-        <Label text="Détails de l'Espace" style="-fx-font-size: 20px; -fx-padding: 10;" />
+        <Label text="Ajouter un Espace" style="-fx-font-size: 20px; -fx-padding: 10;" />
     </top>
     <center>
         <VBox spacing="20" alignment="CENTER" padding="20">
             <HBox spacing="10">
                 <Label text="Nom de l'Espace:" />
-                <TextField fx:id="txtNomEspace" editable="false"/>
+                <TextField fx:id="txtNomEspace" promptText="Entrez le nom de l'espace" />
             </HBox>
             <HBox spacing="10">
                 <Label text="Capacité:" />
-                <TextField fx:id="txtCapacite" editable="false"/>
+                <TextField fx:id="txtCapacite" promptText="Entrez la capacité de l'espace" />
             </HBox>
             <HBox spacing="10">
                 <Label text="Emplacement:" />
-                <TextField fx:id="txtEmplacement" editable="false"/>
+                <TextField fx:id="txtEmplacement" promptText="Entrez l'emplacement de l'espace" />
             </HBox>
             <HBox spacing="10">
                 <Label text="Description:" />
-                <TextArea fx:id="txtDescription" editable="false"/>
+                <TextArea fx:id="txtDescription" promptText="Entrez une description de l'espace" />
             </HBox>
             <HBox spacing="10">
-                <Button text="Modifier l'Espace" fx:id="btnModifier" onAction="#modifierEspace"/>
+                <Button text="Ajouter l'Espace" fx:id="btnAjouterEspace" onAction="#ajouterEspace"/>
+                <Button text="Annuler" fx:id="btnAnnuler" onAction="#annulerAjout"/>
             </HBox>
             <HBox spacing="10">
                 <!-- Bouton Retour au Menu Espace -->

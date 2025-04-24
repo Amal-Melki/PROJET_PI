@@ -7,12 +7,11 @@ public class DataSource {
     private Connection connection;
     private static DataSource instance;
 
-    private final String URL = "jdbc:mysql://localhost:3306/projet-pi";
-    private final String USERNAME = "root";
-    private final String PASSWORD = "";
-
     private DataSource() {
         try {
+            String URL = "jdbc:mysql://localhost:3306/GESTION-ESPACES";
+            String USERNAME = "root";
+            String PASSWORD = "";
             connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
             System.out.println("Connected to DB !");
         } catch (SQLException e) {

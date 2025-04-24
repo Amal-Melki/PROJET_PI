@@ -22,6 +22,7 @@ public class ReservationEspaceService {
             pst.setString(2, r.getUser());
             pst.setDate(3, Date.valueOf(r.getDateDebut()));
             pst.setDate(4, Date.valueOf(r.getDateFin()));
+            pst.setInt(5, r.getReservationId());
             pst.executeUpdate();
             System.out.println(" Reservation added !");
         } catch (SQLException e) {

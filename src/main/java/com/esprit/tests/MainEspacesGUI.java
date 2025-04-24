@@ -1,5 +1,5 @@
 package com.esprit.tests;
-//*
+
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -17,11 +17,13 @@ import java.io.IOException;
 
         @Override
         public void start(Stage primaryStage) throws IOException {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/esprit/views/AjouteEspace.fxml"));
+
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/esprit/views/AjouteReservation.fxml"));
             Parent root = loader.load();
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
-            primaryStage.setTitle("Ajoute Espace");
+            primaryStage.setTitle("Ajoute Reservation");
             primaryStage.show();
         }
     }

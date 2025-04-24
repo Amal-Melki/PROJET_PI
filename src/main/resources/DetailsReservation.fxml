@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.DetailsReservationController">
+    <top>
+        <Label text="Détails de la Réservation" style="-fx-font-size: 20px; -fx-padding: 10;" />
+    </top>
+    <center>
+        <VBox spacing="20" alignment="CENTER" padding="20">
+            <HBox spacing="10">
+                <Label text="Espace réservé:" />
+                <TextField fx:id="txtEspace" editable="false"/>
+            </HBox>
+            <HBox spacing="10">
+                <Label text="Date de début:" />
+                <TextField fx:id="txtDateDebut" editable="false"/>
+            </HBox>
+            <HBox spacing="10">
+                <Label text="Date de fin:" />
+                <TextField fx:id="txtDateFin" editable="false"/>
+            </HBox>
+            <HBox spacing="10">
+                <Button text="Modifier la Réservation" fx:id="btnModifier" onAction="#modifierReservation"/>
+            </HBox>
+            <HBox spacing="10">
+                <!-- Bouton Retour au Menu Espace -->
+                <Button text="Retour au Menu Espace" fx:id="btnRetourMenu" onAction="#retourMenuEspace"/>
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>

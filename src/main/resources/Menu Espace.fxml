@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.MenuEspaceController">
+    <top>
+        <Label text="Menu de Gestion des Espaces" style="-fx-font-size: 20px; -fx-padding: 10;" />
+    </top>
+    <center>
+        <VBox spacing="20" alignment="CENTER" padding="20">
+            <Button text="Ajouter un Espace" fx:id="btnAjouterEspace" onAction="#ouvrirAjouterEspace"/>
+            <Button text="Afficher les Espaces" fx:id="btnAfficherEspaces" onAction="#afficherEspaces"/>
+            <Button text="Retour" fx:id="btnRetour" onAction="#retourAccueil"/>
+        </VBox>
+    </center>
+</BorderPane>

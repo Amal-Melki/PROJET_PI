@@ -1,5 +1,4 @@
 package com.esprit.services;
-
 import com.esprit.modules.Espace;
 import com.esprit.utils.DataSource;
 
@@ -7,103 +6,81 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EspaceService implements Iservice {
+public class EspaceService {
 
-    private final Connection connection;
+    private Connection connection;
 
-    // Constructor
     public EspaceService() {
         connection = DataSource.getInstance().getConnection();
     }
 
-    @Override
-    public void add(Object o) {
-        Espace espace = (Espace) o;
-        String sql = "INSERT INTO Espace(nomEspace, type, capacite, localisation, prix) VALUES(?, ?, ?, ?, ?)";
-        try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            ps.setString(1, espace.getNom());
-            ps.setString(2, espace.getType());
-            ps.setInt(3, espace.getCapacite());
-            ps.setString(4, espace.getLocalisation());
-            ps.setDouble(5, espace.getPrix());
-
-            int affectedRows = ps.executeUpdate();
-            if (affectedRows == 0) {
-                throw new SQLException("Aucune ligne ajoutée.");
-            }
-            // Get the generated key (ID)
-            try (ResultSet rs = ps.getGeneratedKeys()) {
-                if (rs.next()) {
-                    espace.setId(rs.getInt(1));
-                }
-            }
-            System.out.println("ID de la ligne ajoutée: " + espace.getId());
+    public void add(Espace espace) {
+        String req = "INSERT INTO espace(nomEspace, type, capacite, localisation, prix, disponibilite) VALUES (?, ?, ?, ?, ?, ?)";
+        try {
+            PreparedStatement pst = connection.prepareStatement(req);
+            pst.setString(1, espace.getNom());
+            pst.setString(2, espace.getType());
+            pst.setInt(3, espace.getCapacite());
+            pst.setString(4, espace.getLocalisation());
+            pst.setDouble(5, espace.getPrix());
+            pst.setBoolean(6, espace.isDisponibilite());
+            pst.executeUpdate();
+            System.out.println("Espace ajouté !");
         } catch (SQLException e) {
-            System.out.println("Erreur en ajout : " + e.getMessage());
+            System.out.println(" Erreur lors de l'ajout : " + e.getMessage());
         }
     }
 
-    @Override
-    public void update(Object o) {
-        Espace espace = (Espace) o;  // Cast the object to Espace
-        String sql = "UPDATE Espace SET nomEspace=?, type=?, capacite=?, localisation=?, prix=? WHERE espaceId=?";
-
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, espace.getNom());
-            ps.setString(2, espace.getType());
-            ps.setInt(3, espace.getCapacite());
-            ps.setString(4, espace.getLocalisation());
-            ps.setDouble(5, espace.getPrix());
-            ps.setInt(6, espace.getId());
-
-            int affectedRows = ps.executeUpdate();
-            if (affectedRows == 0) {
-                throw new SQLException("Aucune ligne modifiée.");
-            }
-            System.out.println("Espace mis à jour avec l'ID : " + espace.getId());
+        public void update(Espace espace) {
+            String req = "UPDATE espace SET nomEspace=?, type=?, capacite=?, localisation=?, prix=?, disponibilite=? WHERE espaceId=?";
+        try {
+            PreparedStatement pst = connection.prepareStatement(req);
+            pst.setString(1, espace.getNom());
+            pst.setString(2, espace.getType());
+            pst.setInt(3, espace.getCapacite());
+            pst.setString(4, espace.getLocalisation());
+            pst.setDouble(5, espace.getPrix());
+            pst.setBoolean(6, espace.isDisponibilite());
+            pst.setInt(7, espace.getId());
+            pst.executeUpdate();
+            System.out.println(" Espace modifié !");
         } catch (SQLException e) {
-            System.out.println("Erreur en mise à jour : " + e.getMessage());
+            System.out.println("Erreur lors de la modification : " + e.getMessage());
         }
     }
 
-    @Override
-    public void delete(Object o) {
-        Espace espace = (Espace) o;  // Cast the object to Espace
-        String sql = "DELETE FROM Espace WHERE espaceId=?";
-
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, espace.getId());
-            ps.executeUpdate();
-            System.out.println("Espace supprimé");
+    public void delete(int id) {
+        String req = "DELETE FROM espace WHERE espaceId=?";
+        try {
+            PreparedStatement pst = connection.prepareStatement(req);
+            pst.setInt(1, id);
+            pst.executeUpdate();
+            System.out.println("Espace supprimé !");
         } catch (SQLException e) {
-            System.out.println("Erreur en suppression : " + e.getMessage());
+            System.out.println(" Erreur lors de la suppression : " + e.getMessage());
         }
     }
 
-    @Override
-    public List<Espace> get() {
-        List<Espace> espace = new ArrayList<>();
-
-        String req = "SELECT * FROM Espace";
+    public List<Espace> getAll() {
+        List<Espace> espaces = new ArrayList<>();
+        String req = "SELECT * FROM espace";
         try {
             PreparedStatement pst = connection.prepareStatement(req);
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
-                    espace.add(new Espace(rs.getInt("espaceId"),
-                            rs.getString("nomEspace"),
-                            rs.getString("type"),
-                            rs.getDouble("prix"),
-                            rs.getInt("capacite"),
-                            rs.getString("localisation")));
-                }
-            } catch(SQLException e){
-                System.out.println(e.getMessage());
+                Espace e = new Espace(
+                        rs.getString("nomEspace"),
+                        rs.getString("type"),
+                        rs.getInt("capacite"),
+                        rs.getString("localisation"),
+                        rs.getDouble("prix"),
+                        rs.getBoolean("disponibilite")
+                );
+                espaces.add(e);
             }
-            return espace;
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération : " + e.getMessage());
         }
+        return espaces;
+    }
 }
-
-
-
-
-

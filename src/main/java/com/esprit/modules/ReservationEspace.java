@@ -1,37 +1,29 @@
 package com.esprit.modules;
+import java.time.LocalDate;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 public class ReservationEspace {
     private int reservationId;
-    private Espace espace;
-    private Date dateDebut;
-    private Date dateFin;
-    private int userId;
-    private List<Materiel> materiels;
+    private int espaceId;
+    private String user;
+    private LocalDate dateDebut;
+    private LocalDate dateFin;
 
-    // Constructeur avec ID
-    public ReservationEspace(int reservationId, Espace espace, Date dateDebut, Date dateFin, int userId, List<Materiel> equipements) {
+    public ReservationEspace(int reservationId, int espaceId, String user, LocalDate dateDebut, LocalDate dateFin) {
         this.reservationId = reservationId;
-        this.espace = espace;
+        this.espaceId = espaceId;
+        this.user = user;
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
-        this.userId = userId;
-        this.materiels = (materiels != null) ? materiels : new ArrayList<>();
     }
 
-    // Constructeur sans ID
-    public ReservationEspace(Espace espace, Date dateDebut, Date dateFin, int userId, List<Materiel> materiels) {
-        this.espace = espace;
+    public ReservationEspace(int espaceId, String user, LocalDate dateDebut, LocalDate dateFin) {
+        this.espaceId = espaceId;
+        this.user = user;
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
-        this.userId = userId;
-        this.materiels = (materiels != null) ? materiels : new ArrayList<>();
     }
 
-    // Getters et Setters
     public int getReservationId() {
         return reservationId;
     }
@@ -40,55 +32,46 @@ public class ReservationEspace {
         this.reservationId = reservationId;
     }
 
-    public Espace getEspace() {
-        return espace;
+    public int getEspaceId() {
+        return espaceId;
     }
 
-    public void setEspace(Espace espace) {
-        this.espace = espace;
+    public void setEspaceId(int espaceId) {
+        this.espaceId = espaceId;
     }
 
-    public Date getDateDebut() {
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public LocalDate getDateDebut() {
         return dateDebut;
     }
 
-    public void setDateDebut(Date dateDebut) {
+    public void setDateDebut(LocalDate dateDebut) {
         this.dateDebut = dateDebut;
     }
 
-    public Date getDateFin() {
+    public LocalDate getDateFin() {
         return dateFin;
     }
 
-    public void setDateFin(Date dateFin) {
+    public void setDateFin(LocalDate dateFin) {
         this.dateFin = dateFin;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public List<Materiel> getEquipements() {
-        return materiels;
-    }
-
-    public void setEquipements(List<Materiel> materiels) {
-        this.materiels = (materiels != null) ? materiels : new ArrayList<>();
     }
 
     @Override
     public String toString() {
         return "ReservationEspace{" +
                 "reservationId=" + reservationId +
-                ", espace=" + espace +
+                ", espaceId=" + espaceId +
+                ", user='" + user + '\'' +
                 ", dateDebut=" + dateDebut +
                 ", dateFin=" + dateFin +
-                ", userId=" + userId +
-                ", materiels=" + materiels +
                 '}';
     }
 }

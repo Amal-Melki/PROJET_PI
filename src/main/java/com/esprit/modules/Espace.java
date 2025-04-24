@@ -1,34 +1,35 @@
 package com.esprit.modules;
+import java.time.LocalDate;
+
 
 public class Espace {
     private int espaceId;
     private String nomEspace;
     private String type;
-    private double prix;
     private int capacite;
     private String localisation;
+    private double prix;
+    private boolean disponibilite;
 
-    // Constructeurs
-    public Espace() {}
-
-    public Espace(int id, String nom, String type, double prix, int capacite, String localisation) {
+    public Espace(int id, String nom, String type, int capacite, String localisation, double prix, boolean disponibilite) {
         this.espaceId = id;
         this.nomEspace = nom;
         this.type = type;
-        this.prix = prix;
         this.capacite = capacite;
         this.localisation = localisation;
+        this.prix = prix;
+        this.disponibilite = disponibilite;
     }
 
-    public Espace(String nom, String type, double prix, int capacite, String localisation) {
+    public Espace(String nom, String type, int capacite, String localisation, double prix, boolean disponibilite) {
         this.nomEspace = nom;
         this.type = type;
-        this.prix = prix;
         this.capacite = capacite;
         this.localisation = localisation;
+        this.prix = prix;
+        this.disponibilite = disponibilite;
     }
 
-    // Getters et Setters
     public int getId() {
         return espaceId;
     }
@@ -53,14 +54,6 @@ public class Espace {
         this.type = type;
     }
 
-    public double getPrix() {
-        return prix;
-    }
-
-    public void setPrix(double prix) {
-        this.prix = prix;
-    }
-
     public int getCapacite() {
         return capacite;
     }
@@ -77,15 +70,34 @@ public class Espace {
         this.localisation = localisation;
     }
 
+    public double getPrix() {
+        return prix;
+    }
+
+    public void setPrix(double prix) {
+        this.prix = prix;
+    }
+
+    public boolean isDisponibilite() {
+        return disponibilite;
+    }
+
+    public void setDisponibilite(boolean disponibilite) {
+        this.disponibilite = disponibilite;
+    }
+
     @Override
     public String toString() {
         return "Espace{" +
-                "espaceId=" + espaceId +
-                ", nomEspace='" + nomEspace + '\'' +
+                "id=" + espaceId +
+                ", nom='" + nomEspace + '\'' +
                 ", type='" + type + '\'' +
-                ", prix=" + prix +
                 ", capacite=" + capacite +
                 ", localisation='" + localisation + '\'' +
+                ", prix=" + prix +
+                ", disponibilite=" + disponibilite +
                 '}';
     }
 }
+
+
