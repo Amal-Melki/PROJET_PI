@@ -11,18 +11,35 @@
     <padding>
         <Insets bottom="40" left="40" right="40" top="40" />
     </padding>
-
-    <Text text="Gestion Materiels">
+    <Text text="Gestion Matériels" layoutX="230" layoutY="60">
         <font>
-            <Font size="22.0" />
+            <Font name="Segoe UI Bold" size="30.0"/>
         </font>
+        <style>
+            -fx-fill: white;
+        </style>
     </Text>
 
-    <Button fx:id="btnAjoutMateriel" prefWidth="250" text="➕ Ajouter Matériel" />
-    <Button fx:id="btnListeMateriels" prefWidth="250" text="📄 Liste Matériels" />
-    <Button fx:id="btnAjoutFournisseur" prefWidth="250" text="➕ Ajouter Fournisseur" />
-    <Button fx:id="btnListeFournisseurs" prefWidth="250" text="📄 Liste Fournisseurs" />
-    <Button fx:id="btnAjoutReservation" prefWidth="250" text="➕ Ajouter Réservation" />
-    <Button fx:id="btnListeReservations" prefWidth="250" text="📋 Liste Réservations" />
+
+    <Button fx:id="btnAjoutMateriel" prefWidth="260" prefHeight="45" text="➕ Ajouter Matériel"
+            style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 25; -fx-font-family: 'Segoe UI Semibold';" />
+
+    <Button fx:id="btnListeMateriels" prefWidth="260" prefHeight="45" text="📄 Liste Matériels"
+            style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 25; -fx-font-family: 'Segoe UI Semibold';" />
+
+    <Button fx:id="btnAjoutFournisseur" prefWidth="260" prefHeight="45" text="➕ Ajouter Fournisseur"
+            style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 25; -fx-font-family: 'Segoe UI Semibold';" />
+
+    <Button fx:id="btnListeFournisseurs" prefWidth="260" prefHeight="45" text="📄 Liste Fournisseurs"
+            style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 25; -fx-font-family: 'Segoe UI Semibold';" />
+
+    <Button fx:id="btnAjoutReservation" prefWidth="260" prefHeight="45" text="➕ Ajouter Réservation"
+            style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 25; -fx-font-family: 'Segoe UI Semibold';" />
+
+    <Button fx:id="btnListeReservations" prefWidth="260" prefHeight="45" text="📋 Liste Réservations"
+            style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 25; -fx-font-family: 'Segoe UI Semibold';" />
+
 
 </VBox>
+
+

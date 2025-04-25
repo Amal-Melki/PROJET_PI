@@ -5,33 +5,72 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="512.0" style="-fx-background-color: pink;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.esprit.controllers.AjoutFournisseur">
+<Pane xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.esprit.controllers.AjoutFournisseur"
+      prefHeight="500.0" prefWidth="700.0"
+      style="-fx-background-color: pink;">
+
    <children>
-      <Label layoutX="69.0" layoutY="51.0" text="Nom">
+
+      <!-- Bouton Retour -->
+      <Button fx:id="btnRetour"
+              layoutX="600.0" layoutY="20.0"
+              mnemonicParsing="false"
+              text="↩ Retour"
+              onAction="#retourAccueil"
+              style="-fx-background-color: #ff8cb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 20; -fx-cursor: hand; -fx-padding: 6 12 6 12;" />
+
+      <!-- Titre Ajout Fournisseur -->
+      <Text text="Ajout Fournisseur"
+            layoutX="200.0" layoutY="70.0"
+            style="-fx-fill: white;">
          <font>
-            <Font size="14.0" />
+            <Font name="Segoe UI Semibold" size="28.0" />
+         </font>
+      </Text>
+
+      <!-- Labels -->
+      <Label layoutX="100.0" layoutY="120.0" text="Nom :">
+         <font>
+            <Font size="15.0" />
          </font>
       </Label>
-      <Label layoutX="80.0" layoutY="254.0" text="Email">
+
+      <Label layoutX="100.0" layoutY="180.0" text="Téléphone :">
          <font>
-            <Font size="14.0" />
+            <Font size="15.0" />
          </font>
       </Label>
-      <Label layoutX="74.0" layoutY="192.0" text="Adresse">
+
+      <Label layoutX="100.0" layoutY="240.0" text="Adresse :">
          <font>
-            <Font size="14.0" />
+            <Font size="15.0" />
          </font>
       </Label>
-      <Label layoutX="67.0" layoutY="119.0" text="Telephone">
+
+      <Label layoutX="100.0" layoutY="300.0" text="Email :">
          <font>
-            <Font size="14.0" />
+            <Font size="15.0" />
          </font>
       </Label>
-      <TextField fx:id="tfNom" layoutX="196.0" layoutY="38.0" />
-      <TextField fx:id="tfEmail" layoutX="193.0" layoutY="250.0" prefHeight="25.0" prefWidth="230.0" />
-      <TextField fx:id="tfTelephone" layoutX="196.0" layoutY="115.0" />
-      <TextField fx:id="tfAdresse" layoutX="193.0" layoutY="188.0" prefHeight="25.0" prefWidth="184.0" />
-      <Button fx:id="btnAjouter" layoutX="241.0" layoutY="322.0" mnemonicParsing="false" onAction="#ajouterFournisseur" prefHeight="33.0" prefWidth="89.0" text="Ajouter"/>
+
+      <!-- TextFields -->
+      <TextField fx:id="tfNom" layoutX="220.0" layoutY="115.0" prefWidth="300.0"/>
+      <TextField fx:id="tfTelephone" layoutX="220.0" layoutY="175.0" prefWidth="300.0"/>
+      <TextField fx:id="tfAdresse" layoutX="220.0" layoutY="235.0" prefWidth="300.0"/>
+      <TextField fx:id="tfEmail" layoutX="220.0" layoutY="295.0" prefWidth="300.0"/>
+
+      <!-- Bouton Ajouter -->
+      <Button fx:id="btnAjouter"
+              layoutX="290.0" layoutY="370.0"
+              text="Ajouter"
+              onAction="#ajouterFournisseur"
+              prefWidth="120.0" prefHeight="40.0"
+              style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 15px; -fx-background-radius: 20; -fx-cursor: hand;" />
+
    </children>
+
 </Pane>

@@ -1,32 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<Pane xmlns="http://javafx.com/javafx/17"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.esprit.controllers.ModifierMateriel"
-      prefHeight="500.0" prefWidth="900.0"
-      style="-fx-background-color: pink;">
+<AnchorPane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.esprit.controllers.ModifierMateriel"
+            style="-fx-background-color: pink;">
 
     <children>
+
+        <!-- Bouton Retour en haut à droite -->
+        <Button fx:id="btnRetourAccueil"
+                text="↩ Retour"
+                layoutX="790.0"
+                layoutY="20.0"
+                onAction="#retourAccueil"
+                style="-fx-background-color: #ff7fa8; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 20; -fx-cursor: hand; -fx-padding: 6 12 6 12;" />
+
+        <!-- Titre Liste Matériels -->
+        <Text text="Liste Matériels"
+              layoutX="320.0" layoutY="70.0"
+              style="-fx-fill: white;">
+            <font>
+                <Font name="Segoe UI Bold" size="30.0"/>
+            </font>
+        </Text>
+
+        <!-- Tableau de Matériels décalé en dessous du titre -->
         <TableView fx:id="tableMateriels"
-                   layoutX="10.0" layoutY="10.0"
-                   prefHeight="480.0" prefWidth="850.0"
-                   style="-fx-background-color: #ffffff;
-                          -fx-border-color: #ccc;
-                          -fx-border-radius: 10;
-                          -fx-background-radius: 10;
-                          -fx-table-cell-border-color: transparent;">
+                   layoutX="10.0"
+                   layoutY="100.0"
+                   prefHeight="480.0"
+                   prefWidth="880.0"
+                   style="-fx-background-color: #ffe6eb;">
             <columns>
-                <TableColumn fx:id="colNom" prefWidth="120.0" text="Nom" />
-                <TableColumn fx:id="colType" prefWidth="120.0" text="Type" />
-                <TableColumn fx:id="colQuantite" prefWidth="100.0" text="Quantité" />
-                <TableColumn fx:id="colEtat" prefWidth="100.0" text="État" />
-                <TableColumn fx:id="colDescription" prefWidth="170.0" text="Description" />
-                <TableColumn fx:id="colAction" prefWidth="300.0" text="Action" />
+                <TableColumn fx:id="colNom" text="Nom" prefWidth="120" />
+                <TableColumn fx:id="colType" text="Type" prefWidth="120" />
+                <TableColumn fx:id="colQuantite" text="Quantité" prefWidth="100" />
+                <TableColumn fx:id="colEtat" text="État" prefWidth="120" />
+                <TableColumn fx:id="colDescription" text="Description" prefWidth="250" />
+                <TableColumn fx:id="colAction" text="Action" prefWidth="150" />
             </columns>
         </TableView>
+
     </children>
-</Pane>
+</AnchorPane>

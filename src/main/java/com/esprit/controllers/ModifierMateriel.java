@@ -4,10 +4,12 @@ import com.esprit.modules.Materiels;
 import com.esprit.services.ServiceMateriel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -40,6 +42,9 @@ public class ModifierMateriel implements Initializable {
 
     private final ObservableList<Materiels> data = FXCollections.observableArrayList();
 
+    @FXML
+    private Button btnRetourAccueil;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         colNom.setCellValueFactory(new PropertyValueFactory<>("nom"));
@@ -48,12 +53,16 @@ public class ModifierMateriel implements Initializable {
         colEtat.setCellValueFactory(new PropertyValueFactory<>("etat"));
         colDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
 
+        chargerDonnees();
+        ajouterColonneAction();
+    }
+
+    private void chargerDonnees() {
+        data.clear();
         ServiceMateriel sm = new ServiceMateriel();
         List<Materiels> liste = sm.recuperer();
         data.addAll(liste);
         tableMateriels.setItems(data);
-
-        ajouterColonneAction();
     }
 
     private void ajouterColonneAction() {
@@ -76,17 +85,19 @@ public class ModifierMateriel implements Initializable {
 
                 btnModifier.setOnAction(event -> {
                     Materiels m = getTableView().getItems().get(getIndex());
+
                     try {
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierMaterielFormulaire.fxml"));
-                        Parent root = loader.load();
+                        Parent formulaire = loader.load();
 
                         ModifierMaterielFormulaire controller = loader.getController();
                         controller.initData(m);
 
-                        Stage stage = new Stage();
-                        stage.setTitle("Modifier Matériel");
-                        stage.setScene(new Scene(root));
-                        stage.show();
+                        // ✅ On récupère le stage actuel (même fenêtre)
+                        Stage stageActuel = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                        stageActuel.setScene(new Scene(formulaire));
+                        stageActuel.setTitle("Modifier Matériel");
+                        stageActuel.sizeToScene(); // Ajuster la taille de la fenêtre
 
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -104,8 +115,8 @@ public class ModifierMateriel implements Initializable {
                     confirm.showAndWait().ifPresent(response -> {
                         if (response == ButtonType.OK) {
                             ServiceMateriel service = new ServiceMateriel();
-                            service.supprimer(m); // Suppression depuis la base
-                            data.remove(m); // Suppression depuis la liste affichée
+                            service.supprimer(m);
+                            data.remove(m);
                         }
                     });
                 });
@@ -125,4 +136,22 @@ public class ModifierMateriel implements Initializable {
         alert.setContentText(message);
         alert.show();
     }
+
+
+
+    @FXML
+    void retourAccueil(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Accueil.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) btnRetourAccueil.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Accueil - Gestion des Ressources");
+            stage.sizeToScene();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

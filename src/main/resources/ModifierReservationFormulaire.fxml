@@ -3,6 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <Pane xmlns="http://javafx.com/javafx/17"
       xmlns:fx="http://javafx.com/fxml/1"
@@ -11,52 +12,60 @@
       style="-fx-background-color: pink;">
 
     <children>
-        <Label layoutX="70.0" layoutY="50.0" text="Matériel :">
-            <font><Font size="14.0"/></font>
+
+        <!-- Bouton Retour moderne -->
+        <Button fx:id="btnRetour"
+                layoutX="530.0" layoutY="20.0"
+                text="↩ Retour"
+                onAction="#retourAccueil"
+                style="-fx-background-color: #ff7fa8; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 20; -fx-cursor: hand; -fx-padding: 6 12 6 12;" />
+
+        <!-- Titre élégant -->
+        <Text text="Modifier Réservation"
+              layoutX="190.0" layoutY="70.0"
+              style="-fx-fill: white;">
+            <font>
+                <Font name="Segoe UI Bold" size="30.0" />
+            </font>
+        </Text>
+
+        <!-- Labels et Champs -->
+        <Label layoutX="70.0" layoutY="110.0" text="Matériel :">
+            <font><Font size="15.0" /></font>
         </Label>
 
-        <!-- ✅ Remplacement du ComboBox par un Label en lecture seule -->
-        <Label fx:id="lblNomMateriel" layoutX="200.0" layoutY="50.0" prefWidth="200.0">
-            <font><Font size="14.0"/></font>
-            <style>
-                -fx-background-color: white;
-                -fx-border-color: #ccc;
-                -fx-padding: 5;
-                -fx-border-radius: 5;
-                -fx-background-radius: 5;
-            </style>
-        </Label>
+        <!-- Champ Matériel (Lecture seule) -->
+        <Label fx:id="lblNomMateriel"
+               layoutX="200.0" layoutY="105.0"
+               prefWidth="250.0"
+               style="-fx-background-color: white; -fx-border-color: #ccc; -fx-padding: 6; -fx-border-radius: 8; -fx-background-radius: 8;" />
 
-        <Label layoutX="70.0" layoutY="110.0" text="Date début :">
-            <font><Font size="14.0"/></font>
+        <Label layoutX="70.0" layoutY="170.0" text="Date début :">
+            <font><Font size="15.0" /></font>
         </Label>
-        <DatePicker fx:id="dpDebut" layoutX="200.0" layoutY="110.0"/>
+        <DatePicker fx:id="dpDebut" layoutX="200.0" layoutY="165.0" prefWidth="250.0"/>
 
-        <Label layoutX="70.0" layoutY="170.0" text="Date fin :">
-            <font><Font size="14.0"/></font>
+        <Label layoutX="70.0" layoutY="230.0" text="Date fin :">
+            <font><Font size="15.0" /></font>
         </Label>
-        <DatePicker fx:id="dpFin" layoutX="200.0" layoutY="170.0"/>
+        <DatePicker fx:id="dpFin" layoutX="200.0" layoutY="225.0" prefWidth="250.0"/>
 
-        <Label layoutX="70.0" layoutY="230.0" text="Quantité :">
-            <font><Font size="14.0"/></font>
+        <Label layoutX="70.0" layoutY="290.0" text="Quantité :">
+            <font><Font size="15.0" /></font>
         </Label>
-        <TextField fx:id="tfQuantite" layoutX="200.0" layoutY="230.0" prefWidth="100.0"/>
+        <TextField fx:id="tfQuantite" layoutX="200.0" layoutY="285.0" prefWidth="250.0"/>
 
-        <Label layoutX="70.0" layoutY="290.0" text="Statut :">
-            <font><Font size="14.0"/></font>
+        <Label layoutX="70.0" layoutY="350.0" text="Statut :">
+            <font><Font size="15.0" /></font>
         </Label>
-        <ComboBox fx:id="cbStatut" layoutX="200.0" layoutY="290.0" prefWidth="150.0"/>
+        <ComboBox fx:id="cbStatut" layoutX="200.0" layoutY="345.0" prefWidth="250.0"/>
 
-        <Button fx:id="btnEnregistrer" layoutX="250.0" layoutY="400.0" text="Enregistrer" onAction="#modifierReservation">
-            <font><Font size="14.0"/></font>
-            <style>
-                -fx-background-color: #ff8cb3;
-                -fx-text-fill: white;
-                -fx-font-weight: bold;
-                -fx-background-radius: 15;
-                -fx-cursor: hand;
-                -fx-padding: 6 14 6 14;
-            </style>
-        </Button>
+        <!-- Bouton Enregistrer -->
+        <Button fx:id="btnEnregistrer"
+                layoutX="240.0" layoutY="420.0"
+                text="Enregistrer"
+                onAction="#modifierReservation"
+                style="-fx-background-color: #ff7fa8; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 15px; -fx-background-radius: 20; -fx-cursor: hand; -fx-padding: 8 18 8 18;" />
+
     </children>
 </Pane>

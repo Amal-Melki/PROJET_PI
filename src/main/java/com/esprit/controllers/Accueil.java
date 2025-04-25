@@ -3,28 +3,26 @@ package com.esprit.controllers;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
 public class Accueil {
 
     @FXML
     private Button btnAjoutMateriel;
-
     @FXML
     private Button btnListeMateriels;
-
     @FXML
     private Button btnAjoutFournisseur;
-
     @FXML
     private Button btnListeFournisseurs;
-
     @FXML
     private Button btnAjoutReservation;
-
     @FXML
     private Button btnListeReservations;
 
@@ -39,39 +37,40 @@ public class Accueil {
     }
 
     private void ouvrirAjoutMateriel(ActionEvent e) {
-        chargerInterface("/AjoutMateriel.fxml", "Ajout Matériel");
+        changerScene("/AjoutMateriel.fxml", e);
     }
 
     private void ouvrirListeMateriels(ActionEvent e) {
-        chargerInterface("/ModifierMateriel.fxml", "Liste des Matériels");
+        changerScene("/ModifierMateriel.fxml", e);
     }
 
     private void ouvrirAjoutFournisseur(ActionEvent e) {
-        chargerInterface("/AjoutFournisseur.fxml", "Ajout Fournisseur");
+        changerScene("/AjoutFournisseur.fxml", e);
     }
 
     private void ouvrirListeFournisseurs(ActionEvent e) {
-        chargerInterface("/ModifierFournisseur.fxml", "Liste des Fournisseurs");
+        changerScene("/ModifierFournisseur.fxml", e);
     }
 
     private void ouvrirAjoutReservation(ActionEvent e) {
-        chargerInterface("/AjoutReservation.fxml", "Ajout Réservation");
+        changerScene("/AjoutReservation.fxml", e);
     }
 
     private void ouvrirListeReservations(ActionEvent e) {
-        chargerInterface("/ModifierReservation.fxml", "Liste des Réservations");
+        changerScene("/ModifierReservation.fxml", e);
     }
 
-    private void chargerInterface(String cheminFXML, String titreFenetre) {
+    private void changerScene(String cheminFXML, ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(cheminFXML));
             Parent root = loader.load();
 
-            Stage stage = new Stage();
+            // On récupère le stage actuel à partir du bouton cliqué
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
-            stage.setTitle(titreFenetre);
             stage.show();
-        } catch (Exception ex) {
+
+        } catch (IOException ex) {
             ex.printStackTrace();
         }
     }

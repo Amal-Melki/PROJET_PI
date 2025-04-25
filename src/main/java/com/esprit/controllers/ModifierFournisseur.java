@@ -4,10 +4,12 @@ import com.esprit.modules.Fournisseur;
 import com.esprit.services.ServiceFournisseur;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -36,18 +38,24 @@ public class ModifierFournisseur implements Initializable {
 
     private final ObservableList<Fournisseur> data = FXCollections.observableArrayList();
 
+    @FXML
+    private Button btnRetourAccueil;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         colNom.setCellValueFactory(new PropertyValueFactory<>("nom"));
         colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
 
-        // Charger les fournisseurs
+        chargerDonnees();
+        ajouterColonneAction();
+    }
+
+    private void chargerDonnees() {
+        data.clear();
         ServiceFournisseur sf = new ServiceFournisseur();
         List<Fournisseur> liste = sf.recuperer();
         data.addAll(liste);
         tableFournisseurs.setItems(data);
-
-        ajouterColonneAction();
     }
 
     private void ajouterColonneAction() {
@@ -57,7 +65,7 @@ public class ModifierFournisseur implements Initializable {
             private final HBox box = new HBox(10, btnModifier, btnEffacer);
 
             {
-                box.setAlignment(Pos.CENTER); // Centrage des boutons
+                box.setAlignment(Pos.CENTER);
 
                 String commonStyle = "-fx-text-fill: white;" +
                         "-fx-font-weight: bold;" +
@@ -72,14 +80,17 @@ public class ModifierFournisseur implements Initializable {
                     Fournisseur f = getTableView().getItems().get(getIndex());
                     try {
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierFournisseurFormulaire.fxml"));
-                        Parent root = loader.load();
+                        Parent formulaire = loader.load();
+
                         ModifierFournisseurFormulaire controller = loader.getController();
                         controller.initData(f);
 
-                        Stage stage = new Stage();
-                        stage.setTitle("Modifier Fournisseur");
-                        stage.setScene(new Scene(root));
-                        stage.show();
+                        // ✅ Remplacer la scène dans la même fenêtre
+                        Stage stageActuel = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                        stageActuel.setScene(new Scene(formulaire));
+                        stageActuel.setTitle("Modifier Fournisseur");
+                        stageActuel.sizeToScene(); // Adapter la taille automatiquement
+
                     } catch (IOException e) {
                         e.printStackTrace();
                         showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible d’ouvrir le formulaire.");
@@ -95,8 +106,8 @@ public class ModifierFournisseur implements Initializable {
                     confirm.showAndWait().ifPresent(response -> {
                         if (response == ButtonType.OK) {
                             ServiceFournisseur sf = new ServiceFournisseur();
-                            sf.supprimer(f); // méthode qui supprime de la base
-                            data.remove(f);  // mise à jour de l'affichage
+                            sf.supprimer(f);
+                            data.remove(f);
                         }
                     });
                 });
@@ -117,4 +128,21 @@ public class ModifierFournisseur implements Initializable {
         alert.setContentText(message);
         alert.show();
     }
+
+    @FXML
+    void retourAccueil(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Accueil.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) btnRetourAccueil.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Accueil - Gestion des Ressources");
+            stage.sizeToScene();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }
