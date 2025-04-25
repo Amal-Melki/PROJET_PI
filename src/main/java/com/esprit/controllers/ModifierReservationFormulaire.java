@@ -6,9 +6,14 @@ import com.esprit.services.ServiceMateriel;
 import com.esprit.services.ServiceReservationMateriel;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
@@ -34,8 +39,13 @@ public class ModifierReservationFormulaire implements Initializable {
     @FXML
     private Button btnEnregistrer;
 
+    @FXML
+    private Button btnRetour;
+
     private ReservationMateriel reservationToModify;
     private Materiels materielAssocie;
+
+    private int ancienneQuantiteReservee; // 🔥 Stocker l'ancienne quantité pour recalculer
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -44,8 +54,9 @@ public class ModifierReservationFormulaire implements Initializable {
 
     public void setReservation(ReservationMateriel r) {
         this.reservationToModify = r;
+        this.ancienneQuantiteReservee = r.getQuantiteReservee();
 
-        // Récupérer le matériel correspondant pour la quantité
+        // Récupérer le matériel associé
         ServiceMateriel sm = new ServiceMateriel();
         for (Materiels m : sm.recuperer()) {
             if (m.getId() == r.getMaterielId()) {
@@ -79,30 +90,48 @@ public class ModifierReservationFormulaire implements Initializable {
             return;
         }
 
-        int quantite;
+        int nouvelleQuantite;
         try {
-            quantite = Integer.parseInt(quantiteText);
+            nouvelleQuantite = Integer.parseInt(quantiteText);
         } catch (NumberFormatException e) {
             showAlert(Alert.AlertType.ERROR, "Quantité invalide", "La quantité doit être un nombre entier.");
             return;
         }
 
-        if (quantite <= 0 || quantite > materielAssocie.getQuantite()) {
-            showAlert(Alert.AlertType.ERROR, "Quantité invalide", "Quantité non disponible (stock max : " + materielAssocie.getQuantite() + ")");
+        if (nouvelleQuantite <= 0) {
+            showAlert(Alert.AlertType.ERROR, "Quantité invalide", "La quantité doit être positive.");
             return;
         }
 
-        // Mise à jour
-        reservationToModify.setMaterielId(materielAssocie.getId()); // inchangé
+        // 🔥 Calculer le stock actuel réel
+        ServiceMateriel sm = new ServiceMateriel();
+        int quantiteDisponibleActuelle = sm.recupererQuantite(materielAssocie.getId());
+
+        int stockApresModification = quantiteDisponibleActuelle + ancienneQuantiteReservee - nouvelleQuantite;
+        if (stockApresModification < 0) {
+            showAlert(Alert.AlertType.ERROR, "Stock insuffisant", "Pas assez de stock pour effectuer cette modification.");
+            return;
+        }
+
+        // Mise à jour de la réservation
+        reservationToModify.setMaterielId(materielAssocie.getId());
         reservationToModify.setDateDebut(java.sql.Date.valueOf(dateDebut));
         reservationToModify.setDateFin(java.sql.Date.valueOf(dateFin));
-        reservationToModify.setQuantiteReservee(quantite);
+        reservationToModify.setQuantiteReservee(nouvelleQuantite);
         reservationToModify.setStatut(statut);
 
-        ServiceReservationMateriel service = new ServiceReservationMateriel();
-        service.modifier(reservationToModify);
+        ServiceReservationMateriel serviceReservation = new ServiceReservationMateriel();
+        serviceReservation.modifier(reservationToModify);
 
+        // 🔥 Mettre à jour le stock matériel
+        sm.mettreAJourQuantite(materielAssocie.getId(), stockApresModification);
+
+        // ✅ Message + fermeture
         showAlert(Alert.AlertType.INFORMATION, "Succès", "Réservation mise à jour avec succès !");
+
+        // ✅ Fermer la fenêtre
+        Stage stage = (Stage) btnEnregistrer.getScene().getWindow();
+        stage.close();
     }
 
     private void showAlert(Alert.AlertType type, String titre, String message) {
@@ -110,6 +139,21 @@ public class ModifierReservationFormulaire implements Initializable {
         alert.setTitle(titre);
         alert.setHeaderText(null);
         alert.setContentText(message);
-        alert.show();
+        alert.showAndWait();
+    }
+
+    @FXML
+    private void retourAccueil() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierReservation.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) btnRetour.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Liste des Réservations");
+            stage.sizeToScene();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

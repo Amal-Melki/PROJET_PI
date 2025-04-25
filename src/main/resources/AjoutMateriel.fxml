@@ -7,45 +7,77 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
+<Pane xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.esprit.controllers.AjoutMateriel"
+      prefHeight="550.0" prefWidth="700.0"
+      style="-fx-background-color: pink;">
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" opacity="0.81" prefHeight="518.0" prefWidth="636.0" style="-fx-background-color: pink;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.esprit.controllers.AjoutMateriel">
    <children>
-      <Label contentDisplay="CENTER" layoutX="76.0" layoutY="50.0" prefHeight="34.0" prefWidth="69.0" text="Nom" textAlignment="RIGHT">
+
+      <!-- Bouton Retour -->
+      <Button fx:id="btnRetour"
+              layoutX="600.0" layoutY="20.0"
+              text="↩ Retour"
+              onAction="#retourAccueil"
+              style="-fx-background-color: #ff7fa8; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 20; -fx-cursor: hand; -fx-padding: 6 12 6 12;" />
+
+      <!-- Titre Ajout Matériel -->
+      <Text text="Ajout Matériel"
+            layoutX="230.0" layoutY="70.0"
+            style="-fx-fill: white;">
          <font>
-            <Font size="14.0" />
+            <Font name="Segoe UI Bold" size="30.0" />
+         </font>
+      </Text>
+
+      <!-- Labels -->
+      <Label layoutX="90.0" layoutY="130.0" text="Nom :">
+         <font>
+            <Font size="15.0" />
          </font>
       </Label>
-      <Label layoutX="76.0" layoutY="113.0" prefHeight="18.0" prefWidth="46.0" text="Type ">
+
+      <Label layoutX="90.0" layoutY="190.0" text="Type :">
          <font>
-            <Font size="14.0" />
+            <Font size="15.0" />
          </font>
       </Label>
-      <Label layoutX="76.0" layoutY="183.0" text="Quantité">
+
+      <Label layoutX="90.0" layoutY="250.0" text="Quantité :">
          <font>
-            <Font size="14.0" />
+            <Font size="15.0" />
          </font>
       </Label>
-      <Label layoutX="76.0" layoutY="248.0" prefHeight="17.0" prefWidth="46.0" text="Etat">
+
+      <Label layoutX="90.0" layoutY="310.0" text="État :">
          <font>
-            <Font size="14.0" />
+            <Font size="15.0" />
          </font>
       </Label>
-      <ComboBox layoutX="219.0" layoutY="244.0" prefWidth="150.0" />
-      <Label layoutX="80.0" layoutY="355.0" text="Description">
+
+      <Label layoutX="90.0" layoutY="370.0" text="Description :">
          <font>
-            <Font size="14.0" />
+            <Font size="15.0" />
          </font>
       </Label>
-      <Button fx:id="btnAjouter" layoutX="283.0" layoutY="446.0" mnemonicParsing="false" onAction="#addMateriel" text="Ajouter">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Button>
-      <TextField fx:id="tfNom" layoutX="219.0" layoutY="55.0" />
-      <ComboBox fx:id="cbType" layoutX="218.0" layoutY="110.0" prefWidth="150.0" />
-      <TextField fx:id="tfQuantite" layoutX="219.0" layoutY="179.0" />
-      <ComboBox fx:id="cbEtat" layoutX="219.0" layoutY="244.0" prefWidth="150.0" />
-      <TextArea fx:id="taDescription" layoutX="210.0" layoutY="322.0" prefHeight="83.0" prefWidth="342.0"   />
+
+      <!-- Champs de saisie -->
+      <TextField fx:id="tfNom" layoutX="220.0" layoutY="125.0" prefWidth="300.0" />
+      <ComboBox fx:id="cbType" layoutX="220.0" layoutY="185.0" prefWidth="300.0" />
+      <TextField fx:id="tfQuantite" layoutX="220.0" layoutY="245.0" prefWidth="300.0" />
+      <ComboBox fx:id="cbEtat" layoutX="220.0" layoutY="305.0" prefWidth="300.0" />
+      <TextArea fx:id="taDescription" layoutX="220.0" layoutY="365.0" prefWidth="300.0" prefHeight="60.0" />
+
+      <!-- Bouton Ajouter -->
+      <Button fx:id="btnAjouter"
+              layoutX="290.0" layoutY="450.0"
+              text="Ajouter"
+              onAction="#addMateriel"
+              prefWidth="130.0" prefHeight="45.0"
+              style="-fx-background-color: #ff7fa8; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px; -fx-background-radius: 20; -fx-cursor: hand;" />
+
    </children>
 </Pane>

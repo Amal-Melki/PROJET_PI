@@ -6,10 +6,12 @@ import com.esprit.services.ServiceMateriel;
 import com.esprit.services.ServiceReservationMateriel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -42,6 +44,8 @@ public class ModifierReservation implements Initializable {
     private TableColumn<ReservationMateriel, Void> colAction;
 
     private final ObservableList<ReservationMateriel> data = FXCollections.observableArrayList();
+    @FXML
+    private Button btnRetourAccueil;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -98,10 +102,11 @@ public class ModifierReservation implements Initializable {
                         ModifierReservationFormulaire controller = loader.getController();
                         controller.setReservation(reservation);
 
-                        Stage stage = new Stage();
-                        stage.setScene(new Scene(root));
-                        stage.setTitle("Modifier Réservation");
-                        stage.show();
+                        // ✅ Remplacer la scène dans la même fenêtre
+                        Stage stageActuel = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                        stageActuel.setScene(new Scene(root));
+                        stageActuel.setTitle("Modifier Réservation");
+                        stageActuel.sizeToScene();
 
                     } catch (IOException e) {
                         showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible d’ouvrir le formulaire.");
@@ -139,4 +144,22 @@ public class ModifierReservation implements Initializable {
         alert.setContentText(message);
         alert.show();
     }
+
+
+
+    @FXML
+    void retourAccueil(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Accueil.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) btnRetourAccueil.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Accueil - Gestion des Ressources");
+            stage.sizeToScene();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

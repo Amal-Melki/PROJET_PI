@@ -7,14 +7,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class AjoutMateriel implements Initializable {
@@ -37,9 +36,24 @@ public class AjoutMateriel implements Initializable {
     @FXML
     private Button btnAjouter;
 
+    @FXML
+    private Button btnRetour;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        cbType.getItems().addAll("Informatique", "Électrique", "Bureau", "Médical");
+        cbType.getItems().addAll(
+                "Mobilier (chaises, tables, estrades)",
+                "Éclairage (spots, projecteurs, LED)",
+                "Sonorisation (micros, enceintes, mixeurs)",
+                "Audiovisuel (écran, vidéoprojecteur, caméra)",
+                "Décoration (fleurs, supports décoratifs, rideaux)",
+                "Tentes / Structures",
+                "Équipements de scène",
+                "Équipements de sécurité (extincteurs, barrières)",
+                "Électricité (générateurs, rallonges)",
+                "Photobooth / Accessoires photo"
+        );
+
         cbEtat.getItems().addAll("DISPONIBLE", "EN_MAINTENANCE", "HORS_SERVICE");
         cbEtat.setValue("DISPONIBLE");
 
@@ -56,31 +70,80 @@ public class AjoutMateriel implements Initializable {
     @FXML
     void addMateriel(ActionEvent event) throws IOException {
         try {
-            String nom = tfNom.getText();
+            String nom = tfNom.getText().trim();
             String type = cbType.getValue();
-            int quantite = Integer.parseInt(tfQuantite.getText());
+            String quantiteStr = tfQuantite.getText().trim();
             String etat = cbEtat.getValue();
-            String description = taDescription.getText();
+            String description = taDescription.getText().trim();
 
-            Materiels materiel = new Materiels(0, nom, type, quantite, etat, description);
+            // Vérification champ vide
+            if (nom.isEmpty() || type == null || quantiteStr.isEmpty() || etat == null) {
+                showAlert(Alert.AlertType.WARNING, "Champs manquants", "Veuillez remplir tous les champs obligatoires.");
+                return;
+            }
+
+            int quantite = Integer.parseInt(quantiteStr);
+
+            //  Vérification de la quantité
+            if (quantite < 0) {
+                showAlert(Alert.AlertType.ERROR, "Erreur", "La quantité ne peut pas être négative.");
+                return;
+            }
+            if (quantite == 0) {
+                showAlert(Alert.AlertType.ERROR, "Erreur", "La quantité doit être supérieure à 0.");
+                return;
+            }
+
+            //  Vérification de l'existence
             ServiceMateriel sm = new ServiceMateriel();
+            List<Materiels> existants = sm.recuperer();
+            for (Materiels m : existants) {
+                if (m.getNom().equalsIgnoreCase(nom)
+                        && m.getType().equalsIgnoreCase(type)
+                        && m.getQuantite() == quantite) {
+
+                    showAlert(Alert.AlertType.WARNING, "Doublon", "Ce matériel existe déjà !");
+                    return;
+                }
+            }
+
+            // ✅ Ajout
+            Materiels materiel = new Materiels(0, nom, type, quantite, etat, description);
             sm.ajouter(materiel);
 
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Ajout réussi");
-            alert.setContentText("Matériel ajouté avec succès !");
-            alert.show();
+            showAlert(Alert.AlertType.INFORMATION, "Ajout réussi", "Matériel ajouté avec succès !");
 
-            // Rediriger vers ModifierMateriel.fxml après l’ajout
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierMateriel.fxml"));
-            Parent root = loader.load();
-            btnAjouter.getScene().setRoot(root);
+            // Réinitialisation des champs
+            tfNom.clear();
+            tfQuantite.clear();
+            taDescription.clear();
+            cbType.getSelectionModel().clearSelection();
+            cbEtat.setValue("DISPONIBLE");
 
         } catch (NumberFormatException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Erreur");
-            alert.setContentText("Quantité doit être un nombre entier.");
-            alert.show();
+            showAlert(Alert.AlertType.ERROR, "Erreur", "La quantité doit être un nombre entier valide.");
+        }
+    }
+
+    private void showAlert(Alert.AlertType type, String titre, String message) {
+        Alert alert = new Alert(type);
+        alert.setTitle(titre);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.show();
+    }
+
+    @FXML
+    private void retourAccueil() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Accueil.fxml"));
+            Parent root = loader.load();
+
+            // Remplacer la scène actuelle
+            Stage stage = (Stage) btnRetour.getScene().getWindow();
+            stage.setScene(new Scene(root));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

@@ -4,6 +4,7 @@ import com.esprit.modules.Materiels;
 import com.esprit.utils.DataSource;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -54,15 +55,13 @@ public class ServiceMateriel implements IService<Materiels> {
         }
     }
 
-
-
     @Override
     public void supprimer(Materiels materiel) {
         String req = "DELETE FROM materiel WHERE id=" + materiel.getId();
         try {
             Statement st = connection.createStatement();
             st.executeUpdate(req);
-            System.out.println(" Matériel supprimé avec succès !");
+            System.out.println("Matériel supprimé avec succès !");
         } catch (SQLException e) {
             System.out.println("Erreur lors de la suppression du matériel : " + e.getMessage());
         }
@@ -91,5 +90,33 @@ public class ServiceMateriel implements IService<Materiels> {
         }
 
         return materiels;
+    }
+
+    // ✅ Mettre à jour seulement la quantité
+    public void mettreAJourQuantite(int idMateriel, int nouvelleQuantite) {
+        String req = "UPDATE materiel SET quantite = " + nouvelleQuantite + " WHERE id = " + idMateriel;
+        try {
+            Statement st = connection.createStatement();
+            st.executeUpdate(req);
+            System.out.println("Quantité du matériel mise à jour !");
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la mise à jour de la quantité : " + e.getMessage());
+        }
+    }
+
+    // ✅ Nouvelle méthode pour récupérer uniquement la quantité actuelle
+    public int recupererQuantite(int idMateriel) {
+        String req = "SELECT quantite FROM materiel WHERE id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(req)) {
+            ps.setInt(1, idMateriel);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("quantite");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération de la quantité : " + e.getMessage());
+        }
+        return -1; // Retourne -1 si erreur
     }
 }

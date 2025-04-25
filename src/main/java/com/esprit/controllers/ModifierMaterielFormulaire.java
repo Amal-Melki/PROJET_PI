@@ -4,8 +4,13 @@ import com.esprit.modules.Materiels;
 import com.esprit.services.ServiceMateriel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class ModifierMaterielFormulaire {
 
@@ -29,10 +34,25 @@ public class ModifierMaterielFormulaire {
 
     private Materiels materiel; // Objet à modifier
 
+    @FXML
+    private Button btnRetour;
+
     // Initialisation automatique des ComboBox
     @FXML
     public void initialize() {
-        cbType.getItems().addAll("Informatique", "Électrique", "Bureau", "Médical", "Audio");
+        cbType.getItems().addAll(
+                "Mobilier (chaises, tables, estrades)",
+                "Éclairage (spots, projecteurs, LED)",
+                "Sonorisation (micros, enceintes, mixeurs)",
+                "Audiovisuel (écran, vidéoprojecteur, caméra)",
+                "Décoration (fleurs, supports décoratifs, rideaux)",
+                "Tentes / Structures",
+                "Équipements de scène",
+                "Équipements de sécurité (extincteurs, barrières)",
+                "Électricité (générateurs, rallonges)",
+                "Photobooth / Accessoires photo"
+        );
+
         cbEtat.getItems().addAll("DISPONIBLE", "EN_MAINTENANCE", "HORS_SERVICE");
     }
 
@@ -76,6 +96,20 @@ public class ModifierMaterielFormulaire {
             alert.setHeaderText(null);
             alert.setContentText("Quantité invalide !");
             alert.show();
+        }
+    }
+
+    @FXML
+    private void retourAccueil() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierMateriel.fxml"));
+            Parent root = loader.load();
+
+            // Remplacer la scène actuelle
+            Stage stage = (Stage) btnRetour.getScene().getWindow();
+            stage.setScene(new Scene(root));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

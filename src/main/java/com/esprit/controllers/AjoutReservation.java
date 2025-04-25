@@ -2,15 +2,18 @@ package com.esprit.controllers;
 
 import com.esprit.modules.Materiels;
 import com.esprit.modules.ReservationMateriel;
-import com.esprit.modules.ReservationMateriel;
 import com.esprit.services.ServiceMateriel;
-import com.esprit.services.ServiceReservationMateriel;
 import com.esprit.services.ServiceReservationMateriel;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
@@ -35,6 +38,9 @@ public class AjoutReservation implements Initializable {
 
     @FXML
     private Button btnReserver;
+
+    @FXML
+    private Button btnRetour;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -82,12 +88,42 @@ public class AjoutReservation implements Initializable {
             return;
         }
 
-        if (quantite > materiel.getQuantite()) {
-            showAlert(Alert.AlertType.ERROR, "Quantité insuffisante", "La quantité demandée dépasse celle disponible (" + materiel.getQuantite() + ").");
+        // Vérification du stock déjà réservé
+        ServiceReservationMateriel serviceReservation = new ServiceReservationMateriel();
+        List<ReservationMateriel> reservationsExistantes = serviceReservation.recuperer();
+        int totalDejaReserve = 0;
+        for (ReservationMateriel r : reservationsExistantes) {
+            if (r.getMaterielId() == materiel.getId()) {
+                totalDejaReserve += r.getQuantiteReservee();
+            }
+        }
+
+        // Si le stock est déjà saturé
+        if (totalDejaReserve >= materiel.getQuantite()) {
+            showAlert(Alert.AlertType.ERROR, "Indisponible", "Désolé, ce matériel est déjà entièrement réservé.");
             return;
         }
 
-        // Création et enregistrement de la réservation
+        // Vérifie que la quantité demandée n'excède pas le stock restant
+        int stockRestant = materiel.getQuantite() - totalDejaReserve;
+        if (quantite > stockRestant) {
+            showAlert(Alert.AlertType.ERROR, "Quantité insuffisante", "Il ne reste que " + stockRestant + " unité(s) disponible(s).");
+            return;
+        }
+
+        // Vérification de doublon
+        for (ReservationMateriel r : reservationsExistantes) {
+            if (r.getMaterielId() == materiel.getId()
+                    && r.getDateDebut().toLocalDate().isEqual(dateDebut)
+                    && r.getDateFin().toLocalDate().isEqual(dateFin)
+                    && r.getQuantiteReservee() == quantite
+                    && r.getStatut().equalsIgnoreCase(statut)) {
+                showAlert(Alert.AlertType.WARNING, "Doublon", "Cette réservation existe déjà !");
+                return;
+            }
+        }
+
+        // ✅ Création de la réservation
         ReservationMateriel reservation = new ReservationMateriel(
                 0,
                 materiel.getId(),
@@ -97,8 +133,12 @@ public class AjoutReservation implements Initializable {
                 statut
         );
 
-        ServiceReservationMateriel sr = new ServiceReservationMateriel();
-        sr.ajouter(reservation);
+        serviceReservation.ajouter(reservation);
+
+        // ✅ Mettre à jour la quantité restante du matériel dans la base
+        int nouvelleQuantite = materiel.getQuantite() - quantite;
+        ServiceMateriel serviceMateriel = new ServiceMateriel();
+        serviceMateriel.mettreAJourQuantite(materiel.getId(), nouvelleQuantite);
 
         showAlert(Alert.AlertType.INFORMATION, "Succès", "Réservation enregistrée avec succès !");
         resetForm();
@@ -118,5 +158,27 @@ public class AjoutReservation implements Initializable {
         dpFin.setValue(null);
         tfQuantite.clear();
         cbStatut.setValue("EN_ATTENTE");
+    }
+
+    @FXML
+    private void retourAccueil() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Accueil.fxml"));
+            Parent root = loader.load();
+
+            // Remplacer la scène actuelle
+            Stage stage = (Stage) btnRetour.getScene().getWindow();
+            stage.setScene(new Scene(root));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Button getBtnReserver() {
+        return btnReserver;
+    }
+
+    public void setBtnReserver(Button btnReserver) {
+        this.btnReserver = btnReserver;
     }
 }
