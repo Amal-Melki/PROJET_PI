@@ -302,13 +302,17 @@ public class UtilisateursController implements AdminAware {
 
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
-                if (user instanceof Admin) {
-                    adminService.supprimer((Admin) user);
-                } else if (user instanceof Client) {
-                    clientService.supprimer((Client) user);
+                try {
+                    if (user instanceof Admin) {
+                        adminService.supprimer((Admin) user);
+                    } else if (user instanceof Client) {
+                        clientService.supprimer((Client) user);
+                    }
+                    loadData();
+                    showAlert("Utilisateur supprimé avec succès", Alert.AlertType.INFORMATION);
+                } catch (Exception e) {
+                    showAlert("Erreur lors de la suppression: " + e.getMessage(), Alert.AlertType.ERROR);
                 }
-                loadData();
-                showAlert("Utilisateur supprimé avec succès", Alert.AlertType.INFORMATION);
             }
         });
     }

@@ -7,6 +7,9 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ComboBox;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.stage.Stage;
 
 import java.time.LocalDate;
@@ -25,14 +28,22 @@ public class AjouterEvenementController {
     @FXML
     private TextField txtLongitude;
     @FXML
-    private TextField txtCategories;
+    private ComboBox<String> cmbCategories;
     @FXML
     private TextField txtNbrPlaces;
 
     private EvenementService evenementService;
+    private final ObservableList<String> categories = FXCollections.observableArrayList(
+        "Célébration (anniversaire)",
+        "Soirée/Gala",
+        "Festival",
+        "Lancement de produit"
+    );
 
     public void initialize() {
         evenementService = new EvenementService();
+        cmbCategories.setItems(categories);
+        cmbCategories.setPromptText("Sélectionnez une catégorie");
     }
 
     @FXML
@@ -46,7 +57,7 @@ public class AjouterEvenementController {
                 evenement.setDate_fin(dateFin.getValue());
                 evenement.setLatitude(txtLatitude.getText());
                 evenement.setLongitude(txtLongitude.getText());
-                evenement.setCategories(txtCategories.getText());
+                evenement.setCategories(cmbCategories.getValue());
                 evenement.setNbr_places_dispo(Integer.parseInt(txtNbrPlaces.getText()));
 
                 evenementService.ajouter(evenement);
@@ -62,7 +73,7 @@ public class AjouterEvenementController {
         if (txtTitle.getText().isEmpty() || txtDescription.getText().isEmpty() ||
             dateDebut.getValue() == null || dateFin.getValue() == null ||
             txtLatitude.getText().isEmpty() || txtLongitude.getText().isEmpty() ||
-            txtCategories.getText().isEmpty() || txtNbrPlaces.getText().isEmpty()) {
+            cmbCategories.getValue() == null || txtNbrPlaces.getText().isEmpty()) {
             showAlert(Alert.AlertType.ERROR, "Erreur", "Veuillez remplir tous les champs!");
             return false;
         }

@@ -254,6 +254,12 @@ public class EvenementsFrontController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/CalendarView.fxml"));
             Parent calendarView = loader.load();
             
+            // Get the controller and set the current client
+            CalendarViewController controller = loader.getController();
+            if (currentClient != null) {
+                controller.setCurrentClient(currentClient);
+            }
+            
             // Get the current stage
             Stage stage = (Stage) eventsContainer.getScene().getWindow();
             

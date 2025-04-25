@@ -9,7 +9,7 @@ public class SMSService {
     private static final String ACCOUNT_SID = "AC1a845498efef04d9a3e8072936fa868a";
     private static final String AUTH_TOKEN = "fdc2f9c92d69b531936ac4dff707fa84";
     // Replace this with your actual Twilio phone number from your Twilio console
-    private static final String TWILIO_PHONE_NUMBER = "+14155238886"; // Example US Twilio number
+    private static final String TWILIO_PHONE_NUMBER = "++15673391364"; // Example US Twilio number
 
     public SMSService() {
         Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
