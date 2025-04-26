@@ -31,7 +31,7 @@
         <TextField fx:id="txtLongitude" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
 
         <Label text="Catégories:" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
-        <TextField fx:id="txtCategories" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+        <ComboBox fx:id="cmbCategories" prefWidth="200" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
 
         <Label text="Nombre de places:" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
         <TextField fx:id="txtNbrPlaces" GridPane.columnIndex="1" GridPane.rowIndex="7"/>

@@ -144,7 +144,7 @@ public class NavigationController {
     }
     
     @FXML
-    private void handleEvenements() {
+    public void handleEvenements() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/EvenementsFront.fxml"));
             Parent view = loader.load();

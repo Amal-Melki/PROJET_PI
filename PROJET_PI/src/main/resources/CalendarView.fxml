@@ -27,6 +27,7 @@
                 <Insets top="20" right="20" bottom="20" left="20"/>
             </padding>
             <HBox alignment="CENTER_LEFT" spacing="10">
+                <Button fx:id="btnBack" text="Retour" onAction="#handleBack" styleClass="calendar-button"/>
                 <Label text="Calendrier des Événements" styleClass="calendar-title"/>
                 <Region HBox.hgrow="ALWAYS"/>
                 <Button fx:id="btnToday" text="Aujourd'hui" onAction="#handleToday" styleClass="calendar-button"/>

@@ -72,10 +72,13 @@ public class AdminService implements IService<Admin> {
     }
 
     @Override
-    public void supprimer(Admin admin) {
+    public void supprimer(Admin admin) throws SQLException {
         String reqAdmin = "DELETE FROM admin WHERE id_admin=?";
         String reqUser = "DELETE FROM user WHERE id_user=?";
+        
         try {
+            connection.setAutoCommit(false); // Start transaction
+            
             // First delete from admin table
             PreparedStatement pstAdmin = connection.prepareStatement(reqAdmin);
             pstAdmin.setInt(1, admin.getId_admin());
@@ -86,9 +89,13 @@ public class AdminService implements IService<Admin> {
             pstUser.setInt(1, admin.getId_user());
             pstUser.executeUpdate();
             
+            connection.commit(); // Commit transaction
             System.out.println("Admin supprimé");
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            connection.rollback(); // Rollback in case of error
+            throw e;
+        } finally {
+            connection.setAutoCommit(true); // Reset auto-commit
         }
     }
 

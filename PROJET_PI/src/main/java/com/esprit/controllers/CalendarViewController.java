@@ -1,6 +1,7 @@
 package com.esprit.controllers;
 
 import com.esprit.models.Evenement;
+import com.esprit.models.Client;
 import com.esprit.services.EvenementService;
 import com.esprit.services.GoogleCalendarService;
 import javafx.fxml.FXML;
@@ -12,6 +13,10 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.geometry.Pos;
 import javafx.geometry.Insets;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
@@ -39,6 +44,11 @@ public class CalendarViewController implements Initializable {
     private List<Evenement> allEvents;
     private YearMonth currentYearMonth;
     private LocalDate selectedDate;
+    private Client currentClient;
+    
+    public void setCurrentClient(Client client) {
+        this.currentClient = client;
+    }
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -218,5 +228,36 @@ public class CalendarViewController implements Initializable {
         Label errorLabel = new Label(message);
         errorLabel.setTextFill(Color.RED);
         upcomingEventsContainer.getChildren().add(errorLabel);
+    }
+
+    @FXML
+    private void handleBack() {
+        try {
+            // Load the Navigation.fxml
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Navigation.fxml"));
+            Parent root = loader.load();
+            
+            // Get the controller and set it up
+            NavigationController controller = loader.getController();
+            controller.setAdminMode(false);
+            if (currentClient != null) {
+                controller.setCurrentUser(currentClient);
+            }
+            
+            // Get the current stage
+            Stage stage = (Stage) calendarGrid.getScene().getWindow();
+            
+            // Set the new scene
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setTitle("EventHub");
+            stage.show();
+            
+            // Load the events view in the navigation
+            controller.handleEvenements();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showError("Erreur lors du retour à la vue principale: " + e.getMessage());
+        }
     }
 } 

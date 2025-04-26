@@ -74,10 +74,13 @@ public class ClientService implements IService<Client> {
     }
 
     @Override
-    public void supprimer(Client client) {
+    public void supprimer(Client client) throws SQLException {
         String reqClient = "DELETE FROM client WHERE id_client=?";
         String reqUser = "DELETE FROM user WHERE id_user=?";
+        
         try {
+            connection.setAutoCommit(false); // Start transaction
+            
             // First delete from client table
             PreparedStatement pstClient = connection.prepareStatement(reqClient);
             pstClient.setInt(1, client.getId_client());
@@ -88,9 +91,13 @@ public class ClientService implements IService<Client> {
             pstUser.setInt(1, client.getId_user());
             pstUser.executeUpdate();
             
+            connection.commit(); // Commit transaction
             System.out.println("Client supprimé");
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            connection.rollback(); // Rollback in case of error
+            throw e;
+        } finally {
+            connection.setAutoCommit(true); // Reset auto-commit
         }
     }
 
