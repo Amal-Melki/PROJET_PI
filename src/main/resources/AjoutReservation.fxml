@@ -2,33 +2,51 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.*?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.AjouterReservationController">
-    <top>
-        <Label text="Ajouter une Réservation" style="-fx-font-size: 20px; -fx-padding: 10;" />
-    </top>
-    <center>
-        <VBox spacing="20" alignment="CENTER" padding="20">
-            <HBox spacing="10">
-                <Label text="Espace à réserver:" />
-                <ComboBox fx:id="comboEspace" promptText="Sélectionnez un espace"/>
-            </HBox>
-            <HBox spacing="10">
-                <Label text="Date de début:" />
-                <DatePicker fx:id="dateDebut"/>
-            </HBox>
-            <HBox spacing="10">
-                <Label text="Date de fin:" />
-                <DatePicker fx:id="dateFin"/>
-            </HBox>
-            <HBox spacing="10">
-                <Button text="Ajouter la Réservation" fx:id="btnAjouterReservation" onAction="#ajouterReservation"/>
-            </HBox>
-            <HBox spacing="10">
-                <!-- Bouton Retour au Menu Espace -->
-                <Button text="Retour au Menu Espace" fx:id="btnRetourMenu" onAction="#retourMenuEspace"/>
-            </HBox>
-        </VBox>
-    </center>
-</BorderPane>
+<Pane prefHeight="550.0" prefWidth="700.0" style="-fx-background-color: pink;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.esprit.controllers.AjoutReservationController">
+
+    <children>
+
+        <!-- Bouton Retour -->
+        <Button fx:id="btnRetour" layoutX="600.0" layoutY="20.0" onAction="#retourMenu" style="-fx-background-color: #ff7fa8; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 20; -fx-cursor: hand; -fx-padding: 6 12 6 12;" text="↩ Retour" />
+
+        <!-- Titre Ajout Réservation -->
+        <Text layoutX="180.0" layoutY="70.0" style="-fx-fill: white;" text="Ajouter Réservation d'Espace">
+            <font>
+                <Font name="Segoe UI Bold" size="28.0" />
+            </font><![CDATA[
+        ]]></Text>
+
+        <!-- Labels -->
+        <Label layoutX="90.0" layoutY="130.0" text="Espace :">
+            <font>
+                <Font size="15.0" />
+            </font>
+        </Label>
+
+        <Label layoutX="90.0" layoutY="190.0" text="Date Début :">
+            <font>
+                <Font size="15.0" />
+            </font>
+        </Label>
+
+        <Label layoutX="90.0" layoutY="250.0" text="Date Fin :">
+            <font>
+                <Font size="15.0" />
+            </font>
+        </Label>
+
+        <!-- Champs de saisie -->
+        <ComboBox fx:id="espaceCombo" layoutX="220.0" layoutY="125.0" prefWidth="300.0" promptText="Sélectionner un Espace" />
+        <DatePicker fx:id="dateDebutPicker" layoutX="220.0" layoutY="185.0" prefWidth="300.0" promptText="18/10/2025" />
+        <DatePicker fx:id="dateFinPicker" layoutX="220.0" layoutY="245.0" prefWidth="300.0" promptText="15/02/2025" />
+
+        <!-- Bouton Réserver -->
+        <Button fx:id="btnReserver" layoutX="140.0" layoutY="330.0" onAction="#ajouterReservation" prefHeight="45.0" prefWidth="130.0" style="-fx-background-color: #ff7fa8; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px; -fx-background-radius: 20; -fx-cursor: hand;" text="Réserver" />
+
+        <!-- Bouton Annuler -->
+        <Button fx:id="btnAnnuler" layoutX="290.0" layoutY="330.0" onAction="#annulerReservation" prefHeight="45.0" prefWidth="130.0" style="-fx-background-color: #ff7fa8; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px; -fx-background-radius: 20; -fx-cursor: hand;" text="Annuler" />
+
+    </children>
+</Pane>

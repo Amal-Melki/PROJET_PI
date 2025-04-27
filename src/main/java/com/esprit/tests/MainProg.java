@@ -20,13 +20,13 @@ public class MainProg {
         Espace es5 = new Espace(5, "Salle des Fêtes Evencia Nabeul", "Événement familial", 500, "Nabeul", 200.0, false);  // Salle fermée
 
         // Test des méthodes sur l'espace
-        //espaceService.add(es1);
+        espaceService.add(es1);
         //espaceService.add(es2);
        // espaceService.add(es3);
         //espaceService.add(es4);
-        //espaceService.add(es5);
+      //  espaceService.add(es5);
        // System.out.println(espaceService.getAll());
-       espaceService.delete(es5.getId());
+       //espaceService.delete(es5.getId());-
 
         // Service pour les réservations d'espaces
         ReservationEspaceService reservationEspaceService = new ReservationEspaceService();

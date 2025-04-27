@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+
+<VBox alignment="CENTER" prefHeight="452.0" prefWidth="447.0" spacing="20" style="-fx-background-color: pink;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.esprit.controllers.MenuEspaceController">
+
+    <padding>
+        <Insets bottom="40" left="40" right="40" top="40" />
+    </padding>
+
+    <!-- Titre -->
+    <Text text="Menu Espace">
+        <font>
+            <Font size="22.0" />
+        </font>
+    </Text>
+
+    <!-- Boutons -->
+    <Button onAction="#openAjoutEspace" prefWidth="260" prefHeight="45" text="➕ Ajouter un Espace"
+            style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 25; -fx-font-family: 'Segoe UI Semibold';" />
+
+    <Button onAction="#openDetailsEspace" prefWidth="260" prefHeight="45" text="📄 Voir les Espaces"
+            style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 25; -fx-font-family: 'Segoe UI Semibold';" />
+
+    <Button onAction="#openAjoutReservation" prefWidth="260" prefHeight="45" text="➕ Réserver un Espace"
+            style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 25; -fx-font-family: 'Segoe UI Semibold';" />
+
+    <Button onAction="#openDetailsReservation" prefWidth="260" prefHeight="45" text="📋 Voir les Réservations"
+            style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 25; -fx-font-family: 'Segoe UI Semibold';" />
+</VBox>

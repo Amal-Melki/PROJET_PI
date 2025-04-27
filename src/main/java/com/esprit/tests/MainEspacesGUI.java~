@@ -20,7 +20,7 @@ public class MainEspacesGUI extends Application {
         try {
             MainEspacesGUI.primaryStage = primaryStage;
             // Charger l'interface principale MenuEspace.fxml
-            Parent root = FXMLLoader.load(getClass().getResource("/MenuEspace.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/com/esprit/Resources/MenuEspace.fxml"));
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
             primaryStage.setTitle("Gestion des Espaces");

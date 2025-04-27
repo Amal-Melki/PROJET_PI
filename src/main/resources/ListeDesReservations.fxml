@@ -1,36 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="450.0" prefWidth="720.0" style="-fx-background-color: pink;" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.esprit.controllers.DetailsEspaceController">
+<AnchorPane prefHeight="450.0" prefWidth="720.0" style="-fx-background-color: pink;" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.esprit.controllers.DetailsReservationController">
 
     <children>
         <!-- VBox pour contenir le titre et la TableView -->
         <VBox alignment="TOP_CENTER" layoutX="40" layoutY="30" prefWidth="640" spacing="20">
-            <Label style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: black;" text="Liste des Espaces" />
+            <Label style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: black;" text="Liste des Réservations" />
 
-            <!-- TableView pour afficher les espaces -->
-            <TableView fx:id="tableEspace" prefHeight="320" prefWidth="640" style="-fx-border-color: #f8bbd0; -fx-border-radius: 8; -fx-background-radius: 8;">
+            <!-- TableView pour afficher les réservations -->
+            <TableView fx:id="tableReservation" prefHeight="320" prefWidth="640" style="-fx-border-color: #f8bbd0; -fx-border-radius: 8; -fx-background-radius: 8;">
                 <columns>
-                    <TableColumn fx:id="colId" prefWidth="60" text="ID" />
-                    <TableColumn fx:id="colNom" prefWidth="100" text="Nom" />
-                    <TableColumn fx:id="colType" prefWidth="100" text="Type" />
-                    <TableColumn fx:id="colCapacite" prefWidth="80" text="Capacité" />
-                    <TableColumn fx:id="colLocalisation" prefWidth="120" text="Localisation" />
-                    <TableColumn fx:id="colPrix" prefWidth="80" text="Prix" />
-                    <TableColumn fx:id="colDisponibilite" prefWidth="120" text="Disponibilité" />
+                    <TableColumn fx:id="colReservationId" prefWidth="60" text="ID" />
+                    <TableColumn fx:id="colEspace" prefWidth="140" text="Espace" />
+                    <TableColumn fx:id="colUser" prefWidth="140" text="Utilisateur" />
+                    <TableColumn fx:id="colDateDebut" prefWidth="140" text="Date Début" />
+                    <TableColumn fx:id="colDateFin" prefWidth="140" text="Date Fin" />
                 </columns>
             </TableView>
 
-            <!-- HBox pour les boutons Enregistrer et Supprimer -->
+            <!-- HBox pour les boutons Détails et Supprimer -->
             <HBox alignment="CENTER" prefWidth="640" spacing="20">
-                <Button onAction="#enregistrerEspace"
+                <Button onAction="#detailsReservation"
                         style="-fx-background-color: #ff7fa8; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 15px; -fx-background-radius: 20; -fx-cursor: hand; -fx-padding: 6 12 6 12;"
-                        text="Enregistrer"
+                        text="Voir détails"
                         prefWidth="120.0" prefHeight="40.0" />
 
-                <Button onAction="#supprimerEspace"
+                <Button onAction="#supprimerReservation"
                         style="-fx-background-color: #ff7fa8; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 15px; -fx-background-radius: 20; -fx-cursor: hand; -fx-padding: 6 12 6 12;"
                         text="Supprimer"
                         prefWidth="120.0" prefHeight="40.0" />
