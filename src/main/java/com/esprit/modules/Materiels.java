@@ -7,26 +7,29 @@ public class Materiels {
     private int quantite;
     private String etat;
     private String description;
+    private String image;
 
     // Constructeurs
     public Materiels() {
     }
 
-    public Materiels(int id, String nom, String type, int quantite, String etat, String description) {
+    public Materiels(int id, String nom, String type, int quantite, String etat, String description, String image) {
         this.id = id;
         this.nom = nom;
         this.type = type;
         this.quantite = quantite;
         this.etat = etat;
         this.description = description;
+        this.image = image;
     }
 
-    public Materiels(String nom, String type, int quantite, String etat, String description) {
+    public Materiels(String nom, String type, int quantite, String etat, String description, String image) {
         this.nom = nom;
         this.type = type;
         this.quantite = quantite;
         this.etat = etat;
         this.description = description;
+        this.image = image;
     }
 
     // Getters et Setters
@@ -78,23 +81,17 @@ public class Materiels {
         this.description = description;
     }
 
-    // Méthode toString()
-   /* @Override
-    public String toString() {
-        return "Materiel{" +
-                "id=" + id +
-                ", nom='" + nom + '\'' +
-                ", type='" + type + '\'' +
-                ", quantite=" + quantite +
-                ", etat='" + etat + '\'' +
-                ", description='" + description + '\'' +
-                '}';
-    }*/
-
-    @Override
-    public String toString() {
-        return nom; // Affiche uniquement le nom dans la ComboBox
+    public String getImage() {
+        return image;
     }
 
-}
+    public void setImage(String image) {
+        this.image = image;
+    }
 
+    // Pour afficher le nom dans les ComboBox ou ListView
+    @Override
+    public String toString() {
+        return nom;
+    }
+}

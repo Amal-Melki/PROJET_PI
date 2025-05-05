@@ -99,9 +99,7 @@ public class ModifierFournisseurFormulaire implements Initializable {
         alert.setContentText("Fournisseur modifié avec succès !");
         alert.showAndWait();
 
-        // ✅ Fermer la fenêtre actuelle
-        Stage stage = (Stage) btnEnregistrer.getScene().getWindow();
-        stage.close();
+
     }
 
     private void showAlert(Alert.AlertType type, String titre, String message) {

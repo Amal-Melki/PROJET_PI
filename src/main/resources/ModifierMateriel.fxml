@@ -1,25 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+<AnchorPane prefHeight="750.0" prefWidth="900.0"
+            xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.esprit.controllers.ModifierMateriel"
             style="-fx-background-color: pink;">
 
     <children>
 
-        <!-- Bouton Retour en haut à droite -->
+        <!-- Bouton Retour -->
         <Button fx:id="btnRetourAccueil"
                 text="↩ Retour"
                 layoutX="790.0"
                 layoutY="20.0"
                 onAction="#retourAccueil"
-                style="-fx-background-color: #ff7fa8; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 20; -fx-cursor: hand; -fx-padding: 6 12 6 12;" />
+                style="-fx-background-color: #ff7fa8; -fx-text-fill: white; -fx-font-weight: bold;
+                       -fx-font-size: 13px; -fx-background-radius: 20; -fx-cursor: hand;
+                       -fx-padding: 6 12 6 12;" />
 
-        <!-- Titre Liste Matériels -->
+        <!-- Titre -->
         <Text text="Liste Matériels"
               layoutX="320.0" layoutY="70.0"
               style="-fx-fill: white;">
@@ -28,22 +33,40 @@
             </font>
         </Text>
 
-        <!-- Tableau de Matériels décalé en dessous du titre -->
-        <TableView fx:id="tableMateriels"
-                   layoutX="10.0"
-                   layoutY="100.0"
-                   prefHeight="480.0"
-                   prefWidth="880.0"
-                   style="-fx-background-color: #ffe6eb;">
-            <columns>
-                <TableColumn fx:id="colNom" text="Nom" prefWidth="120" />
-                <TableColumn fx:id="colType" text="Type" prefWidth="120" />
-                <TableColumn fx:id="colQuantite" text="Quantité" prefWidth="100" />
-                <TableColumn fx:id="colEtat" text="État" prefWidth="120" />
-                <TableColumn fx:id="colDescription" text="Description" prefWidth="250" />
-                <TableColumn fx:id="colAction" text="Action" prefWidth="150" />
-            </columns>
-        </TableView>
+        <!-- Conteneur principal -->
+        <VBox layoutX="20.0" layoutY="100.0" prefWidth="860.0" spacing="20">
+
+            <!-- FlowPane avec les matériels -->
+            <FlowPane fx:id="containerMateriels"
+                      prefWidth="750.0" prefHeight="450.0"
+                      hgap="20.0" vgap="20.0"
+                      style="-fx-background-color: pink; -fx-padding: 10;" />
+
+            <!-- Boutons centrés -->
+            <HBox spacing="30" alignment="center">
+                <Button fx:id="btnModifier"
+                        text="Modifier"
+                        onAction="#modifierMateriel"
+                        prefWidth="150.0" prefHeight="40.0"
+                        style="-fx-background-color: #ff8cb3;
+                               -fx-text-fill: white;
+                               -fx-font-weight: bold;
+                               -fx-background-radius: 15;
+                               -fx-cursor: hand;
+                               -fx-padding: 4 10 4 10;" />
+                <Button fx:id="btnSupprimer"
+                        text="Supprimer"
+                        onAction="#supprimerMateriel"
+                        prefWidth="150.0" prefHeight="40.0"
+                        style="-fx-background-color: #e57373;
+                               -fx-text-fill: white;
+                               -fx-font-weight: bold;
+                               -fx-background-radius: 15;
+                               -fx-cursor: hand;
+                               -fx-padding: 4 10 4 10;" />
+            </HBox>
+
+        </VBox>
 
     </children>
 </AnchorPane>

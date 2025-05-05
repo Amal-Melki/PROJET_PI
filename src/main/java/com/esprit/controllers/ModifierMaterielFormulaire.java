@@ -32,12 +32,11 @@ public class ModifierMaterielFormulaire {
     @FXML
     private Button btnModifier;
 
-    private Materiels materiel; // Objet à modifier
-
     @FXML
     private Button btnRetour;
 
-    // Initialisation automatique des ComboBox
+    private Materiels materiel;
+
     @FXML
     public void initialize() {
         cbType.getItems().addAll(
@@ -56,8 +55,8 @@ public class ModifierMaterielFormulaire {
         cbEtat.getItems().addAll("DISPONIBLE", "EN_MAINTENANCE", "HORS_SERVICE");
     }
 
-    // Méthode appelée depuis ModifierMateriel.java pour remplir les champs
-    public void initData(Materiels m) {
+    // ✅ Cette méthode est appelée pour transmettre les données
+    public void setMateriel(Materiels m) {
         this.materiel = m;
 
         tfNom.setText(m.getNom());
@@ -67,7 +66,6 @@ public class ModifierMaterielFormulaire {
         taDescription.setText(m.getDescription());
     }
 
-    // Bouton "Enregistrer" cliqué
     @FXML
     void modifierMateriel(ActionEvent event) {
         try {
@@ -86,10 +84,6 @@ public class ModifierMaterielFormulaire {
             alert.setContentText("Matériel modifié avec succès !");
             alert.showAndWait();
 
-            // Fermer la fenêtre
-            Stage stage = (Stage) btnModifier.getScene().getWindow();
-            stage.close();
-
         } catch (NumberFormatException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Erreur");
@@ -104,8 +98,6 @@ public class ModifierMaterielFormulaire {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierMateriel.fxml"));
             Parent root = loader.load();
-
-            // Remplacer la scène actuelle
             Stage stage = (Stage) btnRetour.getScene().getWindow();
             stage.setScene(new Scene(root));
         } catch (IOException e) {
