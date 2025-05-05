@@ -3,17 +3,13 @@ package com.esprit.services;
 import com.esprit.modules.Materiels;
 import com.esprit.utils.DataSource;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ServiceMateriel implements IService<Materiels> {
 
-    private Connection connection;
+    private final Connection connection;
 
     public ServiceMateriel() {
         connection = DataSource.getInstance().getConnection();
@@ -21,49 +17,51 @@ public class ServiceMateriel implements IService<Materiels> {
 
     @Override
     public void ajouter(Materiels materiel) {
-        String req = "INSERT INTO materiel(nom, type, quantite, etat, description) VALUES ('"
-                + materiel.getNom() + "', '"
-                + materiel.getType() + "', "
-                + materiel.getQuantite() + ", '"
-                + materiel.getEtat() + "', '"
-                + materiel.getDescription() + "')";
+        String req = "INSERT INTO materiel (nom, type, quantite, etat, description, image) VALUES (?, ?, ?, ?, ?, ?)";
 
-        try {
-            Statement st = connection.createStatement();
-            st.executeUpdate(req);
-            System.out.println("Matériel ajouté avec succès !");
+        try (PreparedStatement ps = connection.prepareStatement(req)) {
+            ps.setString(1, materiel.getNom());
+            ps.setString(2, materiel.getType());
+            ps.setInt(3, materiel.getQuantite());
+            ps.setString(4, materiel.getEtat());
+            ps.setString(5, materiel.getDescription());
+            ps.setString(6, materiel.getImage());
+            ps.executeUpdate();
+            System.out.println("✅ Matériel ajouté avec succès !");
         } catch (SQLException e) {
-            System.out.println("Erreur lors de l'ajout du matériel : " + e.getMessage());
+            System.err.println("❌ Erreur lors de l'ajout du matériel : " + e.getMessage());
         }
     }
 
     @Override
     public void modifier(Materiels materiel) {
-        String req = "UPDATE materiel SET nom='" + materiel.getNom() +
-                "', type='" + materiel.getType() +
-                "', quantite=" + materiel.getQuantite() +
-                ", etat='" + materiel.getEtat() +
-                "', description='" + materiel.getDescription() +
-                "' WHERE id=" + materiel.getId();
+        String req = "UPDATE materiel SET nom = ?, type = ?, quantite = ?, etat = ?, description = ?, image = ? WHERE id = ?";
 
-        try {
-            Statement st = connection.createStatement();
-            st.executeUpdate(req);
-            System.out.println("Matériel modifié avec succès !");
+        try (PreparedStatement ps = connection.prepareStatement(req)) {
+            ps.setString(1, materiel.getNom());
+            ps.setString(2, materiel.getType());
+            ps.setInt(3, materiel.getQuantite());
+            ps.setString(4, materiel.getEtat());
+            ps.setString(5, materiel.getDescription());
+            ps.setString(6, materiel.getImage());
+            ps.setInt(7, materiel.getId());
+            ps.executeUpdate();
+            System.out.println("✅ Matériel modifié avec succès !");
         } catch (SQLException e) {
-            System.out.println("Erreur lors de la modification du matériel : " + e.getMessage());
+            System.err.println("❌ Erreur lors de la modification du matériel : " + e.getMessage());
         }
     }
 
     @Override
     public void supprimer(Materiels materiel) {
-        String req = "DELETE FROM materiel WHERE id=" + materiel.getId();
-        try {
-            Statement st = connection.createStatement();
-            st.executeUpdate(req);
-            System.out.println("Matériel supprimé avec succès !");
+        String req = "DELETE FROM materiel WHERE id = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(req)) {
+            ps.setInt(1, materiel.getId());
+            ps.executeUpdate();
+            System.out.println("✅ Matériel supprimé avec succès !");
         } catch (SQLException e) {
-            System.out.println("Erreur lors de la suppression du matériel : " + e.getMessage());
+            System.err.println("❌ Erreur lors de la suppression du matériel : " + e.getMessage());
         }
     }
 
@@ -72,9 +70,9 @@ public class ServiceMateriel implements IService<Materiels> {
         List<Materiels> materiels = new ArrayList<>();
         String req = "SELECT * FROM materiel";
 
-        try {
-            Statement st = connection.createStatement();
-            ResultSet rs = st.executeQuery(req);
+        try (Statement st = connection.createStatement();
+             ResultSet rs = st.executeQuery(req)) {
+
             while (rs.next()) {
                 materiels.add(new Materiels(
                         rs.getInt("id"),
@@ -82,41 +80,45 @@ public class ServiceMateriel implements IService<Materiels> {
                         rs.getString("type"),
                         rs.getInt("quantite"),
                         rs.getString("etat"),
-                        rs.getString("description")
+                        rs.getString("description"),
+                        rs.getString("image")
                 ));
             }
         } catch (SQLException e) {
-            System.out.println("Erreur lors de la récupération des matériels : " + e.getMessage());
+            System.err.println("❌ Erreur lors de la récupération des matériels : " + e.getMessage());
         }
 
         return materiels;
     }
 
-    // ✅ Mettre à jour seulement la quantité
     public void mettreAJourQuantite(int idMateriel, int nouvelleQuantite) {
-        String req = "UPDATE materiel SET quantite = " + nouvelleQuantite + " WHERE id = " + idMateriel;
-        try {
-            Statement st = connection.createStatement();
-            st.executeUpdate(req);
-            System.out.println("Quantité du matériel mise à jour !");
+        if (nouvelleQuantite < 0) {
+            System.err.println("❌ Mise à jour impossible : quantité négative !");
+            return;
+        }
+
+        String req = "UPDATE materiel SET quantite = ? WHERE id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(req)) {
+            ps.setInt(1, nouvelleQuantite);
+            ps.setInt(2, idMateriel);
+            ps.executeUpdate();
+            System.out.println("🔄 Stock mis à jour (ID " + idMateriel + ") ➔ Quantité = " + nouvelleQuantite);
         } catch (SQLException e) {
-            System.out.println("Erreur lors de la mise à jour de la quantité : " + e.getMessage());
+            System.err.println("❌ Erreur lors de la mise à jour de la quantité : " + e.getMessage());
         }
     }
 
-    // ✅ Nouvelle méthode pour récupérer uniquement la quantité actuelle
-    public int recupererQuantite(int idMateriel) {
+    public int getQuantiteById(int idMateriel) {
         String req = "SELECT quantite FROM materiel WHERE id = ?";
         try (PreparedStatement ps = connection.prepareStatement(req)) {
             ps.setInt(1, idMateriel);
             ResultSet rs = ps.executeQuery();
-
             if (rs.next()) {
                 return rs.getInt("quantite");
             }
         } catch (SQLException e) {
-            System.out.println("Erreur lors de la récupération de la quantité : " + e.getMessage());
+            System.err.println("❌ Erreur lors de la récupération de la quantité : " + e.getMessage());
         }
-        return -1; // Retourne -1 si erreur
+        return -1;
     }
 }

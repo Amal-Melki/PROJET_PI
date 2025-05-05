@@ -45,7 +45,7 @@ public class ModifierReservationFormulaire implements Initializable {
     private ReservationMateriel reservationToModify;
     private Materiels materielAssocie;
 
-    private int ancienneQuantiteReservee; // 🔥 Stocker l'ancienne quantité pour recalculer
+    private int ancienneQuantiteReservee; // 🔥 Pour recalculer le stock correctement
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -56,7 +56,7 @@ public class ModifierReservationFormulaire implements Initializable {
         this.reservationToModify = r;
         this.ancienneQuantiteReservee = r.getQuantiteReservee();
 
-        // Récupérer le matériel associé
+        // 🔥 Récupérer le matériel associé
         ServiceMateriel sm = new ServiceMateriel();
         for (Materiels m : sm.recuperer()) {
             if (m.getId() == r.getMaterielId()) {
@@ -79,7 +79,6 @@ public class ModifierReservationFormulaire implements Initializable {
         String quantiteText = tfQuantite.getText().trim();
         String statut = cbStatut.getValue();
 
-        // Vérifications
         if (materielAssocie == null || dateDebut == null || dateFin == null || quantiteText.isEmpty() || statut == null) {
             showAlert(Alert.AlertType.ERROR, "Champs manquants", "Veuillez remplir tous les champs.");
             return;
@@ -94,7 +93,7 @@ public class ModifierReservationFormulaire implements Initializable {
         try {
             nouvelleQuantite = Integer.parseInt(quantiteText);
         } catch (NumberFormatException e) {
-            showAlert(Alert.AlertType.ERROR, "Quantité invalide", "La quantité doit être un nombre entier.");
+            showAlert(Alert.AlertType.ERROR, "Quantité invalide", "La quantité doit être un nombre entier positif.");
             return;
         }
 
@@ -103,35 +102,33 @@ public class ModifierReservationFormulaire implements Initializable {
             return;
         }
 
-        // 🔥 Calculer le stock actuel réel
         ServiceMateriel sm = new ServiceMateriel();
-        int quantiteDisponibleActuelle = sm.recupererQuantite(materielAssocie.getId());
+        int quantiteStockActuelle = sm.getQuantiteById(materielAssocie.getId());
 
-        int stockApresModification = quantiteDisponibleActuelle + ancienneQuantiteReservee - nouvelleQuantite;
-        if (stockApresModification < 0) {
-            showAlert(Alert.AlertType.ERROR, "Stock insuffisant", "Pas assez de stock pour effectuer cette modification.");
+        // 🔥 Important : on remet d'abord la quantité ancienne avant de recalculer
+        int stockTemporaire = quantiteStockActuelle + ancienneQuantiteReservee;
+
+        if (stockTemporaire - nouvelleQuantite < 0) {
+            showAlert(Alert.AlertType.ERROR, "Stock insuffisant", "Pas assez de stock pour cette modification.");
             return;
         }
 
         // Mise à jour de la réservation
-        reservationToModify.setMaterielId(materielAssocie.getId());
         reservationToModify.setDateDebut(java.sql.Date.valueOf(dateDebut));
         reservationToModify.setDateFin(java.sql.Date.valueOf(dateFin));
         reservationToModify.setQuantiteReservee(nouvelleQuantite);
         reservationToModify.setStatut(statut);
 
-        ServiceReservationMateriel serviceReservation = new ServiceReservationMateriel();
-        serviceReservation.modifier(reservationToModify);
+        ServiceReservationMateriel srm = new ServiceReservationMateriel();
+        srm.modifier(reservationToModify);
 
-        // 🔥 Mettre à jour le stock matériel
-        sm.mettreAJourQuantite(materielAssocie.getId(), stockApresModification);
+        // 🔥 Mise à jour du stock matériel
+        int stockFinal = stockTemporaire - nouvelleQuantite;
+        sm.mettreAJourQuantite(materielAssocie.getId(), stockFinal);
 
-        // ✅ Message + fermeture
-        showAlert(Alert.AlertType.INFORMATION, "Succès", "Réservation mise à jour avec succès !");
+        showAlert(Alert.AlertType.INFORMATION, "Succès", "Réservation modifiée et stock mis à jour avec succès !");
 
-        // ✅ Fermer la fenêtre
-        Stage stage = (Stage) btnEnregistrer.getScene().getWindow();
-        stage.close();
+
     }
 
     private void showAlert(Alert.AlertType type, String titre, String message) {
@@ -147,7 +144,6 @@ public class ModifierReservationFormulaire implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierReservation.fxml"));
             Parent root = loader.load();
-
             Stage stage = (Stage) btnRetour.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("Liste des Réservations");

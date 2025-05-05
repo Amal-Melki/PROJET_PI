@@ -9,8 +9,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -38,6 +40,14 @@ public class AjoutMateriel implements Initializable {
 
     @FXML
     private Button btnRetour;
+
+    @FXML
+    private Button btnImage;
+
+    @FXML
+    private Label lblImagePath;
+
+    private String cheminImage = null;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -68,6 +78,22 @@ public class AjoutMateriel implements Initializable {
     }
 
     @FXML
+    void choisirImage(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Choisir une image");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg", "*.gif")
+        );
+
+        File file = fileChooser.showOpenDialog(btnImage.getScene().getWindow());
+        if (file != null) {
+            cheminImage = file.getAbsolutePath();
+            lblImagePath.setText(file.getName());
+            showAlert(Alert.AlertType.INFORMATION, "Image sélectionnée", "Fichier : " + cheminImage);
+        }
+    }
+
+    @FXML
     void addMateriel(ActionEvent event) throws IOException {
         try {
             String nom = tfNom.getText().trim();
@@ -76,53 +102,52 @@ public class AjoutMateriel implements Initializable {
             String etat = cbEtat.getValue();
             String description = taDescription.getText().trim();
 
-            // Vérification champ vide
-            if (nom.isEmpty() || type == null || quantiteStr.isEmpty() || etat == null) {
-                showAlert(Alert.AlertType.WARNING, "Champs manquants", "Veuillez remplir tous les champs obligatoires.");
+            if (nom.isEmpty() || type == null || quantiteStr.isEmpty() || etat == null || cheminImage == null) {
+                showAlert(Alert.AlertType.WARNING, "Champs manquants", "Veuillez remplir tous les champs obligatoires et choisir une image.");
                 return;
             }
 
             int quantite = Integer.parseInt(quantiteStr);
 
-            //  Vérification de la quantité
-            if (quantite < 0) {
-                showAlert(Alert.AlertType.ERROR, "Erreur", "La quantité ne peut pas être négative.");
-                return;
-            }
-            if (quantite == 0) {
-                showAlert(Alert.AlertType.ERROR, "Erreur", "La quantité doit être supérieure à 0.");
+            if (quantite <= 0) {
+                showAlert(Alert.AlertType.ERROR, "Erreur", "La quantité doit être positive.");
                 return;
             }
 
-            //  Vérification de l'existence
             ServiceMateriel sm = new ServiceMateriel();
             List<Materiels> existants = sm.recuperer();
             for (Materiels m : existants) {
-                if (m.getNom().equalsIgnoreCase(nom)
-                        && m.getType().equalsIgnoreCase(type)
-                        && m.getQuantite() == quantite) {
-
+                if (m.getNom().equalsIgnoreCase(nom) &&
+                        m.getType().equalsIgnoreCase(type) &&
+                        m.getQuantite() == quantite) {
                     showAlert(Alert.AlertType.WARNING, "Doublon", "Ce matériel existe déjà !");
                     return;
                 }
             }
 
-            // ✅ Ajout
-            Materiels materiel = new Materiels(0, nom, type, quantite, etat, description);
+            // ✅ Construction avec image
+            Materiels materiel = new Materiels(0, nom, type, quantite, etat, description, cheminImage);
+
+
+
             sm.ajouter(materiel);
 
             showAlert(Alert.AlertType.INFORMATION, "Ajout réussi", "Matériel ajouté avec succès !");
-
-            // Réinitialisation des champs
-            tfNom.clear();
-            tfQuantite.clear();
-            taDescription.clear();
-            cbType.getSelectionModel().clearSelection();
-            cbEtat.setValue("DISPONIBLE");
+            resetForm();
 
         } catch (NumberFormatException e) {
             showAlert(Alert.AlertType.ERROR, "Erreur", "La quantité doit être un nombre entier valide.");
         }
+    }
+
+    private void resetForm() {
+        tfNom.clear();
+        tfQuantite.clear();
+        taDescription.clear();
+        cbType.getSelectionModel().clearSelection();
+        cbEtat.setValue("DISPONIBLE");
+        cheminImage = null;
+        lblImagePath.setText("");
     }
 
     private void showAlert(Alert.AlertType type, String titre, String message) {
@@ -138,8 +163,6 @@ public class AjoutMateriel implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Accueil.fxml"));
             Parent root = loader.load();
-
-            // Remplacer la scène actuelle
             Stage stage = (Stage) btnRetour.getScene().getWindow();
             stage.setScene(new Scene(root));
         } catch (IOException e) {

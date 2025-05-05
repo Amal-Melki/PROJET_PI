@@ -19,7 +19,9 @@
                 text="↩ Retour"
                 layoutX="550.0" layoutY="20.0"
                 onAction="#retourAccueil"
-                style="-fx-background-color: #ff7fa8; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 20; -fx-cursor: hand; -fx-padding: 6 12 6 12;" />
+                style="-fx-background-color: #ff7fa8; -fx-text-fill: white; -fx-font-weight: bold;
+                       -fx-font-size: 13px; -fx-background-radius: 20; -fx-cursor: hand;
+                       -fx-padding: 6 12 6 12;" />
 
         <!-- Titre Modifier Matériels -->
         <Text text="Modifier Matériels"
@@ -30,38 +32,40 @@
             </font>
         </Text>
 
-        <!-- Labels et champs -->
-        <Label layoutX="76.0" layoutY="130.0" text="Nom :">
-            <font><Font size="15.0" /></font>
-        </Label>
-        <TextField fx:id="tfNom" layoutX="219.0" layoutY="125.0" prefWidth="300.0" />
+        <!-- Labels et champs stylisés -->
+        <Label layoutX="76.0" layoutY="130.0" text="Nom :"
+               style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
+        <TextField fx:id="tfNom" layoutX="219.0" layoutY="125.0" prefWidth="300.0"
+                   style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
 
-        <Label layoutX="76.0" layoutY="190.0" text="Type :">
-            <font><Font size="15.0" /></font>
-        </Label>
-        <ComboBox fx:id="cbType" layoutX="219.0" layoutY="185.0" prefWidth="300.0" />
+        <Label layoutX="76.0" layoutY="190.0" text="Type :"
+               style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
+        <ComboBox fx:id="cbType" layoutX="219.0" layoutY="185.0" prefWidth="300.0"
+                  style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
 
-        <Label layoutX="76.0" layoutY="250.0" text="Quantité :">
-            <font><Font size="15.0" /></font>
-        </Label>
-        <TextField fx:id="tfQuantite" layoutX="219.0" layoutY="245.0" prefWidth="300.0" />
+        <Label layoutX="76.0" layoutY="250.0" text="Quantité :"
+               style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
+        <TextField fx:id="tfQuantite" layoutX="219.0" layoutY="245.0" prefWidth="300.0"
+                   style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
 
-        <Label layoutX="76.0" layoutY="310.0" text="État :">
-            <font><Font size="15.0" /></font>
-        </Label>
-        <ComboBox fx:id="cbEtat" layoutX="219.0" layoutY="305.0" prefWidth="300.0" />
+        <Label layoutX="76.0" layoutY="310.0" text="État :"
+               style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
+        <ComboBox fx:id="cbEtat" layoutX="219.0" layoutY="305.0" prefWidth="300.0"
+                  style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
 
-        <Label layoutX="76.0" layoutY="370.0" text="Description :">
-            <font><Font size="15.0" /></font>
-        </Label>
-        <TextArea fx:id="taDescription" layoutX="219.0" layoutY="365.0" prefHeight="60.0" prefWidth="300.0" />
+        <Label layoutX="76.0" layoutY="370.0" text="Description :"
+               style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
+        <TextArea fx:id="taDescription" layoutX="219.0" layoutY="365.0" prefHeight="60.0" prefWidth="300.0"
+                  style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
 
         <!-- Bouton Enregistrer -->
         <Button fx:id="btnModifier"
                 layoutX="260.0" layoutY="450.0"
                 text="Enregistrer"
                 onAction="#modifierMateriel"
-                style="-fx-background-color: #ff7fa8; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 15px; -fx-background-radius: 20; -fx-cursor: hand; -fx-padding: 6 12 6 12;"
+                style="-fx-background-color: #ff7fa8; -fx-text-fill: white; -fx-font-weight: bold;
+                       -fx-font-size: 15px; -fx-background-radius: 20; -fx-cursor: hand;
+                       -fx-padding: 6 12 6 12;"
                 prefWidth="120.0" prefHeight="40.0" />
 
     </children>

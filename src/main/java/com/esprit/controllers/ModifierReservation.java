@@ -44,6 +44,7 @@ public class ModifierReservation implements Initializable {
     private TableColumn<ReservationMateriel, Void> colAction;
 
     private final ObservableList<ReservationMateriel> data = FXCollections.observableArrayList();
+
     @FXML
     private Button btnRetourAccueil;
 
@@ -55,6 +56,12 @@ public class ModifierReservation implements Initializable {
         colQuantite.setCellValueFactory(new PropertyValueFactory<>("quantiteReservee"));
         colStatut.setCellValueFactory(new PropertyValueFactory<>("statut"));
 
+        chargerDonnees();
+        ajouterColonneAction();
+    }
+
+    private void chargerDonnees() {
+        data.clear();
         ServiceReservationMateriel srm = new ServiceReservationMateriel();
         List<ReservationMateriel> reservations = srm.recuperer();
 
@@ -70,8 +77,6 @@ public class ModifierReservation implements Initializable {
 
         data.addAll(reservations);
         tableReservations.setItems(data);
-
-        ajouterColonneAction();
     }
 
     private void ajouterColonneAction() {
@@ -81,10 +86,8 @@ public class ModifierReservation implements Initializable {
             private final HBox box = new HBox(10, btnModifier, btnEffacer);
 
             {
-                // Centrage du HBox
                 box.setAlignment(Pos.CENTER);
 
-                // Style partagé
                 String commonStyle = "-fx-text-fill: white;" +
                         "-fx-font-weight: bold;" +
                         "-fx-background-radius: 15;" +
@@ -102,7 +105,6 @@ public class ModifierReservation implements Initializable {
                         ModifierReservationFormulaire controller = loader.getController();
                         controller.setReservation(reservation);
 
-                        // ✅ Remplacer la scène dans la même fenêtre
                         Stage stageActuel = (Stage) ((Node) event.getSource()).getScene().getWindow();
                         stageActuel.setScene(new Scene(root));
                         stageActuel.setTitle("Modifier Réservation");
@@ -124,7 +126,9 @@ public class ModifierReservation implements Initializable {
                         if (response == ButtonType.OK) {
                             ServiceReservationMateriel service = new ServiceReservationMateriel();
                             service.supprimer2(r.getId());
-                            data.remove(r); // Supprimer de l'affichage
+
+                            chargerDonnees();
+                            tableReservations.refresh();
                         }
                     });
                 });
@@ -145,8 +149,6 @@ public class ModifierReservation implements Initializable {
         alert.show();
     }
 
-
-
     @FXML
     void retourAccueil(ActionEvent event) {
         try {
@@ -161,5 +163,4 @@ public class ModifierReservation implements Initializable {
             e.printStackTrace();
         }
     }
-
 }

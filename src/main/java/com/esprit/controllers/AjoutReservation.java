@@ -62,19 +62,16 @@ public class AjoutReservation implements Initializable {
         String quantiteText = tfQuantite.getText().trim();
         String statut = cbStatut.getValue();
 
-        // Vérification de champs vides
         if (materiel == null || dateDebut == null || dateFin == null || quantiteText.isEmpty() || statut == null) {
             showAlert(Alert.AlertType.ERROR, "Champs manquants", "Veuillez remplir tous les champs.");
             return;
         }
 
-        // Vérification des dates
         if (!dateDebut.isBefore(dateFin)) {
             showAlert(Alert.AlertType.ERROR, "Dates invalides", "La date de début doit être antérieure à la date de fin.");
             return;
         }
 
-        // Vérification de la quantité
         int quantite;
         try {
             quantite = Integer.parseInt(quantiteText);
@@ -88,31 +85,18 @@ public class AjoutReservation implements Initializable {
             return;
         }
 
-        // Vérification du stock déjà réservé
-        ServiceReservationMateriel serviceReservation = new ServiceReservationMateriel();
-        List<ReservationMateriel> reservationsExistantes = serviceReservation.recuperer();
-        int totalDejaReserve = 0;
-        for (ReservationMateriel r : reservationsExistantes) {
-            if (r.getMaterielId() == materiel.getId()) {
-                totalDejaReserve += r.getQuantiteReservee();
-            }
-        }
+        // Lire la quantité disponible en base
+        ServiceMateriel serviceMateriel = new ServiceMateriel();
+        int quantiteDisponible = serviceMateriel.getQuantiteById(materiel.getId());
 
-        // Si le stock est déjà saturé
-        if (totalDejaReserve >= materiel.getQuantite()) {
-            showAlert(Alert.AlertType.ERROR, "Indisponible", "Désolé, ce matériel est déjà entièrement réservé.");
-            return;
-        }
-
-        // Vérifie que la quantité demandée n'excède pas le stock restant
-        int stockRestant = materiel.getQuantite() - totalDejaReserve;
-        if (quantite > stockRestant) {
-            showAlert(Alert.AlertType.ERROR, "Quantité insuffisante", "Il ne reste que " + stockRestant + " unité(s) disponible(s).");
+        if (quantite > quantiteDisponible) {
+            showAlert(Alert.AlertType.ERROR, "Quantité insuffisante", "Il ne reste que " + quantiteDisponible + " unité(s) disponible(s).");
             return;
         }
 
         // Vérification de doublon
-        for (ReservationMateriel r : reservationsExistantes) {
+        ServiceReservationMateriel serviceReservation = new ServiceReservationMateriel();
+        for (ReservationMateriel r : serviceReservation.recuperer()) {
             if (r.getMaterielId() == materiel.getId()
                     && r.getDateDebut().toLocalDate().isEqual(dateDebut)
                     && r.getDateFin().toLocalDate().isEqual(dateFin)
@@ -122,8 +106,23 @@ public class AjoutReservation implements Initializable {
                 return;
             }
         }
+        // Vérifier le statut du matériel
+        if (!"DISPONIBLE".equalsIgnoreCase(materiel.getEtat())) {
+            showAlert(Alert.AlertType.ERROR, "Matériel indisponible", "Ce matériel n'est pas disponible pour une réservation.");
+            return;
+        }
 
-        // ✅ Création de la réservation
+         // Vérifier si une autre réservation existe sur la même période
+        for (ReservationMateriel r : serviceReservation.recuperer()) {
+            if (r.getMaterielId() == materiel.getId()
+                    && !(r.getDateFin().toLocalDate().isBefore(dateDebut) || r.getDateDebut().toLocalDate().isAfter(dateFin))) {
+                showAlert(Alert.AlertType.ERROR, "Conflit", "Ce matériel est déjà réservé sur cette période.");
+                return;
+            }
+        }
+
+
+        // Création de la réservation
         ReservationMateriel reservation = new ReservationMateriel(
                 0,
                 materiel.getId(),
@@ -134,12 +133,6 @@ public class AjoutReservation implements Initializable {
         );
 
         serviceReservation.ajouter(reservation);
-
-        // ✅ Mettre à jour la quantité restante du matériel dans la base
-        int nouvelleQuantite = materiel.getQuantite() - quantite;
-        ServiceMateriel serviceMateriel = new ServiceMateriel();
-        serviceMateriel.mettreAJourQuantite(materiel.getId(), nouvelleQuantite);
-
         showAlert(Alert.AlertType.INFORMATION, "Succès", "Réservation enregistrée avec succès !");
         resetForm();
     }
@@ -165,8 +158,6 @@ public class AjoutReservation implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Accueil.fxml"));
             Parent root = loader.load();
-
-            // Remplacer la scène actuelle
             Stage stage = (Stage) btnRetour.getScene().getWindow();
             stage.setScene(new Scene(root));
         } catch (IOException e) {

@@ -8,15 +8,16 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.HBox;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -25,119 +26,116 @@ import java.util.ResourceBundle;
 public class ModifierMateriel implements Initializable {
 
     @FXML
-    private TableView<Materiels> tableMateriels;
-
-    @FXML
-    private TableColumn<Materiels, String> colNom;
-    @FXML
-    private TableColumn<Materiels, String> colType;
-    @FXML
-    private TableColumn<Materiels, Integer> colQuantite;
-    @FXML
-    private TableColumn<Materiels, String> colEtat;
-    @FXML
-    private TableColumn<Materiels, String> colDescription;
-    @FXML
-    private TableColumn<Materiels, Void> colAction;
-
-    private final ObservableList<Materiels> data = FXCollections.observableArrayList();
+    private FlowPane containerMateriels;
 
     @FXML
     private Button btnRetourAccueil;
 
+    @FXML
+    private Button btnModifier;
+
+    @FXML
+    private Button btnSupprimer;
+
+    private final ToggleGroup toggleGroup = new ToggleGroup();
+    private final ObservableList<Materiels> materiels = FXCollections.observableArrayList();
+
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        colNom.setCellValueFactory(new PropertyValueFactory<>("nom"));
-        colType.setCellValueFactory(new PropertyValueFactory<>("type"));
-        colQuantite.setCellValueFactory(new PropertyValueFactory<>("quantite"));
-        colEtat.setCellValueFactory(new PropertyValueFactory<>("etat"));
-        colDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
-
-        chargerDonnees();
-        ajouterColonneAction();
-    }
-
-    private void chargerDonnees() {
-        data.clear();
+    public void initialize(URL url, ResourceBundle resourceBundle) {
         ServiceMateriel sm = new ServiceMateriel();
-        List<Materiels> liste = sm.recuperer();
-        data.addAll(liste);
-        tableMateriels.setItems(data);
+        materiels.setAll(sm.recuperer());
+        afficherMateriels();
     }
 
-    private void ajouterColonneAction() {
-        colAction.setCellFactory(param -> new TableCell<>() {
-            private final Button btnModifier = new Button("Modifier");
-            private final Button btnEffacer = new Button("Effacer");
-            private final HBox box = new HBox(10, btnModifier, btnEffacer);
+    private void afficherMateriels() {
+        containerMateriels.getChildren().clear();
 
-            {
-                box.setAlignment(Pos.CENTER);
+        for (Materiels m : materiels) {
+            VBox box = new VBox(8);
+            box.setStyle("-fx-border-color: #ccc; -fx-background-color: white; -fx-padding: 10; -fx-alignment: center;");
+            box.setPrefWidth(150);
 
-                String commonStyle = "-fx-text-fill: white;" +
-                        "-fx-font-weight: bold;" +
-                        "-fx-background-radius: 15;" +
-                        "-fx-cursor: hand;" +
-                        "-fx-padding: 4 10 4 10;";
-
-                btnModifier.setStyle("-fx-background-color: #ff8cb3;" + commonStyle);
-                btnEffacer.setStyle("-fx-background-color: #e57373;" + commonStyle);
-
-                btnModifier.setOnAction(event -> {
-                    Materiels m = getTableView().getItems().get(getIndex());
-
-                    try {
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierMaterielFormulaire.fxml"));
-                        Parent formulaire = loader.load();
-
-                        ModifierMaterielFormulaire controller = loader.getController();
-                        controller.initData(m);
-
-                        // ✅ On récupère le stage actuel (même fenêtre)
-                        Stage stageActuel = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                        stageActuel.setScene(new Scene(formulaire));
-                        stageActuel.setTitle("Modifier Matériel");
-                        stageActuel.sizeToScene(); // Ajuster la taille de la fenêtre
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible d’ouvrir le formulaire.");
-                    }
-                });
-
-                btnEffacer.setOnAction(event -> {
-                    Materiels m = getTableView().getItems().get(getIndex());
-
-                    Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-                    confirm.setTitle("Confirmation");
-                    confirm.setHeaderText(null);
-                    confirm.setContentText("Voulez-vous vraiment supprimer ce matériel ?");
-                    confirm.showAndWait().ifPresent(response -> {
-                        if (response == ButtonType.OK) {
-                            ServiceMateriel service = new ServiceMateriel();
-                            service.supprimer(m);
-                            data.remove(m);
-                        }
-                    });
-                });
+            ImageView imageView = new ImageView();
+            if (m.getImage() != null && !m.getImage().isEmpty()) {
+                File file = new File(m.getImage());
+                if (file.exists()) {
+                    imageView.setImage(new Image(file.toURI().toString()));
+                } else {
+                    imageView.setImage(new Image("/images/nondispo.jpg"));
+                }
+            } else {
+                imageView.setImage(new Image("/images/nondispo.jpg"));
             }
 
-            @Override
-            protected void updateItem(Void item, boolean empty) {
-                super.updateItem(item, empty);
-                setGraphic(empty ? null : box);
+            imageView.setFitWidth(120);
+            imageView.setFitHeight(100);
+            imageView.setPreserveRatio(true);
+
+            Label nomLabel = new Label(m.getNom());
+            nomLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
+
+            RadioButton radioButton = new RadioButton();
+            radioButton.setToggleGroup(toggleGroup);
+            radioButton.setUserData(m);
+
+            box.getChildren().addAll(imageView, nomLabel, radioButton);
+            containerMateriels.getChildren().add(box);
+        }
+    }
+
+    @FXML
+    void modifierMateriel(ActionEvent event) {
+        RadioButton selectedRadio = (RadioButton) toggleGroup.getSelectedToggle();
+        if (selectedRadio == null) {
+            showAlert(Alert.AlertType.WARNING, "Aucun matériel sélectionné", "Veuillez sélectionner un matériel à modifier.");
+            return;
+        }
+
+        Materiels materiel = (Materiels) selectedRadio.getUserData();
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierMaterielFormulaire.fxml"));
+            Parent root = loader.load();
+
+            // Appel de setMateriel() du contrôleur pour pré-remplir le formulaire
+            ModifierMaterielFormulaire controller = loader.getController();
+            controller.setMateriel(materiel);
+
+            Stage stage = (Stage) btnModifier.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Modifier Matériel");
+            stage.sizeToScene();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    void supprimerMateriel(ActionEvent event) {
+        RadioButton selectedRadio = (RadioButton) toggleGroup.getSelectedToggle();
+        if (selectedRadio == null) {
+            showAlert(Alert.AlertType.WARNING, "Aucun matériel sélectionné", "Veuillez sélectionner un matériel à supprimer.");
+            return;
+        }
+
+        Materiels materiel = (Materiels) selectedRadio.getUserData();
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Confirmation de suppression");
+        confirm.setHeaderText("Voulez-vous vraiment supprimer ce matériel ?");
+        confirm.setContentText(materiel.getNom());
+
+        confirm.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                ServiceMateriel sm = new ServiceMateriel();
+                sm.supprimer(materiel);
+                materiels.remove(materiel);
+                afficherMateriels();
+                showAlert(Alert.AlertType.INFORMATION, "Suppression réussie", "Le matériel a été supprimé.");
             }
         });
     }
-
-    private void showAlert(Alert.AlertType type, String title, String message) {
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setContentText(message);
-        alert.show();
-    }
-
-
 
     @FXML
     void retourAccueil(ActionEvent event) {
@@ -154,4 +152,11 @@ public class ModifierMateriel implements Initializable {
         }
     }
 
+    private void showAlert(Alert.AlertType type, String titre, String message) {
+        Alert alert = new Alert(type);
+        alert.setTitle(titre);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.show();
+    }
 }

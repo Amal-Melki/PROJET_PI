@@ -16,8 +16,8 @@ public class Main {
         ServiceFournisseur servicefournisseur = new ServiceFournisseur();
         ServiceReservationMateriel servicereservation = new ServiceReservationMateriel();
         // Ajouter un matériel
-        Materiels materiel = new Materiels("Enceinte JBL", "Audio", 10, "DISPONIBLE", "Enceinte Bluetooth puissante");
-       serviceMateriel.ajouter(materiel);
+      //  Materiels materiel = new Materiels("Enceinte JBL", "Audio", 10, "DISPONIBLE", "Enceinte Bluetooth puissante");
+       //serviceMateriel.ajouter(materiel);
 
         // Afficher tous les matériels
         System.out.println("Liste des matériels :");

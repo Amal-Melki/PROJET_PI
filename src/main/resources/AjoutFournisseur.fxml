@@ -21,7 +21,8 @@
               mnemonicParsing="false"
               text="↩ Retour"
               onAction="#retourAccueil"
-              style="-fx-background-color: #ff8cb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 20; -fx-cursor: hand; -fx-padding: 6 12 6 12;" />
+              style="-fx-background-color: #ff8cb3; -fx-text-fill: white; -fx-font-weight: bold;
+                     -fx-font-size: 13px; -fx-background-radius: 20; -fx-cursor: hand; -fx-padding: 6 12 6 12;" />
 
       <!-- Titre Ajout Fournisseur -->
       <Text text="Ajout Fournisseur"
@@ -32,36 +33,28 @@
          </font>
       </Text>
 
-      <!-- Labels -->
-      <Label layoutX="100.0" layoutY="120.0" text="Nom :">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Label>
+      <!-- Labels stylisés -->
+      <Label layoutX="100.0" layoutY="120.0" text="Nom :"
+             style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
 
-      <Label layoutX="100.0" layoutY="180.0" text="Téléphone :">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Label>
+      <Label layoutX="100.0" layoutY="180.0" text="Téléphone :"
+             style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
 
-      <Label layoutX="100.0" layoutY="240.0" text="Adresse :">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Label>
+      <Label layoutX="100.0" layoutY="240.0" text="Adresse :"
+             style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
 
-      <Label layoutX="100.0" layoutY="300.0" text="Email :">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Label>
+      <Label layoutX="100.0" layoutY="300.0" text="Email :"
+             style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
 
-      <!-- TextFields -->
-      <TextField fx:id="tfNom" layoutX="220.0" layoutY="115.0" prefWidth="300.0"/>
-      <TextField fx:id="tfTelephone" layoutX="220.0" layoutY="175.0" prefWidth="300.0"/>
-      <TextField fx:id="tfAdresse" layoutX="220.0" layoutY="235.0" prefWidth="300.0"/>
-      <TextField fx:id="tfEmail" layoutX="220.0" layoutY="295.0" prefWidth="300.0"/>
+      <!-- TextFields stylisés -->
+      <TextField fx:id="tfNom" layoutX="220.0" layoutY="115.0" prefWidth="300.0"
+                 style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #ffffff;" />
+      <TextField fx:id="tfTelephone" layoutX="220.0" layoutY="175.0" prefWidth="300.0"
+                 style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #ffffff;" />
+      <TextField fx:id="tfAdresse" layoutX="220.0" layoutY="235.0" prefWidth="300.0"
+                 style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #ffffff;" />
+      <TextField fx:id="tfEmail" layoutX="220.0" layoutY="295.0" prefWidth="300.0"
+                 style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #ffffff;" />
 
       <!-- Bouton Ajouter -->
       <Button fx:id="btnAjouter"
@@ -69,8 +62,8 @@
               text="Ajouter"
               onAction="#ajouterFournisseur"
               prefWidth="120.0" prefHeight="40.0"
-              style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 15px; -fx-background-radius: 20; -fx-cursor: hand;" />
+              style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold;
+                     -fx-font-size: 15px; -fx-background-radius: 20; -fx-cursor: hand;" />
 
    </children>
-
 </Pane>
