@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="550.0" prefWidth="700.0" style="-fx-background-color: pink;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.esprit.controllers.AjouterReservationClient">
+
+    <children>
+        <!-- Titre -->
+        <Text layoutX="180.0" layoutY="60.0" style="-fx-fill: white;" text="Réserver un Espace">
+            <font>
+                <Font name="Segoe UI Bold" size="30.0" />
+            </font>
+        </Text>
+
+        <!-- Bouton Retour -->
+        <Button fx:id="btnRetour" layoutX="600.0" layoutY="20.0" onAction="#retourConsulterEspaces"
+                style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 25; -fx-font-family: 'Segoe UI Semibold'; -fx-cursor: hand; -fx-padding: 6 12 6 12;"
+                text="↩ Retour" />
+
+        <!-- Informations de l'espace -->
+        <VBox layoutX="50.0" layoutY="100.0" prefHeight="198.0" prefWidth="633.0" spacing="10.0"
+              style="-fx-background-color: rgba(255, 255, 255, 0.5); -fx-padding: 15; -fx-background-radius: 10;">
+            <Label style="-fx-font-size: 18; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="Informations de l'espace" />
+
+            <HBox spacing="10.0">
+                <Label style="-fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="Nom:" />
+                <Label fx:id="nomEspaceLabel" style="-fx-font-family: 'Segoe UI';" />
+            </HBox>
+
+            <HBox spacing="10.0">
+                <Label style="-fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="Type:" />
+                <Label fx:id="typeEspaceLabel" style="-fx-font-family: 'Segoe UI';" />
+            </HBox>
+
+            <HBox spacing="10.0">
+                <Label style="-fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="Capacité:" />
+                <Label fx:id="capaciteEspaceLabel" style="-fx-font-family: 'Segoe UI';" />
+            </HBox>
+
+            <HBox spacing="10.0">
+                <Label style="-fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="Localisation:" />
+                <Label fx:id="localisationEspaceLabel" style="-fx-font-family: 'Segoe UI';" />
+            </HBox>
+
+            <HBox spacing="10.0">
+                <Label style="-fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="Prix:" />
+                <Label fx:id="prixEspaceLabel" style="-fx-font-family: 'Segoe UI';" />
+            </HBox>
+        </VBox>
+
+        <!-- Formulaire de réservation -->
+        <VBox layoutX="50.0" layoutY="300.0" spacing="20.0">
+            <Label style="-fx-font-size: 18; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="Période de réservation" />
+
+            <HBox alignment="CENTER_LEFT" spacing="20.0">
+                <Label text="Date de début:" style="-fx-font-family: 'Segoe UI';" />
+                <DatePicker fx:id="dateDebutPicker" prefWidth="200.0" style="-fx-font-family: 'Segoe UI';" />
+            </HBox>
+
+            <HBox alignment="CENTER_LEFT" spacing="20.0">
+                <Label text="Date de fin:" style="-fx-font-family: 'Segoe UI';" />
+                <DatePicker fx:id="dateFinPicker" prefWidth="200.0" style="-fx-font-family: 'Segoe UI';" />
+            </HBox>
+
+            <HBox alignment="CENTER" layoutX="180.0" layoutY="450.0" spacing="40.0">
+                <Button fx:id="btnConfirmer" onAction="#confirmerReservation" prefHeight="40.0" prefWidth="180.0"
+                        style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 25; -fx-font-family: 'Segoe UI Semibold'; -fx-cursor: hand;"
+                        text="Confirmer la réservation" />
+
+                <Button fx:id="btnAnnuler" onAction="#annulerReservation" prefHeight="40.0" prefWidth="150.0"
+                        style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 25; -fx-font-family: 'Segoe UI Semibold'; -fx-cursor: hand;"
+                        text="Annuler" />
+            </HBox>
+        </VBox>
+    </children>
+</AnchorPane>

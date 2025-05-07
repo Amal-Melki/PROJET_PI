@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+
+<Pane prefHeight="518.0" prefWidth="636.0" style="-fx-background-color: pink;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.esprit.controllers.AjouterEspaceClient">
+    <children>
+
+        <!-- Bouton Retour -->
+        <Button fx:id="btnRetour" layoutX="520.0" layoutY="20.0" onAction="#retourMenu"
+                style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 25; -fx-font-family: 'Segoe UI Semibold'; -fx-cursor: hand; -fx-padding: 6 12 6 12;"
+                text="↩ Retour" />
+
+        <!-- Titre -->
+        <Text layoutX="200.0" layoutY="70.0" style="-fx-fill: white;" text="Ajouter un Espace">
+            <font>
+                <Font name="Segoe UI Bold" size="30.0" />
+            </font>
+        </Text>
+
+        <!-- Labels -->
+        <Label layoutX="80.0" layoutY="110.0" text="Nom :" style="-fx-text-fill: #333333; -fx-font-family: 'Segoe UI';">
+            <font><Font size="15.0" /></font>
+        </Label>
+        <Label layoutX="80.0" layoutY="160.0" text="Type :" style="-fx-text-fill: #333333; -fx-font-family: 'Segoe UI';">
+            <font><Font size="15.0" /></font>
+        </Label>
+        <Label layoutX="80.0" layoutY="210.0" text="Capacité :" style="-fx-text-fill: #333333; -fx-font-family: 'Segoe UI';">
+            <font><Font size="15.0" /></font>
+        </Label>
+        <Label layoutX="80.0" layoutY="260.0" text="Localisation :" style="-fx-text-fill: #333333; -fx-font-family: 'Segoe UI';">
+            <font><Font size="15.0" /></font>
+        </Label>
+        <Label layoutX="80.0" layoutY="310.0" text="Prix :" style="-fx-text-fill: #333333; -fx-font-family: 'Segoe UI';">
+            <font><Font size="15.0" /></font>
+        </Label>
+        <Label layoutX="80.0" layoutY="360.0" text="Disponibilité :" style="-fx-text-fill: #333333; -fx-font-family: 'Segoe UI';">
+            <font><Font size="15.0" /></font>
+        </Label>
+
+        <!-- Champs de saisie -->
+
+        <TextField fx:id="nomField" layoutX="220.0" layoutY="105.0" prefWidth="300.0" text="azurcity"
+                   style="-fx-font-family: 'Segoe UI'; -fx-background-radius: 5;" />
+        <TextField fx:id="typeField" layoutX="220.0" layoutY="155.0" prefWidth="300.0" text="anniversaire"
+                   style="-fx-font-family: 'Segoe UI'; -fx-background-radius: 5;" />
+        <TextField fx:id="capaciteField" layoutX="220.0" layoutY="205.0" prefWidth="300.0" text="500"
+                   style="-fx-font-family: 'Segoe UI'; -fx-background-radius: 5;" />
+        <TextField fx:id="localisationField" layoutX="220.0" layoutY="255.0" prefWidth="300.0" text="ben arous"
+                   style="-fx-font-family: 'Segoe UI'; -fx-background-radius: 5;" />
+        <TextField fx:id="prixField" layoutX="220.0" layoutY="305.0" prefWidth="300.0" text="1500"
+                   style="-fx-font-family: 'Segoe UI'; -fx-background-radius: 5;" />
+        <CheckBox fx:id="disponibiliteCheck" layoutX="220.0" layoutY="355.0" />
+
+        <!-- Bouton Ajouter -->
+        <Button layoutX="260.0" layoutY="420.0" onAction="#ajouterEspace" prefHeight="45.0" prefWidth="130.0"
+                style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 25; -fx-font-family: 'Segoe UI Semibold'; -fx-cursor: hand;"
+                text="Ajouter" />
+
+    </children>
+</Pane>

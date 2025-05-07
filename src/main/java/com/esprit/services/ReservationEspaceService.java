@@ -3,6 +3,7 @@ import com.esprit.modules.ReservationEspace;
 import com.esprit.utils.DataSource;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,5 +77,8 @@ public class ReservationEspaceService {
             System.out.println(" Error fetching reservations: " + e.getMessage());
         }
         return reservations;
+    }
+
+    public void creerReservation(String currentUser, int id, LocalDate dateDebut, LocalDate dateFin) {
     }
 }

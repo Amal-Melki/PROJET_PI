@@ -31,8 +31,8 @@ public class EspaceService {
         }
     }
 
-        public void update(Espace espace) {
-            String req = "UPDATE espace SET nomEspace=?, type=?, capacite=?, localisation=?, prix=?, disponibilite=? WHERE espaceId=?";
+    public void update(Espace espace) {
+        String req = "UPDATE espace SET nomEspace=?, type=?, capacite=?, localisation=?, prix=?, disponibilite=? WHERE espaceId=?";
         try {
             PreparedStatement pst = connection.prepareStatement(req);
             pst.setString(1, espace.getNom());
@@ -43,7 +43,7 @@ public class EspaceService {
             pst.setBoolean(6, espace.isDisponibilite());
             pst.setInt(7, espace.getId());
             pst.executeUpdate();
-            System.out.println(" Espace modifié !");
+            System.out.println("Espace modifié !");
         } catch (SQLException e) {
             System.out.println("Erreur lors de la modification : " + e.getMessage());
         }
@@ -83,4 +83,26 @@ public class EspaceService {
         }
         return espaces;
     }
+
+    public boolean ajouter(Espace nouvelEspace) {
+        String req = "INSERT INTO espace(nomEspace, type, capacite, localisation, prix, disponibilite) VALUES (?, ?, ?, ?, ?, ?)";
+        try {
+            PreparedStatement pst = connection.prepareStatement(req);
+            pst.setString(1, nouvelEspace.getNom());
+            pst.setString(2, nouvelEspace.getType());
+            pst.setInt(3, nouvelEspace.getCapacite());
+            pst.setString(4, nouvelEspace.getLocalisation());
+            pst.setDouble(5, nouvelEspace.getPrix());
+            pst.setBoolean(6, nouvelEspace.isDisponibilite());
+            pst.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de l'ajout : " + e.getMessage());
+            return false;
+        }
 }
+
+    public void ajouterEspace(Espace espace) {
+    }
+}
+

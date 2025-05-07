@@ -35,7 +35,7 @@ public class MainEspacesGUI extends Application {
     // Méthode pour ouvrir n'importe quelle interface FXML
     public static void loadFXML(String fxmlFileName, String title) {
         try {
-            FXMLLoader loader = new FXMLLoader(MainEspacesGUI.class.getResource("/com/esprit/Resources/MenuEspace.fxml" + fxmlFileName));
+            FXMLLoader loader = new FXMLLoader(MainEspacesGUI.class.getResource("/com/esprit/Resources/" + fxmlFileName));
             Parent root = loader.load();
             Stage stage = new Stage();
             stage.setTitle(title);
