@@ -40,11 +40,18 @@ public class ModifierMateriel implements Initializable {
     private final ToggleGroup toggleGroup = new ToggleGroup();
     private final ObservableList<Materiels> materiels = FXCollections.observableArrayList();
 
+    @FXML
+    private TextField tfRecherche;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ServiceMateriel sm = new ServiceMateriel();
         materiels.setAll(sm.recuperer());
         afficherMateriels();
+        tfRecherche.textProperty().addListener((observable, oldValue, newValue) -> {
+            filtrerMateriels(newValue);
+        });
+
     }
 
     private void afficherMateriels() {
@@ -159,4 +166,34 @@ public class ModifierMateriel implements Initializable {
         alert.setContentText(message);
         alert.show();
     }
+
+    private void filtrerMateriels(String motCle) {
+        containerMateriels.getChildren().clear();
+
+        for (Materiels m : materiels) {
+            if (m.getNom().toLowerCase().contains(motCle.toLowerCase())) {
+                VBox box = new VBox(8);
+                box.setStyle("-fx-border-color: #ccc; -fx-background-color: white; -fx-padding: 10; -fx-alignment: center;");
+                box.setPrefWidth(150);
+
+                ImageView imageView = new ImageView();
+                File file = new File(m.getImage() != null ? m.getImage() : "");
+                imageView.setImage((file.exists()) ? new Image(file.toURI().toString()) : new Image("/images/nondispo.jpg"));
+                imageView.setFitWidth(120);
+                imageView.setFitHeight(100);
+                imageView.setPreserveRatio(true);
+
+                Label nomLabel = new Label(m.getNom());
+                nomLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
+
+                RadioButton radioButton = new RadioButton();
+                radioButton.setToggleGroup(toggleGroup);
+                radioButton.setUserData(m);
+
+                box.getChildren().addAll(imageView, nomLabel, radioButton);
+                containerMateriels.getChildren().add(box);
+            }
+        }
+    }
+
 }
