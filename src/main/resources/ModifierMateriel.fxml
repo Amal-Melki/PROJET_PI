@@ -10,60 +10,75 @@
             xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.esprit.controllers.ModifierMateriel"
-            style="-fx-background-color: pink;">
+            style="-fx-background-color: #ffc0cb;"> <!-- Rose pâle cohérent -->
 
     <children>
+
+        <!-- Titre -->
+        <HBox layoutX="0.0" layoutY="20.0" prefWidth="900.0" alignment="center">
+            <Text text="Liste des Matériels"
+                  style="-fx-fill: white;">
+                <font>
+                    <Font name="Segoe UI Bold" size="30.0"/>
+                </font>
+            </Text>
+        </HBox>
+
 
         <!-- Bouton Retour -->
         <Button fx:id="btnRetourAccueil"
                 text="↩ Retour"
-                layoutX="790.0"
-                layoutY="20.0"
+                layoutX="780.0" layoutY="20.0"
                 onAction="#retourAccueil"
-                style="-fx-background-color: #ff7fa8; -fx-text-fill: white; -fx-font-weight: bold;
-                       -fx-font-size: 13px; -fx-background-radius: 20; -fx-cursor: hand;
+                style="-fx-background-color: #ff7fa8; -fx-text-fill: white;
+                       -fx-font-weight: bold; -fx-font-size: 13px;
+                       -fx-background-radius: 20; -fx-cursor: hand;
                        -fx-padding: 6 12 6 12;" />
 
-        <!-- Titre -->
-        <Text text="Liste Matériels"
-              layoutX="320.0" layoutY="70.0"
-              style="-fx-fill: white;">
-            <font>
-                <Font name="Segoe UI Bold" size="30.0"/>
-            </font>
-        </Text>
+        <!-- Barre de recherche -->
+        <HBox layoutY="80.0" prefWidth="900.0" alignment="center">
+            <TextField fx:id="tfRecherche"
+                       promptText="🔍 Rechercher par nom..."
+                       alignment="center"
+                       prefWidth="500.0"
+                       style="-fx-background-color: white; -fx-background-radius: 20;
+                      -fx-border-radius: 20; -fx-border-color: #ff8cb3;
+                      -fx-font-size: 14px; -fx-padding: 8 14;" />
+        </HBox>
+
 
         <!-- Conteneur principal -->
-        <VBox layoutX="20.0" layoutY="100.0" prefWidth="860.0" spacing="20">
+        <VBox layoutX="20.0" layoutY="130.0" prefWidth="860.0" spacing="20">
 
-            <!-- FlowPane avec les matériels -->
+            <!-- FlowPane contenant les matériels -->
             <FlowPane fx:id="containerMateriels"
-                      prefWidth="750.0" prefHeight="450.0"
+                      prefWidth="860.0" prefHeight="480.0"
                       hgap="20.0" vgap="20.0"
-                      style="-fx-background-color: pink; -fx-padding: 10;" />
+                      style="-fx-background-color: transparent;" />
 
-            <!-- Boutons centrés -->
-            <HBox spacing="30" alignment="center">
+            <!-- Boutons Modifier & Supprimer -->
+            <HBox alignment="center" spacing="30">
                 <Button fx:id="btnModifier"
                         text="Modifier"
                         onAction="#modifierMateriel"
-                        prefWidth="150.0" prefHeight="40.0"
+                        prefWidth="150.0" prefHeight="42.0"
                         style="-fx-background-color: #ff8cb3;
                                -fx-text-fill: white;
                                -fx-font-weight: bold;
+                               -fx-font-size: 15px;
                                -fx-background-radius: 15;
-                               -fx-cursor: hand;
-                               -fx-padding: 4 10 4 10;" />
+                               -fx-cursor: hand;" />
+
                 <Button fx:id="btnSupprimer"
                         text="Supprimer"
                         onAction="#supprimerMateriel"
-                        prefWidth="150.0" prefHeight="40.0"
+                        prefWidth="150.0" prefHeight="42.0"
                         style="-fx-background-color: #e57373;
                                -fx-text-fill: white;
                                -fx-font-weight: bold;
+                               -fx-font-size: 15px;
                                -fx-background-radius: 15;
-                               -fx-cursor: hand;
-                               -fx-padding: 4 10 4 10;" />
+                               -fx-cursor: hand;" />
             </HBox>
 
         </VBox>
