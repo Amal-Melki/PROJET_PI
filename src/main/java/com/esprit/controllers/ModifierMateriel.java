@@ -42,6 +42,10 @@ public class ModifierMateriel implements Initializable {
 
     @FXML
     private TextField tfRecherche;
+    @FXML private ComboBox<String> cbFiltreStatut;
+    @FXML private ComboBox<String> cbFiltreType;
+    @FXML private TextField tfFiltreQuantite;
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -51,6 +55,10 @@ public class ModifierMateriel implements Initializable {
         tfRecherche.textProperty().addListener((observable, oldValue, newValue) -> {
             filtrerMateriels(newValue);
         });
+        cbFiltreStatut.setItems(FXCollections.observableArrayList("Tous", "DISPONIBLE", "EN_MAINTENANCE", "HORS_SERVICE"));
+        cbFiltreType.setItems(FXCollections.observableArrayList("Tous", "Mobilier", "Éclairage", "Sonorisation", "Audiovisuel"));
+        cbFiltreStatut.setValue("Tous");
+        cbFiltreType.setValue("Tous");
 
     }
 
@@ -194,6 +202,36 @@ public class ModifierMateriel implements Initializable {
                 containerMateriels.getChildren().add(box);
             }
         }
+    }
+    @FXML
+    void filtrerMateriels() {
+        String statut = cbFiltreStatut.getValue();
+        String type = cbFiltreType.getValue();
+        String quantiteStr = tfFiltreQuantite.getText().trim();
+
+        List<Materiels> tous = new ServiceMateriel().recuperer();
+        ObservableList<Materiels> filtres = FXCollections.observableArrayList();
+
+        for (Materiels m : tous) {
+            boolean match = true;
+
+            if (!"Tous".equals(statut) && !m.getEtat().equalsIgnoreCase(statut)) match = false;
+            if (!"Tous".equals(type) && !m.getType().equalsIgnoreCase(type)) match = false;
+            if (!quantiteStr.isEmpty()) {
+                try {
+                    int q = Integer.parseInt(quantiteStr);
+                    if (m.getQuantite() < q) match = false;
+                } catch (NumberFormatException e) {
+                    showAlert(Alert.AlertType.ERROR, "Quantité invalide", "Veuillez entrer un nombre.");
+                    return;
+                }
+            }
+
+            if (match) filtres.add(m);
+        }
+
+        materiels.setAll(filtres);
+        afficherMateriels();
     }
 
 }

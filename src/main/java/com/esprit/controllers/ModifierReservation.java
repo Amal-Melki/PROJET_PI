@@ -21,6 +21,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -48,6 +49,14 @@ public class ModifierReservation implements Initializable {
     @FXML
     private Button btnRetourAccueil;
 
+    @FXML
+    private TextField tfRechercheReservation;
+
+    @FXML private ComboBox<String> cbFiltreStatut;
+    @FXML private DatePicker dpFiltreDebut;
+    @FXML private DatePicker dpFiltreFin;
+
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         colNomMateriel.setCellValueFactory(new PropertyValueFactory<>("nomMateriel"));
@@ -58,6 +67,19 @@ public class ModifierReservation implements Initializable {
 
         chargerDonnees();
         ajouterColonneAction();
+
+        tfRechercheReservation.textProperty().addListener((obs, oldValue, newValue) -> {
+            filtrerReservations(newValue);
+        });
+
+        cbFiltreStatut.setItems(FXCollections.observableArrayList("EN_ATTENTE", "VALIDEE", "ANNULEE"));
+
+        tfRechercheReservation.textProperty().addListener((obs, oldVal, newVal) -> filtrerReservationsAvance());
+        cbFiltreStatut.valueProperty().addListener((obs, oldVal, newVal) -> filtrerReservationsAvance());
+        dpFiltreDebut.valueProperty().addListener((obs, oldVal, newVal) -> filtrerReservationsAvance());
+        dpFiltreFin.valueProperty().addListener((obs, oldVal, newVal) -> filtrerReservationsAvance());
+
+
     }
 
     private void chargerDonnees() {
@@ -162,5 +184,52 @@ public class ModifierReservation implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void filtrerReservations(String nomRecherche) {
+        if (nomRecherche == null || nomRecherche.trim().isEmpty()) {
+            tableReservations.setItems(data);
+            return;
+        }
+
+        String recherche = nomRecherche.toLowerCase();
+        ObservableList<ReservationMateriel> filtres = FXCollections.observableArrayList();
+
+        for (ReservationMateriel r : data) {
+            if (r.getNomMateriel() != null && r.getNomMateriel().toLowerCase().contains(recherche)) {
+                filtres.add(r);
+            }
+        }
+
+        tableReservations.setItems(filtres);
+    }
+    @FXML
+    private void filtrerReservationsAvance() {
+        String nomRecherche = tfRechercheReservation.getText() != null ? tfRechercheReservation.getText().toLowerCase() : "";
+        String statutFiltre = cbFiltreStatut.getValue();
+        LocalDate dateDebutFiltre = dpFiltreDebut.getValue();
+        LocalDate dateFinFiltre = dpFiltreFin.getValue();
+
+        ObservableList<ReservationMateriel> filtres = FXCollections.observableArrayList();
+
+        for (ReservationMateriel r : data) {
+            boolean matchNom = r.getNomMateriel() != null && r.getNomMateriel().toLowerCase().contains(nomRecherche);
+            boolean matchStatut = (statutFiltre == null || statutFiltre.isEmpty() || r.getStatut().equalsIgnoreCase(statutFiltre));
+            boolean matchDate = true;
+
+            if (dateDebutFiltre != null && r.getDateDebut().toLocalDate().isBefore(dateDebutFiltre)) {
+                matchDate = false;
+            }
+
+            if (dateFinFiltre != null && r.getDateFin().toLocalDate().isAfter(dateFinFiltre)) {
+                matchDate = false;
+            }
+
+            if (matchNom && matchStatut && matchDate) {
+                filtres.add(r);
+            }
+        }
+
+        tableReservations.setItems(filtres);
     }
 }

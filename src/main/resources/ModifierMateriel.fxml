@@ -10,12 +10,12 @@
             xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.esprit.controllers.ModifierMateriel"
-            style="-fx-background-color: #ffc0cb;"> <!-- Rose pâle cohérent -->
+            style="-fx-background-color: #ffc0cb;">
 
     <children>
 
-        <!-- Titre -->
-        <HBox layoutX="0.0" layoutY="20.0" prefWidth="900.0" alignment="center">
+        <!-- Titre Centré -->
+        <HBox layoutY="20.0" prefWidth="900.0" alignment="center">
             <Text text="Liste des Matériels"
                   style="-fx-fill: white;">
                 <font>
@@ -23,7 +23,6 @@
                 </font>
             </Text>
         </HBox>
-
 
         <!-- Bouton Retour -->
         <Button fx:id="btnRetourAccueil"
@@ -42,13 +41,32 @@
                        alignment="center"
                        prefWidth="500.0"
                        style="-fx-background-color: white; -fx-background-radius: 20;
-                      -fx-border-radius: 20; -fx-border-color: #ff8cb3;
-                      -fx-font-size: 14px; -fx-padding: 8 14;" />
+                              -fx-border-radius: 20; -fx-border-color: #ff8cb3;
+                              -fx-font-size: 14px; -fx-padding: 8 14;" />
         </HBox>
 
+        <!-- Filtres -->
+        <HBox layoutY="130.0" layoutX="90.0" spacing="15.0" alignment="center">
+            <ComboBox fx:id="cbFiltreStatut" promptText="Filtrer par statut"
+                      prefWidth="200.0"
+                      style="-fx-background-radius: 15; -fx-border-radius: 15; -fx-border-color: #ff8cb3; -fx-padding: 6;" />
+            <ComboBox fx:id="cbFiltreType" promptText="Filtrer par type"
+                      prefWidth="200.0"
+                      style="-fx-background-radius: 15; -fx-border-radius: 15; -fx-border-color: #ff8cb3; -fx-padding: 6;" />
+            <TextField fx:id="tfFiltreQuantite" promptText="Stock min."
+                       prefWidth="120.0"
+                       style="-fx-background-color: white; -fx-background-radius: 15;
+                              -fx-border-radius: 15; -fx-border-color: #ff8cb3;
+                              -fx-font-size: 13px; -fx-padding: 6 10;" />
+            <Button text="Filtrer"
+                    onAction="#filtrerMateriels"
+                    style="-fx-background-color: #a8476c; -fx-text-fill: white;
+                           -fx-font-weight: bold; -fx-background-radius: 15;
+                           -fx-cursor: hand; -fx-padding: 6 16;" />
+        </HBox>
 
         <!-- Conteneur principal -->
-        <VBox layoutX="20.0" layoutY="130.0" prefWidth="860.0" spacing="20">
+        <VBox layoutX="20.0" layoutY="180.0" prefWidth="860.0" spacing="20">
 
             <!-- FlowPane contenant les matériels -->
             <FlowPane fx:id="containerMateriels"

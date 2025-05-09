@@ -41,6 +41,9 @@ public class ModifierFournisseur implements Initializable {
     @FXML
     private Button btnRetourAccueil;
 
+    @FXML
+    private TextField tfRechercheFournisseur;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         colNom.setCellValueFactory(new PropertyValueFactory<>("nom"));
@@ -48,6 +51,8 @@ public class ModifierFournisseur implements Initializable {
 
         chargerDonnees();
         ajouterColonneAction();
+        configurerRechercheFournisseur();
+
     }
 
     private void chargerDonnees() {
@@ -142,6 +147,21 @@ public class ModifierFournisseur implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    private void configurerRechercheFournisseur() {
+        tfRechercheFournisseur.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null || newValue.trim().isEmpty()) {
+                tableFournisseurs.setItems(data);
+            } else {
+                ObservableList<Fournisseur> resultats = FXCollections.observableArrayList();
+                for (Fournisseur f : data) {
+                    if (f.getNom().toLowerCase().contains(newValue.toLowerCase())) {
+                        resultats.add(f);
+                    }
+                }
+                tableFournisseurs.setItems(resultats);
+            }
+        });
     }
 
 
