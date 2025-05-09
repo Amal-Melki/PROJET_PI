@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
@@ -15,31 +13,43 @@
 
     <children>
 
-        <!-- Bouton de retour en haut à droite -->
+        <!-- Bouton retour -->
         <Button fx:id="btnRetourAccueil"
                 layoutX="650.0" layoutY="20.0"
                 text="↩ Retour"
                 onAction="#retourAccueil"
-                style="-fx-background-color: #ff7fa8; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 20; -fx-cursor: hand; -fx-padding: 6 12 6 12;" />
+                style="-fx-background-color: #ff7fa8; -fx-text-fill: white;
+                       -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 20;
+                       -fx-cursor: hand; -fx-padding: 6 12 6 12;" />
 
-        <!-- Titre au centre en haut -->
-        <Text text="Liste Fournisseurs"
-              layoutX="250.0" layoutY="70.0"
+        <!-- Titre centré -->
+        <Text text="Liste des Fournisseurs"
+              layoutX="230.0" layoutY="60.0"
               style="-fx-fill: white;">
             <font>
                 <Font name="Segoe UI Bold" size="30.0"/>
             </font>
         </Text>
 
-        <!-- Tableau des fournisseurs -->
+        <!-- Champ de recherche -->
+        <HBox layoutX="125.0" layoutY="70.0" prefWidth="500.0" alignment="CENTER">
+            <TextField fx:id="tfRechercheFournisseur"
+                       promptText="🔍 Rechercher un fournisseur par nom..."
+                       prefWidth="500.0"
+                       style="-fx-background-color: white; -fx-background-radius: 20;
+                              -fx-border-radius: 20; -fx-border-color: #ff8cb3;
+                              -fx-font-size: 14px; -fx-padding: 8 14;" />
+        </HBox>
+
+        <!-- Tableau -->
         <TableView fx:id="tableFournisseurs"
-                   layoutX="10.0" layoutY="100.0"
-                   prefWidth="730.0" prefHeight="380.0"
+                   layoutX="10.0" layoutY="120.0"
+                   prefWidth="730.0" prefHeight="350.0"
                    style="-fx-background-color: #ffe6eb; -fx-border-radius: 10px; -fx-background-radius: 10px;">
             <columns>
-                <TableColumn fx:id="colNom" prefWidth="300.0" text="Nom" />
-                <TableColumn fx:id="colEmail" prefWidth="200.0" text="Email" />
-                <TableColumn fx:id="colAction" prefWidth="200.0" text="Action" />
+                <TableColumn fx:id="colNom" text="Nom" prefWidth="300.0"/>
+                <TableColumn fx:id="colEmail" text="Email" prefWidth="200.0"/>
+                <TableColumn fx:id="colAction" text="Action" prefWidth="200.0"/>
             </columns>
         </TableView>
 
