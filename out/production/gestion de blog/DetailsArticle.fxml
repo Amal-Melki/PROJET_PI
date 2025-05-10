@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.awt.Label?>
+<AnchorPane prefHeight="705.0" prefWidth="628.0" style="-fx-background-color: #FFB6C1;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.esprit.Controller.DetailsArticle">
+    <children>
+        <VBox alignment="TOP_CENTER" layoutX="50.0" layoutY="50.0" spacing="15.0" />
+
+         <!-- Bouton pour revenir à la liste des articles -->
+         <Button layoutX="282.0" layoutY="380.0" onAction="#retourListeArticles" text="Retour à la liste" />
+
+         <!-- Date de publication -->
+         <Label layoutX="154.0" layoutY="224.0" text="🔐 Password : " underline="true">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+
+         <!-- Contenu de l'article -->
+         <Label ellipsisString="#key.unspecified" layoutX="152.0" layoutY="158.0" lineSpacing="12.0" text="👮 Username : " underline="true">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Text fill="#1500ff" layoutX="265.0" layoutY="96.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Login" textAlignment="CENTER">
+         <font>
+            <Font size="40.0" />
+         </font>
+      </Text>
+      <Button layoutX="106.0" layoutY="380.0" onAction="#retourListeArticles" text="Login" />
+      <Button layoutX="519.0" layoutY="380.0" onAction="#retourListeArticles" text="Cancel" />
+      <TextField layoutX="295.0" layoutY="160.0" prefHeight="26.0" prefWidth="256.0" />
+      <TextField layoutX="295.0" layoutY="227.0" prefHeight="26.0" prefWidth="256.0" />
+      <Label layoutX="154.0" layoutY="286.0" text="📽 Type : " underline="true">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <TextField layoutX="288.0" layoutY="302.0" prefHeight="26.0" prefWidth="256.0" />
+      <ImageView fitHeight="108.0" fitWidth="156.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="98.0" fitWidth="112.0" layoutX="14.0" layoutY="7.0">
+         <image>
+            <Image url="@../../../../../logo.16_223bb355.jpg" />
+         </image>
+      </ImageView>
+    </children>
+</AnchorPane>
