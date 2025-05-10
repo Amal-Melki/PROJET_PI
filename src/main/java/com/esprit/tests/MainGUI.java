@@ -15,7 +15,7 @@ public class MainGUI extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AccueilProduitDerive.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/produits/AccueilProduitDerive.fxml"));
             Parent root = loader.load();
 
             Scene scene = new Scene(root);

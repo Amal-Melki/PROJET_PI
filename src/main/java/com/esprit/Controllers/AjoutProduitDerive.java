@@ -73,7 +73,7 @@ public class AjoutProduitDerive implements Initializable {
     }
 
     @FXML
-    void addProduit(ActionEvent event) throws IOException {
+    void addProduit(ActionEvent event) {
         try {
             // Validation des champs obligatoires
             if (tfNom.getText().isEmpty() || cbCategorie.getValue() == null
@@ -100,7 +100,7 @@ public class AjoutProduitDerive implements Initializable {
             showAlert("Succès", "Produit ajouté avec succès !", Alert.AlertType.CONFIRMATION);
 
             // Redirection vers la vue de modification
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierProduitDerive.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/produits/ModifierProduitDerive.fxml"));
             Parent root = loader.load();
             btnAjouter.getScene().setRoot(root);
 
@@ -108,6 +108,17 @@ public class AjoutProduitDerive implements Initializable {
             showAlert("Erreur", "Prix et stock doivent être des nombres valides.");
         } catch (Exception e) {
             showAlert("Erreur", "Une erreur est survenue: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    void retourAccueil(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/produits/AccueilProduitDerive.fxml"));
+            Parent root = loader.load();
+            btnAjouter.getScene().setRoot(root);
+        } catch (IOException e) {
+            showAlert("Erreur", "Impossible de retourner à l'accueil.");
         }
     }
 
