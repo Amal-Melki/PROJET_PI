@@ -5,11 +5,11 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import java.util.Properties;
 
-public class EmailService {
-    private static final String EMAIL = "ghadaomri22@gmail.com";
-    private static final String PASSWORD = "ojki bhlr dyvh tcnl";
+public class RegistrationEmailService {
+    private static final String EMAIL = "sellamimaryemm@gmail.com";
+    private static final String PASSWORD = "nvfz ebjb nnhb cccj";
 
-    public void sendReservationConfirmation(String toEmail, String eventName, String eventDate, String eventLocation) {
+    public void sendWelcomeEmail(String toEmail, String firstName, String lastName) {
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.port", "587");
@@ -29,26 +29,30 @@ public class EmailService {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(EMAIL));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
-            message.setSubject("Confirmation de réservation - " + eventName);
+            message.setSubject("Bienvenue sur notre plateforme !");
 
             String emailContent = String.format(
-                "Cher client,\n\n" +
-                "Nous vous confirmons votre réservation pour l'événement suivant :\n\n" +
-                "Événement : %s\n" +
-                "Date : %s\n" +
-                "Lieu : %s\n\n" +
-                "Nous vous remercions de votre confiance et nous espérons vous voir bientôt !\n\n" +
+                "Cher(e) %s %s,\n\n" +
+                "Nous sommes ravis de vous accueillir sur notre plateforme !\n\n" +
+                "Votre compte a été créé avec succès avec les informations suivantes :\n" +
+                "Email : %s\n" +
+                "Nom : %s\n" +
+                "Prénom : %s\n\n" +
+                "Vous pouvez maintenant vous connecter et profiter de tous nos services.\n\n" +
                 "Cordialement,\n" +
                 "L'équipe Evencia",
-                eventName, eventDate, eventLocation
+                firstName,
+                lastName,
+                toEmail,
+                lastName,
+                firstName
             );
 
             message.setText(emailContent);
-
             Transport.send(message);
-            System.out.println("Email de confirmation envoyé avec succès à : " + toEmail);
+            System.out.println("Email de bienvenue envoyé avec succès à : " + toEmail);
         } catch (MessagingException e) {
-            System.err.println("Erreur lors de l'envoi de l'email : " + e.getMessage());
+            System.err.println("Erreur lors de l'envoi de l'email de bienvenue : " + e.getMessage());
             e.printStackTrace();
         }
     }

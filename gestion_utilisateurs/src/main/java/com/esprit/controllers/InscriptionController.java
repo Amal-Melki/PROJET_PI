@@ -4,6 +4,7 @@ import com.esprit.models.Client;
 import com.esprit.models.User;
 import com.esprit.services.ClientService;
 import com.esprit.services.UserService;
+import com.esprit.services.RegistrationEmailService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -51,6 +52,7 @@ public class InscriptionController {
     private String selectedImagePath;
     private UserService userService = new UserService();
     private ClientService clientService = new ClientService();
+    private RegistrationEmailService registrationEmailService = new RegistrationEmailService();
     private Connection connection = DataSource.getInstance().getConnection();
 
     @FXML
@@ -168,7 +170,14 @@ public class InscriptionController {
             );
             clientService.ajouter(client);
 
-            showAlert("Inscription réussie !", Alert.AlertType.INFORMATION);
+            // Send welcome email using the registration email service
+            registrationEmailService.sendWelcomeEmail(
+                txtEmail.getText(),
+                txtPrenom.getText(),
+                txtNom.getText()
+            );
+
+            showAlert("Inscription réussie ! Un email de bienvenue vous a été envoyé.", Alert.AlertType.INFORMATION);
             
             // Load the login view
             try {
