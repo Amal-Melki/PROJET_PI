@@ -20,16 +20,16 @@ public class MainProg {
         Espace es5 = new Espace(5, "Salle des Fêtes Evencia Nabeul", "Événement familial", 500, "Nabeul", 200.0, false);  // Salle fermée
 
         // Test des méthodes sur l'espace
-        espaceService.add(es1);
+       // espaceService.add(es1);
         //espaceService.add(es2);
        // espaceService.add(es3);
         //espaceService.add(es4);
       //  espaceService.add(es5);
-       // System.out.println(espaceService.getAll());
-       //espaceService.delete(es5.getId());-
+       //System.out.println(espaceService.getAll());
+      // espaceService.delete(es5.getId());
 
         // Service pour les réservations d'espaces
-        ReservationEspaceService reservationEspaceService = new ReservationEspaceService();
+        ReservationEspaceService ReservationEspaceService  = new ReservationEspaceService();
 
         ReservationEspace re1 = new ReservationEspace(1, es1.getId(), "Ali Ben Ali", LocalDate.of(2025, 5, 10), LocalDate.of(2025, 5, 12));  // Mariage à la Salle des Fêtes Evencia Tunis
         ReservationEspace re2 = new ReservationEspace(2, es2.getId(), "Amira Zghal", LocalDate.of(2025, 6, 5), LocalDate.of(2025, 6, 6));  // Conférence professionnelle au Centre de Conférences Evencia Sfax
@@ -38,12 +38,13 @@ public class MainProg {
         ReservationEspace re5 = new ReservationEspace(5, es5.getId(), "Mounir Ziani", LocalDate.of(2025, 9, 10), LocalDate.of(2025, 9, 12));  // Événement familial à la Salle des Fêtes Evencia Nabeul
 
         // Test des méthodes sur la réservation
-        reservationEspaceService.add(re1);
-      //  reservationEspaceService.add(re2);
-      //  reservationEspaceService.add(re3);
-       //  reservationEspaceService.add(re4);
-      //   reservationEspaceService.add(re5);
-     // System.out.println(reservationEspaceService.getAll());//reservationEspaceService.delete (re2.getReservationId());
+       //ReservationEspaceService.add(re1);
+      // ReservationEspaceService.add(re2);
+      //  ReservationEspaceService.add(re3);
+       //  ReservationEspaceService.add(re4);
+      //   ReservationEspaceService.add(re5);
+      //System.out.println(ReservationEspaceService.getAll());
+       // ReservationEspaceService.delete (re2.getReservationId());
     }
 
 }

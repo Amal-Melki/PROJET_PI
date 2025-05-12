@@ -74,4 +74,8 @@ public class ReservationEspace {
                 ", dateFin=" + dateFin +
                 '}';
     }
+
+    public void initData(Espace espaceSelectionne) {
+
+    }
 }

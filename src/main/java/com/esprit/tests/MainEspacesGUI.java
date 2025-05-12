@@ -9,8 +9,6 @@ import java.io.IOException;
 
 public class MainEspacesGUI extends Application {
 
-    private static Stage primaryStage;
-
     public static void main(String[] args) {
         launch(args); // Lance JavaFX
     }
@@ -18,17 +16,16 @@ public class MainEspacesGUI extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            MainEspacesGUI.primaryStage = primaryStage;
             // Charger l'interface principale MenuEspace.fxml
-            Parent root = FXMLLoader.load(getClass().getResource("/MenuEspace.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/MenuEspace.fxml"));
+            Parent root = loader.load();
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
             primaryStage.setTitle("Gestion des Espaces");
             primaryStage.show();
-
         } catch (Exception e) {
             System.out.println("Erreur au démarrage : " + e.getMessage());
-            e.printStackTrace();
+
         }
     }
 
@@ -43,7 +40,7 @@ public class MainEspacesGUI extends Application {
             stage.show();
         } catch (IOException e) {
             System.out.println("Erreur lors du chargement de l'interface : " + e.getMessage());
-            e.printStackTrace();
+
         }
     }
 }

@@ -4,8 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="550.0" prefWidth="700.0" style="-fx-background-color: pink;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.esprit.controllers.AjouterReservationClient">
-
+<AnchorPane prefHeight="550.0" prefWidth="700.0" style="-fx-background-color: pink;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.esprit.controllers.AjouterReservationUserController">
     <children>
         <!-- Titre -->
         <Text layoutX="180.0" layoutY="60.0" style="-fx-fill: white;" text="Réserver un Espace">

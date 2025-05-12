@@ -1,6 +1,4 @@
 package com.esprit.modules;
-import java.time.LocalDate;
-
 
 
 public class Espace {
@@ -11,6 +9,8 @@ public class Espace {
     private String localisation;
     private double prix;
     private boolean disponibilite;
+
+    public Espace(){};
 
     public Espace(int id, String nom, String type, int capacite, String localisation, double prix, boolean disponibilite) {
         this.espaceId = id;

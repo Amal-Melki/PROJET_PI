@@ -8,7 +8,7 @@ import java.util.List;
 
 public class EspaceService {
 
-    private Connection connection;
+    private final Connection connection;
 
     public EspaceService() {
         connection = DataSource.getInstance().getConnection();
@@ -76,6 +76,7 @@ public class EspaceService {
                         rs.getDouble("prix"),
                         rs.getBoolean("disponibilite")
                 );
+                e.setId(rs.getInt("espaceId"));
                 espaces.add(e);
             }
         } catch (SQLException e) {
@@ -84,25 +85,39 @@ public class EspaceService {
         return espaces;
     }
 
-    public boolean ajouter(Espace nouvelEspace) {
-        String req = "INSERT INTO espace(nomEspace, type, capacite, localisation, prix, disponibilite) VALUES (?, ?, ?, ?, ?, ?)";
+    public void ajouterEspace(Espace espace) {
+
+    }
+
+    public List<Espace> getEspacesByType(String typeSelectionne) {
+        List<Espace> espaces = new ArrayList<>();
+        String req = "SELECT * FROM espace WHERE type = ?";
         try {
             PreparedStatement pst = connection.prepareStatement(req);
-            pst.setString(1, nouvelEspace.getNom());
-            pst.setString(2, nouvelEspace.getType());
-            pst.setInt(3, nouvelEspace.getCapacite());
-            pst.setString(4, nouvelEspace.getLocalisation());
-            pst.setDouble(5, nouvelEspace.getPrix());
-            pst.setBoolean(6, nouvelEspace.isDisponibilite());
-            pst.executeUpdate();
-            return true;
+            pst.setString(1, typeSelectionne);
+            ResultSet rs = pst.executeQuery();
+            while (rs.next()) {
+                Espace e = new Espace(
+                        rs.getString("nomEspace"),
+                        rs.getString("type"),
+                        rs.getInt("capacite"),
+                        rs.getString("localisation"),
+                        rs.getDouble("prix"),
+                        rs.getBoolean("disponibilite")
+                );
+                e.setId(rs.getInt("espaceId"));
+                espaces.add(e);
+            }
         } catch (SQLException e) {
-            System.out.println("Erreur lors de l'ajout : " + e.getMessage());
-            return false;
+            System.out.println("Erreur lors de la récupération par type : " + e.getMessage());
         }
-}
+        return espaces;
+    }
 
-    public void ajouterEspace(Espace espace) {
+    public void delete(Espace selectedEspace) {
     }
 }
+
+
+
 
