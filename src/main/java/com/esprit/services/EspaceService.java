@@ -116,6 +116,30 @@ public class EspaceService {
 
     public void delete(Espace selectedEspace) {
     }
+
+    public Espace getEspaceById(int id) {
+        String req = "SELECT * FROM espace WHERE espaceId = ?";
+        try {
+            PreparedStatement pst = connection.prepareStatement(req);
+            pst.setInt(1, id);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                Espace e = new Espace(
+                        rs.getString("nomEspace"),
+                        rs.getString("type"),
+                        rs.getInt("capacite"),
+                        rs.getString("localisation"),
+                        rs.getDouble("prix"),
+                        rs.getBoolean("disponibilite")
+                );
+                e.setId(rs.getInt("espaceId"));
+                return e;
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération de l'espace par ID : " + e.getMessage());
+        }
+        return null;
+    }
 }
 
 

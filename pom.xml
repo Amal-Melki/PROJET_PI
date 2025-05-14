@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -8,23 +10,20 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <!-- Version du compilateur Java -->
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <!-- Encodage des fichiers source -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
-        <!-- Dépendance pour MySQL JDBC -->
+        <!-- MySQL JDBC -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.33</version> <!-- Assure-toi d'utiliser la version appropriée -->
+            <version>8.0.33</version>
         </dependency>
 
-
-        <!-- Dépendances pour JavaFX -->
+        <!-- JavaFX -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
@@ -35,20 +34,27 @@
             <artifactId>javafx-fxml</artifactId>
             <version>17.0.12</version>
         </dependency>
+
+        <!-- SendGrid -->
+        <dependency>
+            <groupId>com.sendgrid</groupId>
+            <artifactId>sendgrid-java</artifactId>
+            <version>4.9.3</version>
+        </dependency>
+
     </dependencies>
 
     <build>
         <plugins>
-            <!-- Plugin pour JavaFX avec Maven -->
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <!-- La classe principale de ton application JavaFX -->
                     <mainClass>com.esprit.tests.MainEspacesGUI</mainClass>
                 </configuration>
             </plugin>
         </plugins>
     </build>
+
 </project>

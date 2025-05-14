@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="550.0" prefWidth="800.0" style="-fx-background-color: pink;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.esprit.controllers.ConsulterEspacesUserController">
+<AnchorPane prefHeight="550.0" prefWidth="800.0" style="-fx-background-color: pink;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.esprit.controllers.ConsulterEspacesUserController">
     <children>
         <!-- Titre -->
         <Text layoutX="250.0" layoutY="50.0" style="-fx-fill: white;" text="Espaces Disponibles">
@@ -14,15 +14,11 @@
         </Text>
 
         <!-- Bouton Retour -->
-        <Button fx:id="btnRetour" layoutX="750.0" layoutY="20.0" onAction="#retourMenu"
-                style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 25; -fx-font-family: 'Segoe UI Semibold'; -fx-cursor: hand; -fx-padding: 6 12 6 12;"
-                text="↩ Retour" />
+        <Button fx:id="btnRetour" layoutX="750.0" layoutY="20.0" onAction="#retourMenu" style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 25; -fx-font-family: 'Segoe UI Semibold'; -fx-cursor: hand; -fx-padding: 6 12 6 12;" text="↩ Retour" />
 
         <!-- TableView pour afficher les espaces disponibles -->
-        <TableView fx:id="tableEspaces" layoutX="50.0" layoutY="100.0" prefHeight="350.0" prefWidth="750.0"
-                   style="-fx-border-color: #ff8fb3; -fx-border-radius: 8; -fx-background-radius: 8; -fx-font-family: 'Segoe UI';">
+        <TableView fx:id="tableEspaces" layoutX="50.0" layoutY="100.0" prefHeight="350.0" prefWidth="750.0" style="-fx-border-color: #ff8fb3; -fx-border-radius: 8; -fx-background-radius: 8; -fx-font-family: 'Segoe UI';">
             <columns>
-                <TableColumn fx:id="colId" prefWidth="60" text="ID" />
                 <TableColumn fx:id="colNom" prefWidth="120" text="Nom" />
                 <TableColumn fx:id="colType" prefWidth="120" text="Type" />
                 <TableColumn fx:id="colCapacite" prefWidth="100" text="Capacité" />
@@ -37,19 +33,13 @@
 
         <ComboBox fx:id="comboType" layoutX="310.0" layoutY="70.0" prefWidth="140.0" promptText="Filtrer par type" />
 
-        <Button fx:id="btnRechercher" layoutX="460.0" layoutY="70.0" prefHeight="30.0" prefWidth="100.0" onAction="#rechercherEspace"
-                style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 25; -fx-cursor: hand;"
-                text="Rechercher" />
+        <Button fx:id="btnRechercher" layoutX="460.0" layoutY="70.0" onAction="#rechercherEspace" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 25; -fx-cursor: hand;" text="Rechercher" />
 
         <!-- Boutons d'action -->
         <HBox alignment="CENTER" layoutX="50.0" layoutY="470.0" prefWidth="700.0" spacing="30.0">
-            <Button fx:id="btnReserver" onAction="#reserverEspace" prefHeight="40.0" prefWidth="160.0"
-                    style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 25; -fx-cursor: hand;"
-                    text="Réserver" />
+            <Button fx:id="btnReserver" onAction="#reserverEspace" prefHeight="40.0" prefWidth="160.0" style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 25; -fx-cursor: hand;" text="Réserver" />
 
-            <Button fx:id="btnVoirReservations" onAction="#voirMesReservations" prefHeight="40.0" prefWidth="160.0"
-                    style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 25; -fx-cursor: hand;"
-                    text="Mes Réservations" />
+            <Button fx:id="btnVoirReservations" onAction="#voirMesReservations" prefHeight="40.0" prefWidth="160.0" style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 25; -fx-cursor: hand;" text="Mes Réservations" />
         </HBox>
     </children>
 </AnchorPane>

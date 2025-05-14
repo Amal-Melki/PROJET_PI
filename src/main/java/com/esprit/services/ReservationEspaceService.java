@@ -1,18 +1,21 @@
 package com.esprit.services;
+
 import com.esprit.modules.ReservationEspace;
 import com.esprit.utils.DataSource;
-
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.IOException;
 
 public class ReservationEspaceService {
 
     private Connection connection;
+    private EmailService emailService;
 
     public ReservationEspaceService() {
         connection = DataSource.getInstance().getConnection();
+        emailService = new EmailService();
     }
 
     public void add(ReservationEspace r) {
@@ -96,7 +99,6 @@ public class ReservationEspaceService {
                         rs.getDate("dateDebut").toLocalDate(),
                         rs.getDate("dateFin").toLocalDate()
                 );
-                // Ajout de l'ID si nécessaire
                 r.setReservationId(rs.getInt("reservationId"));
                 reservations.add(r);
             }
@@ -109,5 +111,12 @@ public class ReservationEspaceService {
     public void creerReservation(String currentUser, int espaceId, LocalDate dateDebut, LocalDate dateFin) {
         ReservationEspace r = new ReservationEspace(espaceId, currentUser, dateDebut, dateFin);
         add(r);
+        try {
+            String subject = "Confirmation de réservation";
+            String body = "Bonjour " + currentUser + ",\n\nVotre réservation pour l'espace " + espaceId + " du " + dateDebut + " au " + dateFin + " a été confirmée.\n\nMerci.";
+            emailService.sendEmail(currentUser, subject, body);
+        } catch (IOException e) {
+            System.out.println("Erreur lors de l'envoi de l'email de confirmation : " + e.getMessage());
+        }
     }
 }

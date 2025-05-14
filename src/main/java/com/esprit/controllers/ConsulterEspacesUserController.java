@@ -36,8 +36,7 @@ public class ConsulterEspacesUserController {
     @FXML
     private TableView<Espace> tableEspaces;
 
-    @FXML
-    private TableColumn<Espace, Integer> colId;
+    // Removed colId as per user request
 
     @FXML
     private TableColumn<Espace, String> colNom;
@@ -185,15 +184,30 @@ public class ConsulterEspacesUserController {
 
         ObservableList<Espace> filteredList = FXCollections.observableArrayList();
 
-        for (Espace espace : espacesList) {
-            boolean matchesSearch = searchText.isEmpty() || espace.getNom().toLowerCase().contains(searchText) ||
+        if (searchText.isEmpty() && (selectedType == null || selectedType.isEmpty())) {
+            filteredList.addAll(espacesList);
+        } else if (searchText.isEmpty()) {
+            for (Espace espace : espacesList) {
+                if (espace.getType().equals(selectedType)) {
+                    filteredList.add(espace);
+                }
+            }
+        } else if (selectedType == null || selectedType.isEmpty()) {
+            for (Espace espace : espacesList) {
+                if (espace.getNom().toLowerCase().contains(searchText) ||
                     espace.getType().toLowerCase().contains(searchText) ||
-                    espace.getLocalisation().toLowerCase().contains(searchText);
-
-            boolean matchesType = (selectedType == null || selectedType.isEmpty()) || espace.getType().equals(selectedType);
-
-            if (matchesSearch && matchesType) {
-                filteredList.add(espace);
+                    espace.getLocalisation().toLowerCase().contains(searchText)) {
+                    filteredList.add(espace);
+                }
+            }
+        } else {
+            for (Espace espace : espacesList) {
+                if ((espace.getNom().toLowerCase().contains(searchText) ||
+                    espace.getType().toLowerCase().contains(searchText) ||
+                    espace.getLocalisation().toLowerCase().contains(searchText)) &&
+                    espace.getType().equals(selectedType)) {
+                    filteredList.add(espace);
+                }
             }
         }
         tableEspaces.setItems(filteredList);
