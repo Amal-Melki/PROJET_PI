@@ -70,6 +70,7 @@ public class AjouterEvenementController {
     }
 
     private boolean validateInput() {
+        // Check for empty fields
         if (txtTitle.getText().isEmpty() || txtDescription.getText().isEmpty() ||
             dateDebut.getValue() == null || dateFin.getValue() == null ||
             txtLatitude.getText().isEmpty() || txtLongitude.getText().isEmpty() ||
@@ -78,15 +79,62 @@ public class AjouterEvenementController {
             return false;
         }
 
-        try {
-            Integer.parseInt(txtNbrPlaces.getText());
-        } catch (NumberFormatException e) {
-            showAlert(Alert.AlertType.ERROR, "Erreur", "Le nombre de places doit être un nombre entier!");
+        // Validate title length
+        if (txtTitle.getText().length() < 3 || txtTitle.getText().length() > 50) {
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Le titre doit contenir entre 3 et 50 caractères!");
+            return false;
+        }
+
+        // Validate description length
+        if (txtDescription.getText().length() < 10 || txtDescription.getText().length() > 500) {
+            showAlert(Alert.AlertType.ERROR, "Erreur", "La description doit contenir entre 10 et 500 caractères!");
+            return false;
+        }
+
+        // Validate dates
+        LocalDate today = LocalDate.now();
+        if (dateDebut.getValue().isBefore(today)) {
+            showAlert(Alert.AlertType.ERROR, "Erreur", "La date de début ne peut pas être dans le passé!");
             return false;
         }
 
         if (dateDebut.getValue().isAfter(dateFin.getValue())) {
             showAlert(Alert.AlertType.ERROR, "Erreur", "La date de début doit être antérieure à la date de fin!");
+            return false;
+        }
+
+        // Validate latitude and longitude format
+        try {
+            double latitude = Double.parseDouble(txtLatitude.getText());
+            double longitude = Double.parseDouble(txtLongitude.getText());
+            
+            if (latitude < -90 || latitude > 90) {
+                showAlert(Alert.AlertType.ERROR, "Erreur", "La latitude doit être comprise entre -90 et 90!");
+                return false;
+            }
+            
+            if (longitude < -180 || longitude > 180) {
+                showAlert(Alert.AlertType.ERROR, "Erreur", "La longitude doit être comprise entre -180 et 180!");
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            showAlert(Alert.AlertType.ERROR, "Erreur", "La latitude et la longitude doivent être des nombres valides!");
+            return false;
+        }
+
+        // Validate number of places
+        try {
+            int nbrPlaces = Integer.parseInt(txtNbrPlaces.getText());
+            if (nbrPlaces <= 0) {
+                showAlert(Alert.AlertType.ERROR, "Erreur", "Le nombre de places doit être supérieur à 0!");
+                return false;
+            }
+            if (nbrPlaces > 1000) {
+                showAlert(Alert.AlertType.ERROR, "Erreur", "Le nombre de places ne peut pas dépasser 1000!");
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Le nombre de places doit être un nombre entier valide!");
             return false;
         }
 

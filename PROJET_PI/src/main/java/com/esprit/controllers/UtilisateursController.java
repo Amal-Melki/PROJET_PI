@@ -246,8 +246,7 @@ public class UtilisateursController implements AdminAware {
     }
 
     private void handleModifier(User user) {
-        if (user == null) {
-            showAlert("Veuillez sélectionner un utilisateur à modifier", Alert.AlertType.WARNING);
+        if (!validateUser(user)) {
             return;
         }
 
@@ -287,6 +286,71 @@ public class UtilisateursController implements AdminAware {
             e.printStackTrace();
             showAlert("Impossible de charger le formulaire de modification", Alert.AlertType.ERROR);
         }
+    }
+
+    private boolean validateUser(User user) {
+        if (user == null) {
+            showAlert("Veuillez sélectionner un utilisateur à modifier", Alert.AlertType.WARNING);
+            return false;
+        }
+
+        // Validate name and surname
+        if (user.getNom_suser() == null || user.getNom_suser().isEmpty() ||
+            user.getPrenom_user() == null || user.getPrenom_user().isEmpty()) {
+            showAlert("Le nom et le prénom ne peuvent pas être vides", Alert.AlertType.ERROR);
+            return false;
+        }
+
+        if (!user.getNom_suser().matches("^[a-zA-Z\\s]+$") || !user.getPrenom_user().matches("^[a-zA-Z\\s]+$")) {
+            showAlert("Le nom et le prénom ne doivent contenir que des lettres", Alert.AlertType.ERROR);
+            return false;
+        }
+
+        if (user.getNom_suser().length() < 2 || user.getNom_suser().length() > 50 ||
+            user.getPrenom_user().length() < 2 || user.getPrenom_user().length() > 50) {
+            showAlert("Le nom et le prénom doivent contenir entre 2 et 50 caractères", Alert.AlertType.ERROR);
+            return false;
+        }
+
+        // Validate email
+        if (user.getEmail_user() == null || user.getEmail_user().isEmpty()) {
+            showAlert("L'email ne peut pas être vide", Alert.AlertType.ERROR);
+            return false;
+        }
+
+        if (!user.getEmail_user().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+            showAlert("Format d'email invalide", Alert.AlertType.ERROR);
+            return false;
+        }
+
+        // Validate password
+        if (user.getPassword_user() == null || user.getPassword_user().isEmpty()) {
+            showAlert("Le mot de passe ne peut pas être vide", Alert.AlertType.ERROR);
+            return false;
+        }
+
+        if (user.getPassword_user().length() < 8) {
+            showAlert("Le mot de passe doit contenir au moins 8 caractères", Alert.AlertType.ERROR);
+            return false;
+        }
+
+        if (!user.getPassword_user().matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$")) {
+            showAlert("Le mot de passe doit contenir au moins une lettre et un chiffre", Alert.AlertType.ERROR);
+            return false;
+        }
+
+        // Additional validation for Client
+        if (user instanceof Client) {
+            Client client = (Client) user;
+            if (client.getNumero_tel() <= 0 || 
+                String.valueOf(client.getNumero_tel()).length() < 8 || 
+                String.valueOf(client.getNumero_tel()).length() > 15) {
+                showAlert("Le numéro de téléphone doit être un nombre valide entre 8 et 15 chiffres", Alert.AlertType.ERROR);
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private void handleSupprimer(User user) {

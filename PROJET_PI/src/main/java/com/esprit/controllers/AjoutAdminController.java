@@ -47,10 +47,7 @@ public class AjoutAdminController implements Initializable {
     void handleAjouter() {
         try {
             // Validate inputs
-            if (txtNom.getText().isEmpty() || txtPrenom.getText().isEmpty() || 
-                txtEmail.getText().isEmpty() || txtPassword.getText().isEmpty() ||
-                comboRole.getValue() == null) {
-                showAlert("Erreur", "Veuillez remplir tous les champs", Alert.AlertType.ERROR);
+            if (!validateInputs()) {
                 return;
             }
 
@@ -86,6 +83,36 @@ public class AjoutAdminController implements Initializable {
         } catch (Exception e) {
             showAlert("Erreur", "Une erreur est survenue: " + e.getMessage(), Alert.AlertType.ERROR);
         }
+    }
+
+    private boolean validateInputs() {
+        // Check for empty fields
+        if (txtNom.getText().isEmpty() || txtPrenom.getText().isEmpty() || 
+            txtEmail.getText().isEmpty() || txtPassword.getText().isEmpty() ||
+            comboRole.getValue() == null) {
+            showAlert("Erreur", "Veuillez remplir tous les champs", Alert.AlertType.ERROR);
+            return false;
+        }
+
+        // Validate name and surname (only letters and spaces)
+        if (!txtNom.getText().matches("^[a-zA-Z\\s]+$") || !txtPrenom.getText().matches("^[a-zA-Z\\s]+$")) {
+            showAlert("Erreur", "Le nom et le prénom ne doivent contenir que des lettres", Alert.AlertType.ERROR);
+            return false;
+        }
+
+        // Validate email format
+        if (!txtEmail.getText().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+            showAlert("Erreur", "Format d'email invalide", Alert.AlertType.ERROR);
+            return false;
+        }
+
+        // Validate password (minimum 8 characters, at least one number and one letter)
+        if (!txtPassword.getText().matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$")) {
+            showAlert("Erreur", "Le mot de passe doit contenir au moins 8 caractères, une lettre et un chiffre", Alert.AlertType.ERROR);
+            return false;
+        }
+
+        return true;
     }
 
     @FXML
