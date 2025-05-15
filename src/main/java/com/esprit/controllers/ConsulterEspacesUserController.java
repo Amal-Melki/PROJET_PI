@@ -56,8 +56,6 @@ public class ConsulterEspacesUserController {
     @FXML
     private TableColumn<Espace, String> colDisponibilite;
 
-    @FXML
-    private TableColumn<Espace, Void> colModifier;
 
     private final ObservableList<Espace> espacesList = FXCollections.observableArrayList();
 
@@ -113,7 +111,6 @@ public class ConsulterEspacesUserController {
             }
         };
 
-        colModifier.setCellFactory(cellFactory);
     }
 
     private void openModifyEspace(Espace espace, ActionEvent event) {

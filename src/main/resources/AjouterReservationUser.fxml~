@@ -4,8 +4,6 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-
-
 <?import javafx.geometry.Insets?>
 
 <AnchorPane prefHeight="550.0" prefWidth="700.0" style="-fx-background-color: pink;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.esprit.controllers.AjouterReservationUserController">

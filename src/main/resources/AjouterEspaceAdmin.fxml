@@ -1,56 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<Pane xmlns="http://javafx.com/javafx/17"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.esprit.controllers.AjouterEspaceAdminController"
-      prefHeight="500.0" prefWidth="700.0"
-      style="-fx-background-color: pink;">
+<Pane prefHeight="500.0" prefWidth="700.0" style="-fx-background-color: pink;"
+      xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.esprit.controllers.AjouterEspaceAdminController">
 
    <children>
 
       <!-- Bouton Retour -->
-      <Button fx:id="btnRetour"
-              layoutX="600.0" layoutY="20.0"
-              mnemonicParsing="false"
-              text="↩ Retour"
-              onAction="#retourMenu"
+      <Button fx:id="btnRetour" layoutX="600.0" layoutY="20.0" mnemonicParsing="false"
+              text="↩ Retour" onAction="#retourMenu"
               style="-fx-background-color: #ff8cb3; -fx-text-fill: white; -fx-font-weight: bold;
                      -fx-font-size: 13px; -fx-background-radius: 20; -fx-cursor: hand; -fx-padding: 6 12 6 12;" />
 
       <!-- Titre Ajout Espace -->
-      <Text text="Ajout Espace"
-            layoutX="280.0" layoutY="70.0"
-            style="-fx-fill: white;">
+      <Text layoutX="280.0" layoutY="70.0" text="Ajout Espace" style="-fx-fill: white;">
          <font>
             <Font name="Segoe UI Semibold" size="28.0" />
          </font>
       </Text>
 
-      <!-- Labels stylisés -->
+      <!-- Labels -->
       <Label layoutX="100.0" layoutY="120.0" text="Nom :"
              style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
-
       <Label layoutX="100.0" layoutY="180.0" text="Type :"
              style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
-
       <Label layoutX="100.0" layoutY="240.0" text="Capacité :"
              style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
-
       <Label layoutX="100.0" layoutY="300.0" text="Localisation :"
              style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
-
       <Label layoutX="100.0" layoutY="360.0" text="Prix :"
              style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
 
-      <!-- TextFields stylisés -->
+      <!-- TextFields -->
       <TextField fx:id="tfNom" layoutX="220.0" layoutY="115.0" prefWidth="300.0"
                  style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #ffffff;" />
       <TextField fx:id="tfType" layoutX="220.0" layoutY="175.0" prefWidth="300.0"
@@ -63,11 +48,8 @@
                  style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #ffffff;" />
 
       <!-- Bouton Ajouter -->
-      <Button fx:id="btnAjouter"
-              layoutX="290.0" layoutY="420.0"
-              text="Ajouter"
-              onAction="#ajouterEspace"
-              prefWidth="120.0" prefHeight="40.0"
+      <Button fx:id="btnAjouter" layoutX="290.0" layoutY="420.0" text="Ajouter"
+              onAction="#ajouterEspace" prefWidth="120.0" prefHeight="40.0"
               style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold;
                      -fx-font-size: 15px; -fx-background-radius: 20; -fx-cursor: hand;" />
 
