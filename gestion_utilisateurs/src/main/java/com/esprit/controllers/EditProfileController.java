@@ -107,6 +107,10 @@ public class EditProfileController {
             return;
         }
         
+        if (!validateInputs()) {
+            return;
+        }
+        
         try {
             // Update user data
             currentClient.setNom_suser(nomField.getText());
@@ -132,6 +136,45 @@ public class EditProfileController {
         } catch (Exception e) {
             showAlert("Erreur", "Erreur lors de la mise à jour du profil: " + e.getMessage(), Alert.AlertType.ERROR);
         }
+    }
+    
+    private boolean validateInputs() {
+        // Check for empty fields
+        if (nomField.getText().isEmpty() || prenomField.getText().isEmpty() || telephoneField.getText().isEmpty()) {
+            showAlert("Erreur", "Veuillez remplir tous les champs", Alert.AlertType.ERROR);
+            return false;
+        }
+
+        // Validate name and surname (only letters and spaces)
+        if (!nomField.getText().matches("^[a-zA-Z\\s]+$") || !prenomField.getText().matches("^[a-zA-Z\\s]+$")) {
+            showAlert("Erreur", "Le nom et le prénom ne doivent contenir que des lettres", Alert.AlertType.ERROR);
+            return false;
+        }
+
+        // Validate name and surname length
+        if (nomField.getText().length() < 2 || nomField.getText().length() > 50) {
+            showAlert("Erreur", "Le nom doit contenir entre 2 et 50 caractères", Alert.AlertType.ERROR);
+            return false;
+        }
+
+        if (prenomField.getText().length() < 2 || prenomField.getText().length() > 50) {
+            showAlert("Erreur", "Le prénom doit contenir entre 2 et 50 caractères", Alert.AlertType.ERROR);
+            return false;
+        }
+
+        // Validate phone number
+        try {
+            int phoneNumber = Integer.parseInt(telephoneField.getText());
+            if (phoneNumber <= 0 || String.valueOf(phoneNumber).length() < 8 || String.valueOf(phoneNumber).length() > 15) {
+                showAlert("Erreur", "Le numéro de téléphone doit être un nombre valide entre 8 et 15 chiffres", Alert.AlertType.ERROR);
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            showAlert("Erreur", "Le numéro de téléphone doit être un nombre valide", Alert.AlertType.ERROR);
+            return false;
+        }
+
+        return true;
     }
     
     @FXML

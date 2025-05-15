@@ -68,11 +68,7 @@ public class ModifierAdminController implements Initializable {
     @FXML
     void handleModifier() {
         try {
-            // Validate inputs
-            if (txtNom.getText().isEmpty() || txtPrenom.getText().isEmpty() || 
-                txtEmail.getText().isEmpty() || txtPassword.getText().isEmpty() ||
-                comboRole.getValue() == null) {
-                showAlert("Erreur", "Veuillez remplir tous les champs", Alert.AlertType.ERROR);
+            if (!validateInputs()) {
                 return;
             }
 
@@ -112,6 +108,52 @@ public class ModifierAdminController implements Initializable {
         } catch (Exception e) {
             showAlert("Erreur", "Une erreur est survenue: " + e.getMessage(), Alert.AlertType.ERROR);
         }
+    }
+
+    private boolean validateInputs() {
+        // Check for empty fields
+        if (txtNom.getText().isEmpty() || txtPrenom.getText().isEmpty() || 
+            txtEmail.getText().isEmpty() || txtPassword.getText().isEmpty() ||
+            comboRole.getValue() == null) {
+            showAlert("Erreur", "Veuillez remplir tous les champs", Alert.AlertType.ERROR);
+            return false;
+        }
+
+        // Validate name and surname (only letters and spaces)
+        if (!txtNom.getText().matches("^[a-zA-Z\\s]+$") || !txtPrenom.getText().matches("^[a-zA-Z\\s]+$")) {
+            showAlert("Erreur", "Le nom et le prénom ne doivent contenir que des lettres", Alert.AlertType.ERROR);
+            return false;
+        }
+
+        // Validate name and surname length
+        if (txtNom.getText().length() < 2 || txtNom.getText().length() > 50) {
+            showAlert("Erreur", "Le nom doit contenir entre 2 et 50 caractères", Alert.AlertType.ERROR);
+            return false;
+        }
+
+        if (txtPrenom.getText().length() < 2 || txtPrenom.getText().length() > 50) {
+            showAlert("Erreur", "Le prénom doit contenir entre 2 et 50 caractères", Alert.AlertType.ERROR);
+            return false;
+        }
+
+        // Validate email format
+        if (!txtEmail.getText().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+            showAlert("Erreur", "Format d'email invalide", Alert.AlertType.ERROR);
+            return false;
+        }
+
+        // Validate password strength
+        if (txtPassword.getText().length() < 8) {
+            showAlert("Erreur", "Le mot de passe doit contenir au moins 8 caractères", Alert.AlertType.ERROR);
+            return false;
+        }
+
+        if (!txtPassword.getText().matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$")) {
+            showAlert("Erreur", "Le mot de passe doit contenir au moins une lettre et un chiffre", Alert.AlertType.ERROR);
+            return false;
+        }
+
+        return true;
     }
 
     @FXML

@@ -121,25 +121,7 @@ public class InscriptionController {
 
     @FXML
     private void handleInscription() {
-        // Validate input
-        if (txtNom.getText().isEmpty() || txtPrenom.getText().isEmpty() || 
-            txtEmail.getText().isEmpty() || txtPassword.getText().isEmpty() || 
-            txtConfirmPassword.getText().isEmpty() || txtNumeroTel.getText().isEmpty()) {
-            showAlert("Veuillez remplir tous les champs", Alert.AlertType.WARNING);
-            return;
-        }
-
-        // Validate phone number
-        try {
-            Integer.parseInt(txtNumeroTel.getText());
-        } catch (NumberFormatException e) {
-            showAlert("Le numéro de téléphone doit être un nombre", Alert.AlertType.ERROR);
-            return;
-        }
-
-        // Check if passwords match
-        if (!txtPassword.getText().equals(txtConfirmPassword.getText())) {
-            showAlert("Les mots de passe ne correspondent pas", Alert.AlertType.ERROR);
+        if (!validateInputs()) {
             return;
         }
 
@@ -199,6 +181,70 @@ public class InscriptionController {
         } catch (Exception e) {
             showAlert("Erreur lors de l'inscription: " + e.getMessage(), Alert.AlertType.ERROR);
         }
+    }
+
+    private boolean validateInputs() {
+        // Check for empty fields
+        if (txtNom.getText().isEmpty() || txtPrenom.getText().isEmpty() || 
+            txtEmail.getText().isEmpty() || txtPassword.getText().isEmpty() || 
+            txtConfirmPassword.getText().isEmpty() || txtNumeroTel.getText().isEmpty()) {
+            showAlert("Veuillez remplir tous les champs", Alert.AlertType.WARNING);
+            return false;
+        }
+
+        // Validate name and surname (only letters and spaces)
+        if (!txtNom.getText().matches("^[a-zA-Z\\s]+$") || !txtPrenom.getText().matches("^[a-zA-Z\\s]+$")) {
+            showAlert("Le nom et le prénom ne doivent contenir que des lettres", Alert.AlertType.ERROR);
+            return false;
+        }
+
+        // Validate name and surname length
+        if (txtNom.getText().length() < 2 || txtNom.getText().length() > 50) {
+            showAlert("Le nom doit contenir entre 2 et 50 caractères", Alert.AlertType.ERROR);
+            return false;
+        }
+
+        if (txtPrenom.getText().length() < 2 || txtPrenom.getText().length() > 50) {
+            showAlert("Le prénom doit contenir entre 2 et 50 caractères", Alert.AlertType.ERROR);
+            return false;
+        }
+
+        // Validate email format
+        if (!txtEmail.getText().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+            showAlert("Format d'email invalide", Alert.AlertType.ERROR);
+            return false;
+        }
+
+        // Validate phone number
+        try {
+            int phoneNumber = Integer.parseInt(txtNumeroTel.getText());
+            if (phoneNumber <= 0 || String.valueOf(phoneNumber).length() < 8 || String.valueOf(phoneNumber).length() > 15) {
+                showAlert("Le numéro de téléphone doit être un nombre valide entre 8 et 15 chiffres", Alert.AlertType.ERROR);
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            showAlert("Le numéro de téléphone doit être un nombre valide", Alert.AlertType.ERROR);
+            return false;
+        }
+
+        // Validate password strength
+        if (txtPassword.getText().length() < 8) {
+            showAlert("Le mot de passe doit contenir au moins 8 caractères", Alert.AlertType.ERROR);
+            return false;
+        }
+
+        if (!txtPassword.getText().matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$")) {
+            showAlert("Le mot de passe doit contenir au moins une lettre et un chiffre", Alert.AlertType.ERROR);
+            return false;
+        }
+
+        // Check if passwords match
+        if (!txtPassword.getText().equals(txtConfirmPassword.getText())) {
+            showAlert("Les mots de passe ne correspondent pas", Alert.AlertType.ERROR);
+            return false;
+        }
+
+        return true;
     }
 
     @FXML

@@ -168,6 +168,10 @@ public class EvenementsController {
     }
     
     private void handleModifier(Evenement evenement) {
+        if (!validateEvenement(evenement)) {
+            return;
+        }
+
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierEvenement.fxml"));
             Parent root = loader.load();
@@ -186,6 +190,84 @@ public class EvenementsController {
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible d'ouvrir le formulaire de modification");
         }
+    }
+    
+    private boolean validateEvenement(Evenement evenement) {
+        if (evenement == null) {
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Aucun événement sélectionné");
+            return false;
+        }
+
+        // Validate title
+        if (evenement.getTitle() == null || evenement.getTitle().isEmpty()) {
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Le titre ne peut pas être vide");
+            return false;
+        }
+
+        if (evenement.getTitle().length() < 3 || evenement.getTitle().length() > 50) {
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Le titre doit contenir entre 3 et 50 caractères");
+            return false;
+        }
+
+        // Validate description
+        if (evenement.getDescription_ev() == null || evenement.getDescription_ev().isEmpty()) {
+            showAlert(Alert.AlertType.ERROR, "Erreur", "La description ne peut pas être vide");
+            return false;
+        }
+
+        if (evenement.getDescription_ev().length() < 10 || evenement.getDescription_ev().length() > 500) {
+            showAlert(Alert.AlertType.ERROR, "Erreur", "La description doit contenir entre 10 et 500 caractères");
+            return false;
+        }
+
+        // Validate dates
+        if (evenement.getDate_debut() == null || evenement.getDate_fin() == null) {
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Les dates ne peuvent pas être vides");
+            return false;
+        }
+
+        LocalDate today = LocalDate.now();
+        if (evenement.getDate_debut().isBefore(today)) {
+            showAlert(Alert.AlertType.ERROR, "Erreur", "La date de début ne peut pas être dans le passé");
+            return false;
+        }
+
+        if (evenement.getDate_debut().isAfter(evenement.getDate_fin())) {
+            showAlert(Alert.AlertType.ERROR, "Erreur", "La date de début doit être antérieure à la date de fin");
+            return false;
+        }
+
+        // Validate coordinates
+        try {
+            double latitude = Double.parseDouble(evenement.getLatitude());
+            double longitude = Double.parseDouble(evenement.getLongitude());
+            
+            if (latitude < -90 || latitude > 90) {
+                showAlert(Alert.AlertType.ERROR, "Erreur", "La latitude doit être comprise entre -90 et 90");
+                return false;
+            }
+            
+            if (longitude < -180 || longitude > 180) {
+                showAlert(Alert.AlertType.ERROR, "Erreur", "La longitude doit être comprise entre -180 et 180");
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Les coordonnées doivent être des nombres valides");
+            return false;
+        }
+
+        // Validate number of places
+        if (evenement.getNbr_places_dispo() <= 0) {
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Le nombre de places doit être supérieur à 0");
+            return false;
+        }
+
+        if (evenement.getNbr_places_dispo() > 1000) {
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Le nombre de places ne peut pas dépasser 1000");
+            return false;
+        }
+
+        return true;
     }
     
     private void    handleSupprimer(Evenement evenement) {
