@@ -57,6 +57,9 @@ public class ListeEspacesAdminController {
         colPrix.setCellValueFactory(new PropertyValueFactory<>("prix"));
         colDisponibilite.setCellValueFactory(new PropertyValueFactory<>("disponibilite"));
 
+        // Enable multiple selection in TableView
+        tableEspace.getSelectionModel().setSelectionMode(javafx.scene.control.SelectionMode.MULTIPLE);
+
         loadEspaces();
     }
 
@@ -150,29 +153,43 @@ public class ListeEspacesAdminController {
     }
 
     public void supprimerEspace(ActionEvent actionEvent) {
-        Espace selectedEspace = tableEspace.getSelectionModel().getSelectedItem();
-        if (selectedEspace == null) {
+        ObservableList<Espace> selectedEspaces = tableEspace.getSelectionModel().getSelectedItems();
+        if (selectedEspaces == null || selectedEspaces.isEmpty()) {
             javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.WARNING);
             alert.setTitle("Suppression");
             alert.setHeaderText(null);
-            alert.setContentText("Veuillez sélectionner un espace à supprimer.");
+            alert.setContentText("Veuillez sélectionner au moins un espace à supprimer.");
             alert.showAndWait();
             return;
         }
+
+        javafx.scene.control.Alert confirmationAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
+        confirmationAlert.setTitle("Confirmation de suppression");
+        confirmationAlert.setHeaderText(null);
+        confirmationAlert.setContentText("Êtes-vous sûr de vouloir supprimer définitivement les espaces sélectionnés ?");
+
+        java.util.Optional<javafx.scene.control.ButtonType> result = confirmationAlert.showAndWait();
+        if (result.isEmpty() || result.get() != javafx.scene.control.ButtonType.OK) {
+            return; // User cancelled deletion
+        }
+
         try {
-            espaceService.delete(selectedEspace);
+            for (Espace espace : selectedEspaces) {
+                espaceService.delete(espace);
+            }
+            espacesList.removeAll(selectedEspaces);
+            tableEspace.setItems(espacesList);
             javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
             alert.setTitle("Suppression");
             alert.setHeaderText(null);
-            alert.setContentText("Espace supprimé avec succès.");
+            alert.setContentText("Espaces supprimés avec succès.");
             alert.showAndWait();
-            loadEspaces();
         } catch (Exception e) {
             e.printStackTrace();
             javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
             alert.setTitle("Erreur");
             alert.setHeaderText(null);
-            alert.setContentText("Erreur lors de la suppression de l'espace.");
+            alert.setContentText("Erreur lors de la suppression des espaces.");
             alert.showAndWait();
         }
     }

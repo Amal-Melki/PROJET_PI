@@ -83,6 +83,19 @@ public class DetailsReservationUserController {
         statutLabel.setText(statut);
     }
 
-    public void initData(Espace currentEspace, LocalDate value, LocalDate value1) {
+    public void initData(Espace currentEspace, LocalDate dateDebut, LocalDate dateFin) {
+        if (currentEspace != null && dateDebut != null && dateFin != null) {
+            initialize(
+                currentEspace.getNom(),
+                currentEspace.getType(),
+                currentEspace.getCapacite(),
+                currentEspace.getLocalisation(),
+                currentEspace.getPrix(),
+                "N/A", // reservationId not available here
+                dateDebut.toString(),
+                dateFin.toString(),
+                "Confirmée" // Assuming status is confirmed
+            );
+        }
     }
 }

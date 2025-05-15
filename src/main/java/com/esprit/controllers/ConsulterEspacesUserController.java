@@ -59,9 +59,9 @@ public class ConsulterEspacesUserController {
     @FXML
     private TableColumn<Espace, Void> colModifier;
 
-    private ObservableList<Espace> espacesList = FXCollections.observableArrayList();
+    private final ObservableList<Espace> espacesList = FXCollections.observableArrayList();
 
-    private EspaceService espaceService = new EspaceService();
+    private final EspaceService espaceService = new EspaceService();
 
     @FXML
     void initialize() {

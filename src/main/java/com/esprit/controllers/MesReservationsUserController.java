@@ -1,6 +1,5 @@
 package com.esprit.controllers;
 
-
 import com.esprit.modules.ReservationEspace;
 import com.esprit.services.ReservationEspaceService;
 import javafx.collections.FXCollections;
@@ -28,8 +27,9 @@ public class MesReservationsUserController {
     private TableColumn<ReservationEspace, String> colDateDebut;
     @FXML
     private TableColumn<ReservationEspace, String> colDateFin;
-    @FXML
-    private TableColumn<ReservationEspace, String> colStatus;
+    // Removed colStatus as ReservationEspace has no 'status' property
+    // @FXML
+    // private TableColumn<ReservationEspace, String> colStatus;
 
     private ReservationEspaceService reservationService = new ReservationEspaceService();
 
@@ -39,7 +39,7 @@ public class MesReservationsUserController {
         colEspace.setCellValueFactory(new PropertyValueFactory<>("espaceId"));
         colDateDebut.setCellValueFactory(new PropertyValueFactory<>("dateDebut"));
         colDateFin.setCellValueFactory(new PropertyValueFactory<>("dateFin"));
-        colStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
+        // colStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
 
         loadReservations();
     }
@@ -59,11 +59,25 @@ public class MesReservationsUserController {
         ReservationEspace selectedReservation = tableReservations.getSelectionModel().getSelectedItem();
         if (selectedReservation != null) {
             reservationService.delete(selectedReservation.getReservationId());
+
+            // Send cancellation email
+            String userEmail = selectedReservation.getUser();
+            String emailSubject = "Annulation de votre réservation";
+            String emailBody = "Bonjour,\n\nVotre réservation avec l'ID " + selectedReservation.getReservationId() +
+                    " a été annulée avec succès.\n\nCordialement,\nL'équipe de gestion des espaces.";
+
+            com.esprit.services.EmailService emailService = new com.esprit.services.EmailService();
+            try {
+                emailService.sendEmail(userEmail, emailSubject, emailBody);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             loadReservations();
             javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
             alert.setTitle("Annulation");
             alert.setHeaderText(null);
-            alert.setContentText("Réservation annulée avec succès.");
+            alert.setContentText("Réservation annulée avec succès et email de confirmation envoyé.");
             alert.showAndWait();
         } else {
             javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.WARNING);

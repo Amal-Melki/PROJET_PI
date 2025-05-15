@@ -1,61 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<Pane xmlns="http://javafx.com/javafx/17"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.esprit.controllers.MesReservationsUserController"
-      prefHeight="600.0" prefWidth="700.0"
-      style="-fx-background-color: pink;">
+<Pane prefHeight="600.0" prefWidth="700.0" style="-fx-background-color: pink;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.esprit.controllers.MesReservationsUserController">
 
     <!-- Bouton Retour -->
-    <Button fx:id="btnRetour"
-            layoutX="600.0" layoutY="20.0"
-            text="↩ Retour"
-            onAction="#retourConsulterEspaces"
-            style="-fx-background-color: #ff7fa8; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 20;"/>
+    <Button fx:id="btnRetour" layoutX="600.0" layoutY="20.0" onAction="#retourConsulterEspaces" style="-fx-background-color: #ff7fa8; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 20;" text="↩ Retour" />
 
     <!-- Titre -->
-    <Text text="Mes Réservations"
-          layoutX="230.0" layoutY="70.0"
-          style="-fx-fill: white;">
+    <Text layoutX="230.0" layoutY="70.0" style="-fx-fill: white;" text="Mes Réservations">
         <font>
-            <Font name="Segoe UI Bold" size="30.0"/>
+            <Font name="Segoe UI Bold" size="30.0" />
         </font>
     </Text>
 
     <!-- TableView pour afficher les réservations -->
-    <TableView fx:id="tableReservations"
-               layoutX="30.0" layoutY="120.0"
-               prefHeight="320.0" prefWidth="640.0"
-               style="-fx-background-radius: 10;">
+    <TableView fx:id="tableReservations" layoutX="30.0" layoutY="120.0" prefHeight="320.0" prefWidth="640.0" style="-fx-background-radius: 10;">
         <columns>
-            <TableColumn fx:id="colReservationId" text="ID" prefWidth="50"/>
-            <TableColumn fx:id="colEspace" text="Espace" prefWidth="150"/>
-            <TableColumn fx:id="colDateDebut" text="Date Début" prefWidth="150"/>
-            <TableColumn fx:id="colDateFin" text="Date Fin" prefWidth="150"/>
-            <TableColumn fx:id="colStatus" text="Statut" prefWidth="140"/>
+            <TableColumn fx:id="colReservationId" prefWidth="80" text="ID" />
+            <TableColumn fx:id="colEspace" prefWidth="203.39999771118164" text="Espace" />
+            <TableColumn fx:id="colDateDebut" prefWidth="202.7999725341797" text="Date Début" />
+            <TableColumn fx:id="colDateFin" prefWidth="180.4000244140625" text="Date Fin" />
+            <!-- Removed colStatus column because ReservationEspace has no 'status' property -->
         </columns>
     </TableView>
 
     <!-- Boutons -->
-    <Button fx:id="btnAnnulerReservation"
-            layoutX="140.0" layoutY="480.0"
-            text="Annuler la réservation"
-            onAction="#annulerReservation"
-            prefWidth="180.0" prefHeight="45.0"
-            style="-fx-background-color: #ff7fa8; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 20;"/>
+    <Button fx:id="btnAnnulerReservation" layoutX="140.0" layoutY="480.0" onAction="#annulerReservation" prefHeight="45.0" prefWidth="180.0" style="-fx-background-color: #ff7fa8; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 20;" text="Annuler la réservation" />
 
-    <Button fx:id="btnVoirDetails"
-            layoutX="380.0" layoutY="480.0"
-            text="Voir les détails"
-            onAction="#voirDetails"
-            prefWidth="180.0" prefHeight="45.0"
-            style="-fx-background-color: #ff7fa8; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 20;"/>
+    <Button fx:id="btnVoirDetails" layoutX="380.0" layoutY="480.0" onAction="#voirDetails" prefHeight="45.0" prefWidth="180.0" style="-fx-background-color: #ff7fa8; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 20;" text="Voir les détails" />
 
 </Pane>
