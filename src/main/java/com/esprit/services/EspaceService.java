@@ -115,6 +115,9 @@ public class EspaceService {
     }
 
     public void delete(Espace selectedEspace) {
+        if (selectedEspace != null) {
+            delete(selectedEspace.getId());
+        }
     }
 
     public Espace getEspaceById(int id) {
