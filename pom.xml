@@ -1,11 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.esprit</groupId>
-    <artifactId>gestion_produit_derive</artifactId>
+    <groupId>org.example</groupId>
+    <artifactId>PROJET_PI</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -23,6 +22,7 @@
         </dependency>
 
         <!-- JavaFX (compatible avec JDK 17) -->
+
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
@@ -33,6 +33,13 @@
             <artifactId>javafx-fxml</artifactId>
             <version>17.0.2</version>
         </dependency>
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>jakarta.mail</artifactId>
+            <version>2.0.1</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>
@@ -47,4 +54,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>

@@ -7,47 +7,50 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.List;
-import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
-public class ModifierProduitDerive implements Initializable {
+public class ModifierProduitDerive {
 
-    @FXML
-    private TableView<ProduitDerive> tableProduits;
-    @FXML
-    private TableColumn<ProduitDerive, String> colNom;
-    @FXML
-    private TableColumn<ProduitDerive, String> colCategorie;
-    @FXML
-    private TableColumn<ProduitDerive, Double> colPrix;
-    @FXML
-    private TableColumn<ProduitDerive, Integer> colStock;
-    @FXML
-    private TableColumn<ProduitDerive, String> colDescription;
-    @FXML
-    private TableColumn<ProduitDerive, String> colImageUrl;
-    @FXML
-    private TableColumn<ProduitDerive, Void> colAction;
+    @FXML private ComboBox<String> cbType;
+    @FXML private ComboBox<String> cbStatut;
+    @FXML private TextField tfRecherche;
 
-    @FXML
-    private Button btnRetourAccueil;
+    @FXML private TableView<ProduitDerive> tableProduits;
+    @FXML private TableColumn<ProduitDerive, String> colNom;
+    @FXML private TableColumn<ProduitDerive, String> colCategorie;
+    @FXML private TableColumn<ProduitDerive, Double> colPrix;
+    @FXML private TableColumn<ProduitDerive, Integer> colStock;
+    @FXML private TableColumn<ProduitDerive, String> colDescription;
+    @FXML private TableColumn<ProduitDerive, String> colImageUrl;
+    @FXML private TableColumn<ProduitDerive, Void> colAction;
+
+    @FXML private Pane formPane;
+    @FXML private TextField tfNomEdit;
+    @FXML private ComboBox<String> cbCategorieEdit;
+    @FXML private TextField tfPrixEdit;
+    @FXML private TextField tfStockEdit;
+    @FXML private TextArea taDescriptionEdit;
+    @FXML private TextField tfImageUrlEdit;
+    @FXML private Button btnSaveEdit;
+    @FXML private Button btnCancelEdit;
+
+    @FXML private Button btnRetourAccueil;
 
     private final ObservableList<ProduitDerive> data = FXCollections.observableArrayList();
+    private ProduitDerive selectedProduit;
 
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    @FXML
+    public void initialize() {
         colNom.setCellValueFactory(new PropertyValueFactory<>("nom"));
         colCategorie.setCellValueFactory(new PropertyValueFactory<>("categorie"));
         colPrix.setCellValueFactory(new PropertyValueFactory<>("prix"));
@@ -56,99 +59,122 @@ public class ModifierProduitDerive implements Initializable {
         colImageUrl.setCellValueFactory(new PropertyValueFactory<>("imageUrl"));
 
         chargerDonnees();
+        setupFilters();
         ajouterColonneAction();
+
+        formPane.setVisible(false);
+        formPane.setManaged(false);
     }
 
     private void chargerDonnees() {
-        data.clear();
         ServiceProduitDerive spd = new ServiceProduitDerive();
-        List<ProduitDerive> liste = spd.recuperer();
-        data.addAll(liste);
+        List<ProduitDerive> produits = spd.recuperer();
+        data.setAll(produits);
         tableProduits.setItems(data);
+    }
+
+    private void setupFilters() {
+        // Example categories and statuses, adjust as needed
+        cbType.setItems(FXCollections.observableArrayList("Type1", "Type2", "Type3"));
+        cbStatut.setItems(FXCollections.observableArrayList("Disponible", "Indisponible"));
+
+        cbType.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> handleFiltrer(null));
+        cbStatut.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> handleFiltrer(null));
+        tfRecherche.textProperty().addListener((obs, oldVal, newVal) -> handleFiltrer(null));
+    }
+
+    @FXML
+    private void handleFiltrer(ActionEvent event) {
+        String typeFilter = cbType.getValue();
+        String statutFilter = cbStatut.getValue();
+        String searchText = tfRecherche.getText() != null ? tfRecherche.getText().toLowerCase() : "";
+
+        List<ProduitDerive> filtered = data.stream()
+                .filter(p -> (typeFilter == null || typeFilter.isEmpty() || p.getCategorie().equals(typeFilter)))
+                .filter(p -> (statutFilter == null || statutFilter.isEmpty() || (statutFilter.equals("Disponible") && p.getStock() > 0) || (statutFilter.equals("Indisponible") && p.getStock() <= 0)))
+                .filter(p -> p.getNom().toLowerCase().contains(searchText) || p.getDescription().toLowerCase().contains(searchText))
+                .collect(Collectors.toList());
+
+        tableProduits.setItems(FXCollections.observableArrayList(filtered));
     }
 
     private void ajouterColonneAction() {
         colAction.setCellFactory(param -> new TableCell<>() {
-            private final Button btnModifier = new Button("Modifier");
-            private final Button btnEffacer = new Button("Effacer");
-            private final HBox box = new HBox(10, btnModifier, btnEffacer);
+            private final Button btnEdit = new Button("Modifier");
 
             {
-                box.setAlignment(Pos.CENTER);
-
-                String styleCommun = "-fx-text-fill: white;" +
-                        "-fx-font-weight: bold;" +
-                        "-fx-background-radius: 15;" +
-                        "-fx-cursor: hand;" +
-                        "-fx-padding: 4 10 4 10;";
-
-                btnModifier.setStyle("-fx-background-color: #ff8cb3;" + styleCommun);
-                btnEffacer.setStyle("-fx-background-color: #e57373;" + styleCommun);
-
-                btnModifier.setOnAction(event -> {
-                    ProduitDerive p = getTableView().getItems().get(getIndex());
-                    try {
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/produits/ModifierProduitDeriveFormulaire.fxml"));
-                        Parent formulaire = loader.load();
-
-                        ModifierProduitDeriveFormulaire controller = loader.getController();
-                        controller.initData(p);
-
-                        Stage stageActuel = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                        stageActuel.setScene(new Scene(formulaire));
-                        stageActuel.setTitle("Modifier Produit Dérivé");
-                        stageActuel.sizeToScene();
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible d’ouvrir le formulaire.");
-                    }
-                });
-
-                btnEffacer.setOnAction(event -> {
-                    ProduitDerive p = getTableView().getItems().get(getIndex());
-                    Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-                    confirm.setTitle("Confirmation");
-                    confirm.setHeaderText(null);
-                    confirm.setContentText("Voulez-vous vraiment supprimer ce produit dérivé ?");
-                    confirm.showAndWait().ifPresent(response -> {
-                        if (response == ButtonType.OK) {
-                            ServiceProduitDerive spd = new ServiceProduitDerive();
-                            spd.supprimer(p);
-                            data.remove(p);
-                        }
-                    });
+                btnEdit.setStyle("-fx-background-color: #ffa726; -fx-text-fill: white; -fx-background-radius: 10;");
+                btnEdit.setOnAction(e -> {
+                    selectedProduit = getTableView().getItems().get(getIndex());
+                    showEditForm(selectedProduit);
                 });
             }
 
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
-                setGraphic(empty ? null : box);
+                setGraphic(empty ? null : btnEdit);
             }
         });
     }
 
-    private void showAlert(Alert.AlertType type, String titre, String message) {
-        Alert alert = new Alert(type);
-        alert.setTitle(titre);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.show();
+    private void showEditForm(ProduitDerive produit) {
+        if (produit == null) return;
+        formPane.setVisible(true);
+        formPane.setManaged(true);
+
+        tfNomEdit.setText(produit.getNom());
+        cbCategorieEdit.setValue(produit.getCategorie());
+        tfPrixEdit.setText(String.valueOf(produit.getPrix()));
+        tfStockEdit.setText(String.valueOf(produit.getStock()));
+        taDescriptionEdit.setText(produit.getDescription());
+        tfImageUrlEdit.setText(produit.getImageUrl());
     }
 
     @FXML
-    void retourAccueil(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Accueil.fxml"));
-            Parent root = loader.load();
+    private void saveEdit(ActionEvent event) {
+        if (selectedProduit == null) return;
 
-            Stage stage = (Stage) btnRetourAccueil.getScene().getWindow();
+        selectedProduit.setNom(tfNomEdit.getText());
+        selectedProduit.setCategorie(cbCategorieEdit.getValue());
+        try {
+            selectedProduit.setPrix(Double.parseDouble(tfPrixEdit.getText()));
+            selectedProduit.setStock(Integer.parseInt(tfStockEdit.getText()));
+        } catch (NumberFormatException e) {
+            showAlert("Erreur", "Prix et Stock doivent être des nombres valides.");
+            return;
+        }
+        selectedProduit.setDescription(taDescriptionEdit.getText());
+        selectedProduit.setImageUrl(tfImageUrlEdit.getText());
+
+        new ServiceProduitDerive().modifier(selectedProduit);
+        chargerDonnees();
+        formPane.setVisible(false);
+        formPane.setManaged(false);
+    }
+
+    @FXML
+    private void cancelEdit(ActionEvent event) {
+        formPane.setVisible(false);
+        formPane.setManaged(false);
+    }
+
+    @FXML
+    private void retourAccueil(ActionEvent event) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/views/Accueil.fxml"));
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
-            stage.setTitle("Accueil - Gestion des Produits Dérivés");
-            stage.sizeToScene();
+            stage.setTitle("Accueil");
+            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR, message, ButtonType.OK);
+        alert.setTitle(title);
+        alert.showAndWait();
     }
 }

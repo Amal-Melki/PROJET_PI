@@ -110,4 +110,25 @@ public class ServiceProduitDerive implements IService<ProduitDerive> {
             System.out.println("Erreur lors de la mise à jour du stock : " + e.getMessage());
         }
     }
+
+
+
+    public boolean supprimerProduit(int id) {
+        String req = "DELETE FROM produit_derive WHERE id = ?";
+        try {
+            PreparedStatement pst = connection.prepareStatement(req);
+            pst.setInt(1, id);
+            int rowsAffected = pst.executeUpdate();
+            return rowsAffected > 0; // true si au moins une ligne a été supprimée
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la suppression du produit (par ID) : " + e.getMessage());
+            return false;
+        }
+    }
+
+    public List<ProduitDerive> obtenirTousLesProduits() {
+        return recuperer(); // Appelle simplement la méthode existante
+    }
+
 }
+

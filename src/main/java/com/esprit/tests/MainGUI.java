@@ -6,26 +6,26 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class MainGUI extends Application {
+import java.net.URL;
 
-    public static void main(String[] args) {
-        launch(args);
-    }
+public class MainGUI extends Application {
 
     @Override
     public void start(Stage primaryStage) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/produits/AccueilProduitDerive.fxml"));
-            Parent root = loader.load();
+            // Load the FXML file and assign it to the root variable
+Parent root = FXMLLoader.load(getClass().getResource("/products/AccueilProduitDerive.fxml"));
 
-            Scene scene = new Scene(root);
-            primaryStage.setScene(scene);
-            primaryStage.setTitle("🎁 Gestion des Produits Dérivés - Accueil");
+            primaryStage.setTitle("🏠 Accueil - Gestion Produits Dérivés");
+            primaryStage.setScene(new Scene(root));
             primaryStage.show();
-
         } catch (Exception e) {
-            System.out.println("Erreur au démarrage : " + e.getMessage());
+            System.out.println("Erreur lors du chargement du FXML:");
             e.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) {
+        launch(args);
     }
 }

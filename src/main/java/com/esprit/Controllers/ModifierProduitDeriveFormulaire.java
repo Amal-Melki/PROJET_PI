@@ -74,4 +74,17 @@ public class ModifierProduitDeriveFormulaire {
             alert.show();
         }
     }
+
+    @FXML
+    private void handleInsererImage(ActionEvent event) {
+        javafx.stage.FileChooser fileChooser = new javafx.stage.FileChooser();
+        fileChooser.setTitle("Sélectionner une image");
+        fileChooser.getExtensionFilters().addAll(
+                new javafx.stage.FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg", "*.gif")
+        );
+        java.io.File selectedFile = fileChooser.showOpenDialog(btnModifier.getScene().getWindow());
+        if (selectedFile != null) {
+            tfImageUrl.setText(selectedFile.toURI().toString());
+        }
+    }
 }

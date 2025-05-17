@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.esprit.Controllers.PanierController"
+      alignment="CENTER" spacing="20"
+      style="-fx-background-color: pink;"
+      prefHeight="500" prefWidth="600">
+
+    <padding>
+        <Insets bottom="40" left="40" right="40" top="40"/>
+    </padding>
+
+    <Text text="🛒 Mon Panier">
+        <font>
+            <Font name="Segoe UI Bold" size="30.0"/>
+        </font>
+        <style>
+            -fx-fill: white;
+        </style>
+    </Text>
+
+    <ListView fx:id="listePanier"
+              prefHeight="250"
+              prefWidth="500"
+              style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;"/>
+
+    <HBox spacing="20" alignment="CENTER">
+        <Button fx:id="btnViderPanier"
+                text="❌ Vider le Panier"
+                prefWidth="200" prefHeight="40"
+                style="-fx-background-color: #ff8fb3; -fx-text-fill: white;
+                       -fx-font-weight: bold; -fx-font-size: 14px;
+                       -fx-background-radius: 25; -fx-font-family: 'Segoe UI Semibold';"/>
+
+        <Button fx:id="btnValiderPanier"
+                text="✅ Valider Commande"
+                prefWidth="200" prefHeight="40"
+                style="-fx-background-color: #ff8fb3; -fx-text-fill: white;
+                       -fx-font-weight: bold; -fx-font-size: 14px;
+                       -fx-background-radius: 25; -fx-font-family: 'Segoe UI Semibold';"/>
+    </HBox>
+
+    <Button fx:id="btnRetour"
+            text="↩ Retour à l'accueil"
+            onAction="#retourAccueil"
+            prefWidth="200" prefHeight="40"
+            style="-fx-background-color: #ff8fb3; -fx-text-fill: white;
+                   -fx-font-weight: bold; -fx-font-size: 14px;
+                   -fx-background-radius: 25; -fx-font-family: 'Segoe UI Semibold';"/>
+</VBox>
