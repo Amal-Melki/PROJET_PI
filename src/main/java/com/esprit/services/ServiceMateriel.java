@@ -17,7 +17,7 @@ public class ServiceMateriel implements IService<Materiels> {
 
     @Override
     public void ajouter(Materiels materiel) {
-        String req = "INSERT INTO materiel (nom, type, quantite, etat, description, image) VALUES (?, ?, ?, ?, ?, ?)";
+        String req = "INSERT INTO materiel (nom, type, quantite, etat, description, image, prix) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement ps = connection.prepareStatement(req)) {
             ps.setString(1, materiel.getNom());
@@ -26,6 +26,7 @@ public class ServiceMateriel implements IService<Materiels> {
             ps.setString(4, materiel.getEtat());
             ps.setString(5, materiel.getDescription());
             ps.setString(6, materiel.getImage());
+            ps.setDouble(7, materiel.getPrix());
             ps.executeUpdate();
             System.out.println("✅ Matériel ajouté avec succès !");
         } catch (SQLException e) {
@@ -35,7 +36,7 @@ public class ServiceMateriel implements IService<Materiels> {
 
     @Override
     public void modifier(Materiels materiel) {
-        String req = "UPDATE materiel SET nom = ?, type = ?, quantite = ?, etat = ?, description = ?, image = ? WHERE id = ?";
+        String req = "UPDATE materiel SET nom = ?, type = ?, quantite = ?, etat = ?, description = ?, image = ?, prix = ? WHERE id = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(req)) {
             ps.setString(1, materiel.getNom());
@@ -44,12 +45,14 @@ public class ServiceMateriel implements IService<Materiels> {
             ps.setString(4, materiel.getEtat());
             ps.setString(5, materiel.getDescription());
             ps.setString(6, materiel.getImage());
-            ps.setInt(7, materiel.getId());
+            ps.setDouble(7, materiel.getPrix());
+            ps.setInt(8, materiel.getId());
             ps.executeUpdate();
             System.out.println("✅ Matériel modifié avec succès !");
         } catch (SQLException e) {
             System.err.println("❌ Erreur lors de la modification du matériel : " + e.getMessage());
         }
+
     }
 
     @Override
@@ -81,7 +84,8 @@ public class ServiceMateriel implements IService<Materiels> {
                         rs.getInt("quantite"),
                         rs.getString("etat"),
                         rs.getString("description"),
-                        rs.getString("image")
+                        rs.getString("image"),
+                        rs.getDouble("prix")
                 ));
             }
         } catch (SQLException e) {
@@ -121,4 +125,44 @@ public class ServiceMateriel implements IService<Materiels> {
         }
         return -1;
     }
+
+    public double getPrixById(int idMateriel) {
+        String req = "SELECT prix FROM materiel WHERE id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(req)) {
+            ps.setInt(1, idMateriel);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getDouble("prix");
+            }
+        } catch (SQLException e) {
+            System.err.println("❌ Erreur lors de la récupération du prix : " + e.getMessage());
+        }
+        return -1;
+    }
+    public List<Materiels> getMaterielsDisponibles() {
+        List<Materiels> disponibles = new ArrayList<>();
+        String req = "SELECT * FROM materiel WHERE etat = 'DISPONIBLE' AND quantite > 0";
+
+        try (Statement st = connection.createStatement();
+             ResultSet rs = st.executeQuery(req)) {
+
+            while (rs.next()) {
+                disponibles.add(new Materiels(
+                        rs.getInt("id"),
+                        rs.getString("nom"),
+                        rs.getString("type"),
+                        rs.getInt("quantite"),
+                        rs.getString("etat"),
+                        rs.getString("description"),
+                        rs.getString("image"),
+                        rs.getDouble("prix")
+                ));
+            }
+        } catch (SQLException e) {
+            System.err.println("❌ Erreur lors de la récupération des matériels disponibles : " + e.getMessage());
+        }
+
+        return disponibles;
+    }
+
 }

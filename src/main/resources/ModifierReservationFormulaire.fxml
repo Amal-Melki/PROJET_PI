@@ -8,19 +8,18 @@
 <Pane xmlns="http://javafx.com/javafx/17"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.esprit.controllers.ModifierReservationFormulaire"
-      prefHeight="520.0" prefWidth="640.0"
+      prefHeight="518.0" prefWidth="636.0"
       style="-fx-background-color: pink;">
 
     <children>
 
-        <!-- Bouton Retour moderne -->
+        <!-- Bouton Retour -->
         <Button fx:id="btnRetour"
-                layoutX="530.0" layoutY="20.0"
+                layoutX="540.0" layoutY="20.0"
                 text="↩ Retour"
                 onAction="#retourAccueil"
                 style="-fx-background-color: #ff7fa8; -fx-text-fill: white; -fx-font-weight: bold;
-                       -fx-font-size: 13px; -fx-background-radius: 20; -fx-cursor: hand;
-                       -fx-padding: 6 12 6 12;" />
+                       -fx-font-size: 13px; -fx-background-radius: 20; -fx-cursor: hand; -fx-padding: 6 12;" />
 
         <!-- Titre -->
         <Text text="Modifier Réservation"
@@ -31,62 +30,60 @@
             </font>
         </Text>
 
-        <!-- Labels -->
+        <!-- Label Matériel -->
         <Label layoutX="70.0" layoutY="110.0" text="Matériel :"
                style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
         <Label fx:id="lblNomMateriel"
-               layoutX="200.0" layoutY="105.0"
-               prefWidth="250.0"
+               layoutX="200.0" layoutY="105.0" prefWidth="300.0"
                style="-fx-background-color: white; -fx-border-color: white;
                       -fx-background-radius: 10; -fx-border-radius: 10;
                       -fx-padding: 6; -fx-font-size: 14px;" />
 
-        <Label layoutX="70.0" layoutY="170.0" text="Date début :"
+        <!-- Date début -->
+        <Label layoutX="70.0" layoutY="160.0" text="Date début :"
                style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
         <DatePicker fx:id="dpDebut"
-                    layoutX="200.0" layoutY="165.0"
-                    prefWidth="250.0"
-                    style="-fx-background-color: white; -fx-border-color: white;
-                           -fx-background-radius: 10; -fx-border-radius: 10;
-                           -fx-font-size: 14px;" />
+                    layoutX="200.0" layoutY="155.0" prefWidth="300.0"
+                    style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
 
-        <Label layoutX="70.0" layoutY="230.0" text="Date fin :"
+        <!-- Date fin -->
+        <Label layoutX="70.0" layoutY="210.0" text="Date fin :"
                style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
         <DatePicker fx:id="dpFin"
-                    layoutX="200.0" layoutY="225.0"
-                    prefWidth="250.0"
-                    style="-fx-background-color: white; -fx-border-color: white;
-                           -fx-background-radius: 10; -fx-border-radius: 10;
-                           -fx-font-size: 14px;" />
+                    layoutX="200.0" layoutY="205.0" prefWidth="300.0"
+                    style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
 
-        <Label layoutX="70.0" layoutY="290.0" text="Quantité :"
+        <!-- Quantité -->
+        <Label layoutX="70.0" layoutY="260.0" text="Quantité :"
                style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
         <TextField fx:id="tfQuantite"
-                   layoutX="200.0" layoutY="285.0"
-                   prefWidth="250.0"
-                   style="-fx-background-color: white; -fx-border-color: white;
-                          -fx-background-radius: 10; -fx-border-radius: 10;
-                          -fx-font-size: 14px;" />
+                   layoutX="200.0" layoutY="255.0" prefWidth="300.0"
+                   style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
 
-        <Label layoutX="70.0" layoutY="350.0" text="Statut :"
+        <!-- Statut -->
+        <Label layoutX="70.0" layoutY="310.0" text="Statut :"
                style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
         <ComboBox fx:id="cbStatut"
-                  layoutX="200.0" layoutY="345.0"
-                  prefWidth="250.0"
-                  style="-fx-background-color: white; -fx-border-color: white;
-                         -fx-background-radius: 10; -fx-border-radius: 10;
-                         -fx-font-size: 14px;" />
+                  layoutX="200.0" layoutY="305.0" prefWidth="300.0"
+                  style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
+
+        <!-- Montant total -->
+        <Label layoutX="70.0" layoutY="360.0" text="Montant total :"
+               style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
+        <TextField fx:id="tfMontantTotal"
+                   layoutX="200.0" layoutY="355.0" prefWidth="300.0" editable="false"
+                   style="-fx-background-color: #f4f4f4; -fx-background-radius: 10;
+                          -fx-border-radius: 10; -fx-border-color: white; -fx-font-size: 14px;" />
 
         <!-- Bouton Enregistrer -->
         <Button fx:id="btnEnregistrer"
-                layoutX="240.0" layoutY="420.0"
+                layoutX="260.0" layoutY="420.0"
                 text="Enregistrer"
                 onAction="#modifierReservation"
                 prefWidth="120.0" prefHeight="40.0"
                 style="-fx-background-color: #ff7fa8; -fx-text-fill: white;
                        -fx-font-weight: bold; -fx-font-size: 15px;
-                       -fx-background-radius: 20; -fx-cursor: hand;
-                       -fx-padding: 8 18 8 18;" />
+                       -fx-background-radius: 20; -fx-cursor: hand;" />
 
     </children>
 </Pane>

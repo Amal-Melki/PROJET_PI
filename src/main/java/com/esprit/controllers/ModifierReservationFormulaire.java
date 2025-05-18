@@ -21,42 +21,32 @@ import java.util.ResourceBundle;
 
 public class ModifierReservationFormulaire implements Initializable {
 
-    @FXML
-    private Label lblNomMateriel;
-
-    @FXML
-    private DatePicker dpDebut;
-
-    @FXML
-    private DatePicker dpFin;
-
-    @FXML
-    private TextField tfQuantite;
-
-    @FXML
-    private ComboBox<String> cbStatut;
-
-    @FXML
-    private Button btnEnregistrer;
-
-    @FXML
-    private Button btnRetour;
+    @FXML private Label lblNomMateriel;
+    @FXML private DatePicker dpDebut;
+    @FXML private DatePicker dpFin;
+    @FXML private TextField tfQuantite;
+    @FXML private ComboBox<String> cbStatut;
+    @FXML private Button btnEnregistrer;
+    @FXML private Button btnRetour;
+    @FXML private TextField tfMontantTotal;
 
     private ReservationMateriel reservationToModify;
     private Materiels materielAssocie;
-
-    private int ancienneQuantiteReservee; // 🔥 Pour recalculer le stock correctement
+    private int ancienneQuantiteReservee;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         cbStatut.setItems(FXCollections.observableArrayList("EN_ATTENTE", "VALIDEE", "ANNULEE"));
+
+        tfQuantite.textProperty().addListener((obs, oldVal, newVal) -> {
+            calculerMontantTotal();
+        });
     }
 
     public void setReservation(ReservationMateriel r) {
         this.reservationToModify = r;
         this.ancienneQuantiteReservee = r.getQuantiteReservee();
 
-        // 🔥 Récupérer le matériel associé
         ServiceMateriel sm = new ServiceMateriel();
         for (Materiels m : sm.recuperer()) {
             if (m.getId() == r.getMaterielId()) {
@@ -70,6 +60,20 @@ public class ModifierReservationFormulaire implements Initializable {
         dpFin.setValue(r.getDateFin().toLocalDate());
         tfQuantite.setText(String.valueOf(r.getQuantiteReservee()));
         cbStatut.setValue(r.getStatut());
+
+        calculerMontantTotal();
+    }
+
+    private void calculerMontantTotal() {
+        try {
+            int qte = Integer.parseInt(tfQuantite.getText().trim());
+            if (materielAssocie != null) {
+                double montant = qte * materielAssocie.getPrix();
+                tfMontantTotal.setText(String.format("%.2f", montant));
+            }
+        } catch (NumberFormatException e) {
+            tfMontantTotal.setText("");
+        }
     }
 
     @FXML
@@ -81,6 +85,13 @@ public class ModifierReservationFormulaire implements Initializable {
 
         if (materielAssocie == null || dateDebut == null || dateFin == null || quantiteText.isEmpty() || statut == null) {
             showAlert(Alert.AlertType.ERROR, "Champs manquants", "Veuillez remplir tous les champs.");
+            return;
+        }
+
+        // ✅ Vérification de la date de début : pas dans le passé
+        LocalDate today = LocalDate.now();
+        if (dateDebut.isBefore(today)) {
+            showAlert(Alert.AlertType.ERROR, "Date invalide", "La date de début ne peut pas être dans le passé.");
             return;
         }
 
@@ -104,8 +115,6 @@ public class ModifierReservationFormulaire implements Initializable {
 
         ServiceMateriel sm = new ServiceMateriel();
         int quantiteStockActuelle = sm.getQuantiteById(materielAssocie.getId());
-
-        // 🔥 Important : on remet d'abord la quantité ancienne avant de recalculer
         int stockTemporaire = quantiteStockActuelle + ancienneQuantiteReservee;
 
         if (stockTemporaire - nouvelleQuantite < 0) {
@@ -113,23 +122,19 @@ public class ModifierReservationFormulaire implements Initializable {
             return;
         }
 
-        // Mise à jour de la réservation
+        // ✅ Mise à jour des champs
         reservationToModify.setDateDebut(java.sql.Date.valueOf(dateDebut));
         reservationToModify.setDateFin(java.sql.Date.valueOf(dateFin));
         reservationToModify.setQuantiteReservee(nouvelleQuantite);
         reservationToModify.setStatut(statut);
+        reservationToModify.setMontantTotal(nouvelleQuantite * materielAssocie.getPrix());
 
-        ServiceReservationMateriel srm = new ServiceReservationMateriel();
-        srm.modifier(reservationToModify);
-
-        // 🔥 Mise à jour du stock matériel
-        int stockFinal = stockTemporaire - nouvelleQuantite;
-        sm.mettreAJourQuantite(materielAssocie.getId(), stockFinal);
+        new ServiceReservationMateriel().modifier(reservationToModify);
+        sm.mettreAJourQuantite(materielAssocie.getId(), stockTemporaire - nouvelleQuantite);
 
         showAlert(Alert.AlertType.INFORMATION, "Succès", "Réservation modifiée et stock mis à jour avec succès !");
-
-
     }
+
 
     private void showAlert(Alert.AlertType type, String titre, String message) {
         Alert alert = new Alert(type);
