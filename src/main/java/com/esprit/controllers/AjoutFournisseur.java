@@ -2,9 +2,7 @@ package com.esprit.controllers;
 
 import com.esprit.modules.Fournisseur;
 import com.esprit.services.ServiceFournisseur;
-import jakarta.mail.*;
-import jakarta.mail.internet.InternetAddress;
-import jakarta.mail.internet.MimeMessage;
+import com.esprit.utils.EmailService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -15,11 +13,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-import jakarta.mail.*;
-import jakarta.mail.internet.*;
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
+import java.util.List;
+import java.util.Random;
+import java.util.ResourceBundle;
 
 public class AjoutFournisseur implements Initializable {
 
@@ -29,6 +27,8 @@ public class AjoutFournisseur implements Initializable {
     @FXML private TextField tfEmail;
     @FXML private Button btnAjouter;
     @FXML private Button btnRetour;
+
+    private int codeVerification; // ✅ ajout du champ
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -73,42 +73,18 @@ public class AjoutFournisseur implements Initializable {
         Fournisseur fournisseur = new Fournisseur(nom, email, telephone, adresse);
         service.ajouter(fournisseur);
 
-        sendConfirmationEmail(email, nom);
+        // ✅ Génération du code de vérification
+        codeVerification = new Random().nextInt(900000) + 100000;
 
+        // ✅ Envoi de l'e-mail
+        EmailService.sendVerificationEmail(email, String.valueOf(codeVerification));
+
+        // ✅ Message + nettoyage des champs
         showAlert(Alert.AlertType.INFORMATION, "Succès", "Fournisseur ajouté avec succès !");
         tfNom.clear();
         tfTelephone.clear();
         tfAdresse.clear();
         tfEmail.clear();
-    }
-
-    private void sendConfirmationEmail(String recipientEmail, String nomFournisseur) {
-        final String senderEmail = "votre.email@gmail.com";
-        final String senderPassword = "votre_mot_de_passe_app"; // utilisez un mot de passe d'application Gmail
-
-        Properties props = new Properties();
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", "smtp.gmail.com");
-        props.put("mail.smtp.port", "587");
-
-        Session session = Session.getInstance(props, new Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(senderEmail, senderPassword);
-            }
-        });
-
-        try {
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(senderEmail));
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
-            message.setSubject("Bienvenue chez notre plateforme");
-            message.setText("Bonjour " + nomFournisseur + ",\n\nVotre enregistrement a été validé avec succès.\n\nCordialement.");
-
-            Transport.send(message);
-        } catch (MessagingException e) {
-            showAlert(Alert.AlertType.ERROR, "Erreur Email", "L'envoi de l'email a échoué : " + e.getMessage());
-        }
     }
 
     private void showAlert(Alert.AlertType type, String title, String message) {

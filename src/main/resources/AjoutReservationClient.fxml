@@ -7,7 +7,7 @@
 
 <Pane xmlns="http://javafx.com/javafx/17"
       xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.esprit.controllers.AjoutReservation"
+      fx:controller="com.esprit.controllers.AjoutReservationClient"
       prefHeight="580.0" prefWidth="700.0"
       style="-fx-background-color: pink;">
 
@@ -30,47 +30,46 @@
             </font>
         </Text>
 
-        <!-- Labels stylisés -->
+        <!-- Labels -->
         <Label layoutX="80.0" layoutY="120.0" text="Matériel :"
                style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
+        <Label fx:id="lblNomMateriel"
+               layoutX="230.0" layoutY="115.0" prefWidth="300.0"
+               style="-fx-background-color: white; -fx-border-color: white;
+                      -fx-background-radius: 10; -fx-border-radius: 10;
+                      -fx-padding: 6; -fx-font-size: 14px;" />
+
         <Label layoutX="80.0" layoutY="180.0" text="Date début :"
                style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
-        <Label layoutX="80.0" layoutY="240.0" text="Date fin :"
-               style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
-        <Label layoutX="80.0" layoutY="300.0" text="Quantité réservée :"
-               style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
-        <Label layoutX="80.0" layoutY="360.0" text="Montant total :"
-               style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
-        <Label layoutX="80.0" layoutY="420.0" text="Statut :"
-               style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
-
-        <!-- Champs de saisie stylisés -->
-        <ComboBox fx:id="cbMateriel"
-                  layoutX="230.0" layoutY="115.0" prefWidth="300.0"
-                  style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
         <DatePicker fx:id="dpDebut"
                     layoutX="230.0" layoutY="175.0" prefWidth="300.0"
                     style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
+
+        <Label layoutX="80.0" layoutY="240.0" text="Date fin :"
+               style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
         <DatePicker fx:id="dpFin"
                     layoutX="230.0" layoutY="235.0" prefWidth="300.0"
                     style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
+
+        <Label layoutX="80.0" layoutY="300.0" text="Quantité réservée :"
+               style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
         <TextField fx:id="tfQuantite"
                    layoutX="230.0" layoutY="295.0" prefWidth="300.0"
                    style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
+
+        <Label layoutX="80.0" layoutY="360.0" text="Montant total :"
+               style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
         <TextField fx:id="tfMontantTotal"
                    layoutX="230.0" layoutY="355.0" prefWidth="300.0"
                    editable="false"
-                   style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white; -fx-background-color: #f4f4f4;" />
-        <ComboBox fx:id="cbStatut"
-                  layoutX="230.0" layoutY="415.0" prefWidth="300.0"
-                  style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
+                   style="-fx-background-color: #f4f4f4; -fx-border-radius: 10; -fx-border-color: white;" />
 
         <!-- Bouton Réserver -->
         <Button fx:id="btnReserver"
-                layoutX="290.0" layoutY="480.0"
-                text="Réserver"
+                layoutX="250.0" layoutY="440.0"
+                text="Ajouter au panier"
                 onAction="#reserverMateriel"
-                prefWidth="120.0" prefHeight="40.0"
+                prefWidth="200.0" prefHeight="40.0"
                 style="-fx-background-color: #ff7fa8; -fx-text-fill: white; -fx-font-weight: bold;
                        -fx-font-size: 15px; -fx-background-radius: 20; -fx-cursor: hand;" />
 

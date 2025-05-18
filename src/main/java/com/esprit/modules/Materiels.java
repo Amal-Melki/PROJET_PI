@@ -8,12 +8,13 @@ public class Materiels {
     private String etat;
     private String description;
     private String image;
+    private double prix; // ✅ Nouveau champ
 
     // Constructeurs
     public Materiels() {
     }
 
-    public Materiels(int id, String nom, String type, int quantite, String etat, String description, String image) {
+    public Materiels(int id, String nom, String type, int quantite, String etat, String description, String image, double prix) {
         this.id = id;
         this.nom = nom;
         this.type = type;
@@ -21,15 +22,17 @@ public class Materiels {
         this.etat = etat;
         this.description = description;
         this.image = image;
+        this.prix = prix;
     }
 
-    public Materiels(String nom, String type, int quantite, String etat, String description, String image) {
+    public Materiels(String nom, String type, int quantite, String etat, String description, String image, double prix) {
         this.nom = nom;
         this.type = type;
         this.quantite = quantite;
         this.etat = etat;
         this.description = description;
         this.image = image;
+        this.prix = prix;
     }
 
     // Getters et Setters
@@ -87,6 +90,14 @@ public class Materiels {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public double getPrix() {
+        return prix;
+    }
+
+    public void setPrix(double prix) {
+        this.prix = prix;
     }
 
     // Pour afficher le nom dans les ComboBox ou ListView

@@ -13,18 +13,14 @@ import java.io.IOException;
 
 public class Accueil {
 
-    @FXML
-    private Button btnAjoutMateriel;
-    @FXML
-    private Button btnListeMateriels;
-    @FXML
-    private Button btnAjoutFournisseur;
-    @FXML
-    private Button btnListeFournisseurs;
-    @FXML
-    private Button btnAjoutReservation;
-    @FXML
-    private Button btnListeReservations;
+    @FXML private Button btnAjoutMateriel;
+    @FXML private Button btnListeMateriels;
+    @FXML private Button btnAjoutFournisseur;
+    @FXML private Button btnListeFournisseurs;
+    @FXML private Button btnAjoutReservation;
+    @FXML private Button btnListeReservations;
+    @FXML private Button btnAjoutReservationClient;
+    @FXML private Button btnListeMaterielsClient; // ✅ nouveau bouton
 
     @FXML
     public void initialize() {
@@ -34,6 +30,8 @@ public class Accueil {
         btnListeFournisseurs.setOnAction(this::ouvrirListeFournisseurs);
         btnAjoutReservation.setOnAction(this::ouvrirAjoutReservation);
         btnListeReservations.setOnAction(this::ouvrirListeReservations);
+        btnAjoutReservationClient.setOnAction(this::ouvrirAjoutReservationsClient);
+        btnListeMaterielsClient.setOnAction(this::ouvrirListeMaterielsClient);
     }
 
     private void ouvrirAjoutMateriel(ActionEvent e) {
@@ -60,16 +58,21 @@ public class Accueil {
         changerScene("/ModifierReservation.fxml", e);
     }
 
+    private void ouvrirAjoutReservationsClient(ActionEvent e) {
+        changerScene("/AjoutReservationClient.fxml", e);
+    }
+
+    private void ouvrirListeMaterielsClient(ActionEvent e) {
+        changerScene("/ListeMaterielsClient.fxml", e); // ✅ nouvelle vue
+    }
+
     private void changerScene(String cheminFXML, ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(cheminFXML));
             Parent root = loader.load();
-
-            // On récupère le stage actuel à partir du bouton cliqué
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
-
         } catch (IOException ex) {
             ex.printStackTrace();
         }

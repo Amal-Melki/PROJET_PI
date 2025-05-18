@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.esprit.controllers.ListeMaterielsClient"
+            prefHeight="750.0" prefWidth="900.0"
+            style="-fx-background-color: #ffc0cb;">
+
+    <children>
+
+        <!-- Titre -->
+        <Text layoutX="270.0" layoutY="40.0" text="Liste des Matériels "
+              style="-fx-fill: white;">
+            <font>
+                <Font name="Segoe UI Bold" size="28"/>
+            </font>
+        </Text>
+
+        <!-- Barre de recherche -->
+        <HBox layoutX="200.0" layoutY="70.0" spacing="10.0">
+            <TextField fx:id="tfRecherche"
+                       promptText="🔍 Rechercher par nom..."
+                       prefWidth="500.0"
+                       style="-fx-background-color: white; -fx-background-radius: 20;
+                              -fx-border-radius: 20; -fx-border-color: #ff8cb3;
+                              -fx-font-size: 14px; -fx-padding: 8 14;" />
+        </HBox>
+
+        <!-- Filtres -->
+        <HBox layoutX="100.0" layoutY="120.0" spacing="15.0">
+            <ComboBox fx:id="cbFiltreStatut" promptText="Filtrer par statut"
+                      prefWidth="180.0"
+                      style="-fx-background-radius: 15; -fx-border-radius: 15; -fx-border-color: #ff8cb3; -fx-padding: 6;" />
+            <ComboBox fx:id="cbFiltreType" promptText="Filtrer par type"
+                      prefWidth="180.0"
+                      style="-fx-background-radius: 15; -fx-border-radius: 15; -fx-border-color: #ff8cb3; -fx-padding: 6;" />
+            <TextField fx:id="tfFiltreQuantite" promptText="Stock min."
+                       prefWidth="120.0"
+                       style="-fx-background-color: white; -fx-background-radius: 15;
+                              -fx-border-radius: 15; -fx-border-color: #ff8cb3;
+                              -fx-font-size: 13px; -fx-padding: 6 10;" />
+            <Button text="Filtrer"
+                    onAction="#appliquerFiltres"
+                    style="-fx-background-color: #a8476c; -fx-text-fill: white;
+                           -fx-font-weight: bold; -fx-background-radius: 15;
+                           -fx-cursor: hand; -fx-padding: 6 16;" />
+        </HBox>
+
+        <!-- Cartes -->
+        <TilePane fx:id="tilePane"
+                  layoutX="50.0" layoutY="180.0"
+                  prefWidth="800.0" prefHeight="500.0"
+                  hgap="20" vgap="20" alignment="TOP_LEFT"
+                  style="-fx-padding: 10;" />
+
+        <!-- Bouton retour centré -->
+        <HBox layoutX="350.0" layoutY="700.0">
+            <Button fx:id="btnRetourAccueil"
+                    text="↩ Retour"
+                    onAction="#retourAccueil"
+                    prefWidth="200.0" prefHeight="40.0"
+                    style="-fx-background-color: #ff7fa8; -fx-text-fill: white; -fx-font-weight: bold;
+                           -fx-font-size: 15px; -fx-background-radius: 20; -fx-cursor: hand;" />
+        </HBox>
+
+    </children>
+</AnchorPane>

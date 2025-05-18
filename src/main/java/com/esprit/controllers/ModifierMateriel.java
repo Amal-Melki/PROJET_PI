@@ -2,6 +2,7 @@ package com.esprit.controllers;
 
 import com.esprit.modules.Materiels;
 import com.esprit.services.ServiceMateriel;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -14,52 +15,75 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.animation.PauseTransition;
+import javafx.util.Duration;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class ModifierMateriel implements Initializable {
 
-    @FXML
-    private FlowPane containerMateriels;
-
-    @FXML
-    private Button btnRetourAccueil;
-
-    @FXML
-    private Button btnModifier;
-
-    @FXML
-    private Button btnSupprimer;
-
-    private final ToggleGroup toggleGroup = new ToggleGroup();
-    private final ObservableList<Materiels> materiels = FXCollections.observableArrayList();
-
-    @FXML
-    private TextField tfRecherche;
+    public StackPane rootPane;
+    @FXML private FlowPane containerMateriels;
+    @FXML private Button btnRetourAccueil;
+    @FXML private Button btnModifier;
+    @FXML private Button btnSupprimer;
+    @FXML private TextField tfRecherche;
     @FXML private ComboBox<String> cbFiltreStatut;
     @FXML private ComboBox<String> cbFiltreType;
     @FXML private TextField tfFiltreQuantite;
+    @FXML private VBox rootVBox;
+    @FXML private VBox notifBox;
+    
 
+
+
+
+    private final ToggleGroup toggleGroup = new ToggleGroup();
+    private final ObservableList<Materiels> materiels = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ServiceMateriel sm = new ServiceMateriel();
         materiels.setAll(sm.recuperer());
         afficherMateriels();
-        tfRecherche.textProperty().addListener((observable, oldValue, newValue) -> {
-            filtrerMateriels(newValue);
-        });
+
+        tfRecherche.textProperty().addListener((obs, oldVal, newVal) -> filtrerMateriels(newVal));
+
         cbFiltreStatut.setItems(FXCollections.observableArrayList("Tous", "DISPONIBLE", "EN_MAINTENANCE", "HORS_SERVICE"));
         cbFiltreType.setItems(FXCollections.observableArrayList("Tous", "Mobilier", "Éclairage", "Sonorisation", "Audiovisuel"));
         cbFiltreStatut.setValue("Tous");
         cbFiltreType.setValue("Tous");
 
+        List<Materiels> faibles = materiels.stream()
+                .filter(m -> m.getQuantite() < 10)
+                .collect(Collectors.toList());
+
+        if (!faibles.isEmpty()) {
+            notifContainer.setVisible(true);
+            notifContainer.setManaged(true);
+            notifLabel.setText("⚠ " + faibles.size() + " produit(s) ont une quantité inférieure à 10.");
+        }
+
+
+
+    }
+
+    @FXML private HBox notifContainer;
+    @FXML private Label notifLabel;
+
+    @FXML
+    void closeNotif() {
+        notifContainer.setVisible(false);
+        notifContainer.setManaged(false);
     }
 
     private void afficherMateriels() {
@@ -71,17 +95,8 @@ public class ModifierMateriel implements Initializable {
             box.setPrefWidth(150);
 
             ImageView imageView = new ImageView();
-            if (m.getImage() != null && !m.getImage().isEmpty()) {
-                File file = new File(m.getImage());
-                if (file.exists()) {
-                    imageView.setImage(new Image(file.toURI().toString()));
-                } else {
-                    imageView.setImage(new Image("/images/nondispo.jpg"));
-                }
-            } else {
-                imageView.setImage(new Image("/images/nondispo.jpg"));
-            }
-
+            File file = (m.getImage() != null && !m.getImage().isEmpty()) ? new File(m.getImage()) : null;
+            imageView.setImage((file != null && file.exists()) ? new Image(file.toURI().toString()) : new Image("/images/nondispo.jpg"));
             imageView.setFitWidth(120);
             imageView.setFitHeight(100);
             imageView.setPreserveRatio(true);
@@ -100,27 +115,24 @@ public class ModifierMateriel implements Initializable {
 
     @FXML
     void modifierMateriel(ActionEvent event) {
-        RadioButton selectedRadio = (RadioButton) toggleGroup.getSelectedToggle();
-        if (selectedRadio == null) {
+        RadioButton selected = (RadioButton) toggleGroup.getSelectedToggle();
+        if (selected == null) {
             showAlert(Alert.AlertType.WARNING, "Aucun matériel sélectionné", "Veuillez sélectionner un matériel à modifier.");
             return;
         }
 
-        Materiels materiel = (Materiels) selectedRadio.getUserData();
+        Materiels m = (Materiels) selected.getUserData();
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierMaterielFormulaire.fxml"));
             Parent root = loader.load();
-
-            // Appel de setMateriel() du contrôleur pour pré-remplir le formulaire
-            ModifierMaterielFormulaire controller = loader.getController();
-            controller.setMateriel(materiel);
+            ModifierMaterielFormulaire ctrl = loader.getController();
+            ctrl.setMateriel(m);
 
             Stage stage = (Stage) btnModifier.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("Modifier Matériel");
             stage.sizeToScene();
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -128,24 +140,23 @@ public class ModifierMateriel implements Initializable {
 
     @FXML
     void supprimerMateriel(ActionEvent event) {
-        RadioButton selectedRadio = (RadioButton) toggleGroup.getSelectedToggle();
-        if (selectedRadio == null) {
+        RadioButton selected = (RadioButton) toggleGroup.getSelectedToggle();
+        if (selected == null) {
             showAlert(Alert.AlertType.WARNING, "Aucun matériel sélectionné", "Veuillez sélectionner un matériel à supprimer.");
             return;
         }
 
-        Materiels materiel = (Materiels) selectedRadio.getUserData();
+        Materiels m = (Materiels) selected.getUserData();
 
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
         confirm.setTitle("Confirmation de suppression");
         confirm.setHeaderText("Voulez-vous vraiment supprimer ce matériel ?");
-        confirm.setContentText(materiel.getNom());
+        confirm.setContentText(m.getNom());
 
         confirm.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
-                ServiceMateriel sm = new ServiceMateriel();
-                sm.supprimer(materiel);
-                materiels.remove(materiel);
+                new ServiceMateriel().supprimer(m);
+                materiels.remove(m);
                 afficherMateriels();
                 showAlert(Alert.AlertType.INFORMATION, "Suppression réussie", "Le matériel a été supprimé.");
             }
@@ -157,7 +168,6 @@ public class ModifierMateriel implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Accueil.fxml"));
             Parent root = loader.load();
-
             Stage stage = (Stage) btnRetourAccueil.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("Accueil - Gestion des Ressources");
@@ -185,8 +195,8 @@ public class ModifierMateriel implements Initializable {
                 box.setPrefWidth(150);
 
                 ImageView imageView = new ImageView();
-                File file = new File(m.getImage() != null ? m.getImage() : "");
-                imageView.setImage((file.exists()) ? new Image(file.toURI().toString()) : new Image("/images/nondispo.jpg"));
+                File file = (m.getImage() != null) ? new File(m.getImage()) : null;
+                imageView.setImage((file != null && file.exists()) ? new Image(file.toURI().toString()) : new Image("/images/nondispo.jpg"));
                 imageView.setFitWidth(120);
                 imageView.setFitHeight(100);
                 imageView.setPreserveRatio(true);
@@ -203,6 +213,7 @@ public class ModifierMateriel implements Initializable {
             }
         }
     }
+
     @FXML
     void filtrerMateriels() {
         String statut = cbFiltreStatut.getValue();
@@ -233,5 +244,8 @@ public class ModifierMateriel implements Initializable {
         materiels.setAll(filtres);
         afficherMateriels();
     }
+
+
+
 
 }

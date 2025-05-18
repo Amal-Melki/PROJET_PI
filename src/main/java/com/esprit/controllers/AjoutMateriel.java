@@ -9,6 +9,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -20,32 +23,19 @@ import java.util.ResourceBundle;
 
 public class AjoutMateriel implements Initializable {
 
-    @FXML
-    private TextField tfNom;
+    @FXML private TextField tfNom;
+    @FXML private ComboBox<String> cbType;
+    @FXML private TextField tfQuantite;
+    @FXML private ComboBox<String> cbEtat;
+    @FXML private TextArea taDescription;
+    @FXML private TextField tfPrix;
+    @FXML private Label lblImagePath;
+    @FXML private Button btnAjouter;
+    @FXML private Button btnRetour;
+    @FXML private Button btnImage;
+    @FXML private ImageView imageMateriel;
+    @FXML private VBox imageBox;
 
-    @FXML
-    private ComboBox<String> cbType;
-
-    @FXML
-    private TextField tfQuantite;
-
-    @FXML
-    private ComboBox<String> cbEtat;
-
-    @FXML
-    private TextArea taDescription;
-
-    @FXML
-    private Button btnAjouter;
-
-    @FXML
-    private Button btnRetour;
-
-    @FXML
-    private Button btnImage;
-
-    @FXML
-    private Label lblImagePath;
 
     private String cheminImage = null;
 
@@ -63,18 +53,10 @@ public class AjoutMateriel implements Initializable {
                 "Électricité (générateurs, rallonges)",
                 "Photobooth / Accessoires photo"
         );
-
         cbEtat.getItems().addAll("DISPONIBLE", "EN_MAINTENANCE", "HORS_SERVICE");
         cbEtat.setValue("DISPONIBLE");
 
-        btnAjouter.setStyle(
-                "-fx-background-color: #ff8cb3;" +
-                        "-fx-text-fill: white;" +
-                        "-fx-font-weight: bold;" +
-                        "-fx-background-radius: 15;" +
-                        "-fx-cursor: hand;" +
-                        "-fx-padding: 4 10 4 10;"
-        );
+        btnAjouter.setStyle("-fx-background-color: #ff8cb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 15; -fx-cursor: hand; -fx-padding: 4 10 4 10;");
     }
 
     @FXML
@@ -82,14 +64,19 @@ public class AjoutMateriel implements Initializable {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choisir une image");
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg", "*.gif")
+                new FileChooser.ExtensionFilter("Fichiers image", "*.png", "*.jpg", "*.jpeg", "*.gif")
         );
 
         File file = fileChooser.showOpenDialog(btnImage.getScene().getWindow());
         if (file != null) {
             cheminImage = file.getAbsolutePath();
             lblImagePath.setText(file.getName());
-            showAlert(Alert.AlertType.INFORMATION, "Image sélectionnée", "Fichier : " + cheminImage);
+
+            Image image = new Image(file.toURI().toString());
+            imageMateriel.setImage(image);
+
+            imageBox.setVisible(true);
+            imageBox.setManaged(true);
         }
     }
 
@@ -99,50 +86,53 @@ public class AjoutMateriel implements Initializable {
             String nom = tfNom.getText().trim();
             String type = cbType.getValue();
             String quantiteStr = tfQuantite.getText().trim();
+            String prixStr = tfPrix.getText().trim();
             String etat = cbEtat.getValue();
             String description = taDescription.getText().trim();
 
-            if (nom.isEmpty() || type == null || quantiteStr.isEmpty() || etat == null || cheminImage == null) {
-                showAlert(Alert.AlertType.WARNING, "Champs manquants", "Veuillez remplir tous les champs obligatoires et choisir une image.");
+            if (nom.isEmpty() || type == null || quantiteStr.isEmpty() || prixStr.isEmpty() || etat == null || cheminImage == null) {
+                showAlert(Alert.AlertType.WARNING, "Champs manquants", "Veuillez remplir tous les champs obligatoires, y compris le prix et l’image.");
                 return;
             }
 
             int quantite = Integer.parseInt(quantiteStr);
-
             if (quantite <= 0) {
                 showAlert(Alert.AlertType.ERROR, "Erreur", "La quantité doit être positive.");
                 return;
             }
 
+            double prix = Double.parseDouble(prixStr);
+            if (prix < 0) {
+                showAlert(Alert.AlertType.ERROR, "Erreur", "Le prix doit être supérieur ou égal à zéro.");
+                return;
+            }
+
             ServiceMateriel sm = new ServiceMateriel();
-            List<Materiels> existants = sm.recuperer();
-            for (Materiels m : existants) {
+            for (Materiels m : sm.recuperer()) {
                 if (m.getNom().equalsIgnoreCase(nom) &&
                         m.getType().equalsIgnoreCase(type) &&
-                        m.getQuantite() == quantite) {
+                        m.getQuantite() == quantite &&
+                        m.getPrix() == prix) {
                     showAlert(Alert.AlertType.WARNING, "Doublon", "Ce matériel existe déjà !");
                     return;
                 }
             }
 
-            // ✅ Construction avec image
-            Materiels materiel = new Materiels(0, nom, type, quantite, etat, description, cheminImage);
-
-
-
+            Materiels materiel = new Materiels(0, nom, type, quantite, etat, description, cheminImage, prix);
             sm.ajouter(materiel);
 
             showAlert(Alert.AlertType.INFORMATION, "Ajout réussi", "Matériel ajouté avec succès !");
             resetForm();
 
         } catch (NumberFormatException e) {
-            showAlert(Alert.AlertType.ERROR, "Erreur", "La quantité doit être un nombre entier valide.");
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Quantité et prix doivent être des nombres valides.");
         }
     }
 
     private void resetForm() {
         tfNom.clear();
         tfQuantite.clear();
+        tfPrix.clear();
         taDescription.clear();
         cbType.getSelectionModel().clearSelection();
         cbEtat.setValue("DISPONIBLE");

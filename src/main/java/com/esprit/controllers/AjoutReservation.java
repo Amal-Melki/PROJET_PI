@@ -19,39 +19,32 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+
+
 public class AjoutReservation implements Initializable {
 
-    @FXML
-    private ComboBox<Materiels> cbMateriel;
+    @FXML private ComboBox<Materiels> cbMateriel;
+    @FXML private DatePicker dpDebut;
+    @FXML private DatePicker dpFin;
+    @FXML private TextField tfQuantite;
+    @FXML private ComboBox<String> cbStatut;
+    @FXML private Button btnReserver;
+    @FXML private Button btnRetour;
+    @FXML private TextField tfMontantTotal;
 
-    @FXML
-    private DatePicker dpDebut;
-
-    @FXML
-    private DatePicker dpFin;
-
-    @FXML
-    private TextField tfQuantite;
-
-    @FXML
-    private ComboBox<String> cbStatut;
-
-    @FXML
-    private Button btnReserver;
-
-    @FXML
-    private Button btnRetour;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // Charger les matériels
         ServiceMateriel sm = new ServiceMateriel();
         List<Materiels> listeMateriels = sm.recuperer();
         cbMateriel.setItems(FXCollections.observableArrayList(listeMateriels));
-
-        // Charger les statuts possibles
         cbStatut.setItems(FXCollections.observableArrayList("EN_ATTENTE", "VALIDEE", "ANNULEE"));
-        cbStatut.setValue("EN_ATTENTE"); // Valeur par défaut
+        cbStatut.setValue("EN_ATTENTE");
+        tfQuantite.textProperty().addListener((observable, oldValue, newValue) -> calculerMontantTotal());
+        cbMateriel.valueProperty().addListener((obs, oldMat, newMat) -> calculerMontantTotal());
+
     }
 
     @FXML
@@ -64,6 +57,13 @@ public class AjoutReservation implements Initializable {
 
         if (materiel == null || dateDebut == null || dateFin == null || quantiteText.isEmpty() || statut == null) {
             showAlert(Alert.AlertType.ERROR, "Champs manquants", "Veuillez remplir tous les champs.");
+            return;
+        }
+
+        // 🔒 Vérification que la date de début n'est pas dans le passé
+        LocalDate today = LocalDate.now();
+        if (dateDebut.isBefore(today)) {
+            showAlert(Alert.AlertType.ERROR, "Date invalide", "La date de début ne peut pas être dans le passé.");
             return;
         }
 
@@ -85,7 +85,6 @@ public class AjoutReservation implements Initializable {
             return;
         }
 
-        // Lire la quantité disponible en base
         ServiceMateriel serviceMateriel = new ServiceMateriel();
         int quantiteDisponible = serviceMateriel.getQuantiteById(materiel.getId());
 
@@ -94,25 +93,12 @@ public class AjoutReservation implements Initializable {
             return;
         }
 
-        // Vérification de doublon
-        ServiceReservationMateriel serviceReservation = new ServiceReservationMateriel();
-        for (ReservationMateriel r : serviceReservation.recuperer()) {
-            if (r.getMaterielId() == materiel.getId()
-                    && r.getDateDebut().toLocalDate().isEqual(dateDebut)
-                    && r.getDateFin().toLocalDate().isEqual(dateFin)
-                    && r.getQuantiteReservee() == quantite
-                    && r.getStatut().equalsIgnoreCase(statut)) {
-                showAlert(Alert.AlertType.WARNING, "Doublon", "Cette réservation existe déjà !");
-                return;
-            }
-        }
-        // Vérifier le statut du matériel
         if (!"DISPONIBLE".equalsIgnoreCase(materiel.getEtat())) {
             showAlert(Alert.AlertType.ERROR, "Matériel indisponible", "Ce matériel n'est pas disponible pour une réservation.");
             return;
         }
 
-         // Vérifier si une autre réservation existe sur la même période
+        ServiceReservationMateriel serviceReservation = new ServiceReservationMateriel();
         for (ReservationMateriel r : serviceReservation.recuperer()) {
             if (r.getMaterielId() == materiel.getId()
                     && !(r.getDateFin().toLocalDate().isBefore(dateDebut) || r.getDateDebut().toLocalDate().isAfter(dateFin))) {
@@ -121,8 +107,8 @@ public class AjoutReservation implements Initializable {
             }
         }
 
+        double montantTotal = materiel.getPrix() * quantite;
 
-        // Création de la réservation
         ReservationMateriel reservation = new ReservationMateriel(
                 0,
                 materiel.getId(),
@@ -131,6 +117,7 @@ public class AjoutReservation implements Initializable {
                 quantite,
                 statut
         );
+        reservation.setMontantTotal(montantTotal);
 
         serviceReservation.ajouter(reservation);
         showAlert(Alert.AlertType.INFORMATION, "Succès", "Réservation enregistrée avec succès !");
@@ -162,6 +149,19 @@ public class AjoutReservation implements Initializable {
             stage.setScene(new Scene(root));
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void calculerMontantTotal() {
+        Materiels materiel = cbMateriel.getValue();
+        String quantiteText = tfQuantite.getText().trim();
+
+        if (materiel != null && !quantiteText.isEmpty() && quantiteText.matches("\\d+")) {
+            int quantite = Integer.parseInt(quantiteText);
+            double montant = quantite * materiel.getPrix();
+            tfMontantTotal.setText(String.format("%.2f", montant));
+        } else {
+            tfMontantTotal.clear();
         }
     }
 
