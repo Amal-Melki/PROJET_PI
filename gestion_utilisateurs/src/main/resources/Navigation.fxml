@@ -26,17 +26,9 @@
                         text="Accueil" 
                         onAction="#handleAccueil"
                         style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 8 18; -fx-cursor: hand;"/>
-                <Button fx:id="btnEvenements" 
-                        text="Événements" 
-                        onAction="#handleEvenements"
-                        style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 8 18; -fx-cursor: hand;"/>
                 <Button fx:id="btnEditerProfil" 
                         text="Éditer Profil" 
                         onAction="#handleEditerProfil"
-                        style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 8 18; -fx-cursor: hand;"/>
-                <Button fx:id="btnGestionEvenements" 
-                        text="Gestion Événements" 
-                        onAction="#handleGestionEvenements"
                         style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 8 18; -fx-cursor: hand;"/>
             </HBox>
             <Region HBox.hgrow="ALWAYS"/>

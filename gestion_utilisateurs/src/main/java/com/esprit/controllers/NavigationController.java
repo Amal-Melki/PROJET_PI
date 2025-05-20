@@ -26,12 +26,6 @@ public class NavigationController {
     private Button btnAccueil;
     
     @FXML
-    private Button btnEvenements;
-    
-    @FXML
-    private Button btnGestionEvenements;
-    
-    @FXML
     private Button btnDeconnexion;
     
     @FXML
@@ -49,9 +43,6 @@ public class NavigationController {
     
     public void setAdminMode(boolean isAdmin) {
         this.isAdmin = isAdmin;
-        // Show/hide admin-specific buttons
-        btnGestionEvenements.setVisible(isAdmin);
-        btnGestionEvenements.setManaged(isAdmin);
     }
     
     public void setCurrentUser(Client client) {
@@ -157,32 +148,6 @@ public class NavigationController {
     }
     
     @FXML
-    public void handleEvenements() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/EvenementsFront.fxml"));
-            Parent view = loader.load();
-            
-            // Get the controller and set the current client
-            EvenementsFrontController controller = loader.getController();
-            if (!isAdmin && currentClient != null) {
-                controller.setCurrentClient(currentClient);
-            }
-            
-            contentArea.getChildren().clear();
-            contentArea.getChildren().add(view);
-            updateButtonStyles(btnEvenements);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    
-    @FXML
-    private void handleGestionEvenements() {
-        loadView("/Evenements.fxml");
-        updateButtonStyles(btnGestionEvenements);
-    }
-    
-    @FXML
     private void handleDeconnexion() {
         try {
             // Load login view
@@ -247,8 +212,6 @@ public class NavigationController {
     private void updateButtonStyles(Button activeButton) {
         // Reset all buttons to default style
         btnAccueil.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;");
-        btnEvenements.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;");
-        btnGestionEvenements.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;");
         
         // Set active button style
         activeButton.setStyle("-fx-background-color: rgba(255,255,255,0.2); -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-background-radius: 5;");

@@ -16,9 +16,6 @@ public class SidebarController {
     private Button btnUtilisateurs;
 
     @FXML
-    private Button btnEvenements;
-
-    @FXML
     private Button btnReservations;
     
     @FXML
@@ -51,19 +48,6 @@ public class SidebarController {
     void handleUtilisateurs(ActionEvent event) {
         if (mainController != null) {
             mainController.loadContent("/Utilisateurs.fxml");
-        } else {
-            showError("Erreur de navigation", "Le contrôleur principal n'est pas initialisé.");
-        }
-    }
-
-    @FXML
-    void handleEvenements(ActionEvent event) {
-        if (mainController != null) {
-            if (hasEventAccess()) {
-                mainController.loadContent("/Evenements.fxml");
-            } else {
-                showError("Accès refusé", "Vous n'avez pas les permissions nécessaires pour accéder aux événements.");
-            }
         } else {
             showError("Erreur de navigation", "Le contrôleur principal n'est pas initialisé.");
         }
