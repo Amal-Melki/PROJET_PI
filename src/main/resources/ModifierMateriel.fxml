@@ -17,42 +17,7 @@
 
     <children>
 
-        <!-- ✅ Boîte de notification bien positionnée -->
-        <HBox fx:id="notifContainer"
-              StackPane.alignment="TOP_LEFT"
-              visible="false" managed="false"
-              spacing="10"
-              style="-fx-padding: 15;">
-            <VBox fx:id="notifBox"
-                  spacing="10"
-                  alignment="CENTER_LEFT"
-                  maxWidth="400"
-                  style="-fx-background-color: #fff3cd;
-                         -fx-padding: 10;
-                         -fx-border-color: #ffeeba;
-                         -fx-border-radius: 8;
-                         -fx-background-radius: 8;
-                         -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0.0, 2, 2);">
-                <HBox spacing="10" alignment="CENTER_LEFT">
-                    <ImageView fitHeight="24" fitWidth="24">
-                        <image>
-                            <Image url="@/images/OIP.png"/>
-                        </image>
-                    </ImageView>
-                    <Label fx:id="notifLabel"
-                           wrapText="true"
-                           maxWidth="320"
-                           style="-fx-text-fill: #856404; -fx-font-weight: bold;" />
-                    <Button text="✖"
-                            onAction="#closeNotif"
-                            style="-fx-background-color: transparent;
-                                   -fx-text-fill: #856404;
-                                   -fx-font-size: 14;
-                                   -fx-font-weight: bold;" />
-                </HBox>
-            </VBox>
-            <Region HBox.hgrow="ALWAYS"/>
-        </HBox>
+
 
         <!-- ✅ Contenu principal -->
         <VBox spacing="10" alignment="TOP_CENTER"
@@ -60,6 +25,11 @@
             <padding>
                 <Insets top="20" right="20" bottom="20" left="20"/>
             </padding>
+            <Button fx:id="btnExporterCSV"
+                    text="Exporter en CSV"
+                    layoutX="20" layoutY="20"
+                    onAction="#exporterCSV"
+                    style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;"/>
 
             <HBox alignment="CENTER">
                 <Text text="Liste des Matériels" style="-fx-fill: white;">

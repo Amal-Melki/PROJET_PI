@@ -5,13 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d0b8aaef-16e6-47f0-b2c4-5624f1e5a204" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/com/esprit/controllers/ModifierFournisseurFormulaire.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/com/esprit/controllers/ModifierFournisseurFormulaire.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/com/esprit/controllers/ModifierMaterielFormulaire.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/com/esprit/controllers/ModifierMaterielFormulaire.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/com/esprit/controllers/ModifierReservation.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/com/esprit/controllers/ModifierReservation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/com/esprit/controllers/ModifierReservationFormulaire.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/com/esprit/controllers/ModifierReservationFormulaire.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/com/esprit/services/ServiceMateriel.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/com/esprit/services/ServiceMateriel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/com/esprit/services/ServiceReservationMateriel.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/com/esprit/services/ServiceReservationMateriel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/com/esprit/controllers/ModifierMateriel.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/com/esprit/controllers/ModifierMateriel.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,7 +46,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "gestion__matériels",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/RKheriji/IdeaProjects/Projet_PI",
+    "last_opened_file_path": "C:/Users/RKheriji/IdeaProjects/Projet_PI/src",
     "project.structure.last.edited": "SDKs",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2"

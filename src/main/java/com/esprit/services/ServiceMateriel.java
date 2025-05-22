@@ -6,7 +6,9 @@ import com.esprit.utils.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ServiceMateriel implements IService<Materiels> {
 
     private final Connection connection;

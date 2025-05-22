@@ -1,6 +1,11 @@
 package com.esprit.modules;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "materiel")
 public class Materiels {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String nom;
     private String type;
