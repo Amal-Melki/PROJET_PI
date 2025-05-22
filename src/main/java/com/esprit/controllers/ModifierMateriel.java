@@ -1,7 +1,10 @@
 package com.esprit.controllers;
 
+import com.esprit.API.MaterielAPIResponse;
 import com.esprit.modules.Materiels;
 import com.esprit.services.ServiceMateriel;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,19 +18,26 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.animation.PauseTransition;
-import javafx.util.Duration;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
+
+import javafx.stage.FileChooser;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.file.Files;
 
 public class ModifierMateriel implements Initializable {
 
@@ -40,15 +50,15 @@ public class ModifierMateriel implements Initializable {
     @FXML private ComboBox<String> cbFiltreStatut;
     @FXML private ComboBox<String> cbFiltreType;
     @FXML private TextField tfFiltreQuantite;
-    @FXML private VBox rootVBox;
-    @FXML private VBox notifBox;
-    
+
 
 
 
 
     private final ToggleGroup toggleGroup = new ToggleGroup();
     private final ObservableList<Materiels> materiels = FXCollections.observableArrayList();
+
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -63,27 +73,56 @@ public class ModifierMateriel implements Initializable {
         cbFiltreStatut.setValue("Tous");
         cbFiltreType.setValue("Tous");
 
-        List<Materiels> faibles = materiels.stream()
-                .filter(m -> m.getQuantite() < 10)
-                .collect(Collectors.toList());
+        // Appel de l'API pour les stocks faibles
+        new Thread(() -> {
+            try {
+                URL apiUrl = new URL("http://localhost:8080/api/materiels/stock-faible");
+                HttpURLConnection conn = (HttpURLConnection) apiUrl.openConnection();
+                conn.setRequestMethod("GET");
 
-        if (!faibles.isEmpty()) {
-            notifContainer.setVisible(true);
-            notifContainer.setManaged(true);
-            notifLabel.setText("⚠ " + faibles.size() + " produit(s) ont une quantité inférieure à 10.");
-        }
+                if (conn.getResponseCode() == 200) {
+                    InputStream is = conn.getInputStream();
+                    ObjectMapper mapper = new ObjectMapper();
+                    List<MaterielAPIResponse> stockFaible = mapper.readValue(is, new TypeReference<>() {});
+                    is.close();
 
+                    if (!stockFaible.isEmpty()) {
+                        StringBuilder message = new StringBuilder("Matériels en stock faible :\n");
+                        for (MaterielAPIResponse m : stockFaible) {
+                            message.append("- ").append(m.getNom()).append(" (").append(m.getQuantite()).append(" unités)\n");
+                        }
 
+                        Platform.runLater(() -> {
+                            Alert alert = new Alert(Alert.AlertType.WARNING);
+                            alert.setTitle("⚠️ Stock faible détecté");
+                            alert.setHeaderText("Certains matériels sont presque épuisés !");
+                            alert.setContentText(message.toString());
 
-    }
+                            // Style du fond de la boîte
+                            DialogPane dialogPane = alert.getDialogPane();
+                            dialogPane.setStyle(
+                                    "-fx-background-color: #fff3cd;" +     // fond jaune clair
+                                            "-fx-border-color: #f1c40f;" +         // bordure jaune/or
+                                            "-fx-font-size: 14px;" +
+                                            "-fx-font-family: 'Arial';"
+                            );
 
-    @FXML private HBox notifContainer;
-    @FXML private Label notifLabel;
+                            // Style des boutons
+                            dialogPane.lookupButton(ButtonType.OK).setStyle(
+                                    "-fx-background-color: #f39c12;" +
+                                            "-fx-text-fill: white;" +
+                                            "-fx-font-weight: bold;"
+                            );
 
-    @FXML
-    void closeNotif() {
-        notifContainer.setVisible(false);
-        notifContainer.setManaged(false);
+                            alert.showAndWait();
+                        });
+
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 
     private void afficherMateriels() {
@@ -246,6 +285,23 @@ public class ModifierMateriel implements Initializable {
     }
 
 
+    public void exporterCSV() {
+        try {
+            URL url = new URL("http://localhost:8080/api/materiels/export-csv");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
 
+            // Chemin local pour enregistrer le fichier
+            String cheminFichier = "C:\\Users\\RKheriji\\OneDrive - Linedata Services, Inc\\Desktop\\materiels.csv";
+            try (InputStream in = conn.getInputStream();
+                 OutputStream out = new FileOutputStream(cheminFichier)) {
+                in.transferTo(out);
+            }
+
+            System.out.println("✅ Export CSV terminé avec succès !");
+        } catch (Exception e) {
+            System.err.println("Erreur lors de l'export CSV : " + e.getMessage());
+        }
+    }
 
 }
