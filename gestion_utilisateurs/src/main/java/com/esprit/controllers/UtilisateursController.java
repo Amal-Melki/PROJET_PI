@@ -42,7 +42,10 @@ public class UtilisateursController implements AdminAware {
     private TableColumn<User, String> colRole;
 
     @FXML
-    private TableColumn<User, Void> colActions;
+    private TableColumn<User, Void> colModifier;
+
+    @FXML
+    private TableColumn<User, Void> colSupprimer;
 
     @FXML
     private TextField searchField;
@@ -78,7 +81,7 @@ public class UtilisateursController implements AdminAware {
                         roleText = "Fournisseur";
                         break;
                     case 3:
-                        roleText = "Hôte";
+                        roleText = "Moderateur";
                         break;
                     default:
                         roleText = "Admin";
@@ -90,11 +93,12 @@ public class UtilisateursController implements AdminAware {
             return new SimpleStringProperty("User");
         });
 
-        // Add action buttons to each row
-        colActions.setCellFactory(createActionButtonCellFactory());
+        // Add action buttons to Modifier and Supprimer columns
+        colModifier.setCellFactory(createModifierButtonCellFactory());
+        colSupprimer.setCellFactory(createSupprimerButtonCellFactory());
 
         // Set up role filter
-        roleFilter.getItems().addAll("Tous", "Super Admin", "Organisateur", "Fournisseur", "Hôte", "Client");
+        roleFilter.getItems().addAll("Tous", "Super Admin", "Organisateur", "Fournisseur", "Moderateur", "Client");
         roleFilter.setValue("Tous");
 
         // Set up search and filter functionality
@@ -153,7 +157,7 @@ public class UtilisateursController implements AdminAware {
                             roleText = "Fournisseur";
                             break;
                         case 3:
-                            roleText = "Hôte";
+                            roleText = "Moderateur";
                             break;
                         default:
                             roleText = "Admin";
@@ -173,41 +177,53 @@ public class UtilisateursController implements AdminAware {
         this.currentAdmin = admin;
     }
 
-    private Callback<TableColumn<User, Void>, TableCell<User, Void>> createActionButtonCellFactory() {
+    private Callback<TableColumn<User, Void>, TableCell<User, Void>> createModifierButtonCellFactory() {
         return new Callback<>() {
             @Override
             public TableCell<User, Void> call(TableColumn<User, Void> param) {
                 return new TableCell<>() {
                     private final Button btnModifier = new Button("✏️");
-                    private final Button btnSupprimer = new Button("🗑️");
-                    private final HBox buttons = new HBox(5, btnModifier, btnSupprimer);
-
                     {
-                        // Style the buttons
-                        String buttonStyle = "-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold; " +
-                                "-fx-background-radius: 15; -fx-min-width: 30; -fx-min-height: 30; -fx-cursor: hand;";
-                        btnModifier.setStyle(buttonStyle);
-                        btnSupprimer.setStyle(buttonStyle);
-
-                        // Add button actions
+                        btnModifier.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 15; -fx-min-width: 30; -fx-min-height: 30; -fx-cursor: hand;");
                         btnModifier.setOnAction(event -> {
                             User user = getTableView().getItems().get(getIndex());
                             handleModifier(user);
                         });
-
-                        btnSupprimer.setOnAction(event -> {
-                            User user = getTableView().getItems().get(getIndex());
-                            handleSupprimer(user);
-                        });
                     }
-
                     @Override
                     protected void updateItem(Void item, boolean empty) {
                         super.updateItem(item, empty);
                         if (empty) {
                             setGraphic(null);
                         } else {
-                            setGraphic(buttons);
+                            setGraphic(btnModifier);
+                        }
+                    }
+                };
+            }
+        };
+    }
+
+    private Callback<TableColumn<User, Void>, TableCell<User, Void>> createSupprimerButtonCellFactory() {
+        return new Callback<>() {
+            @Override
+            public TableCell<User, Void> call(TableColumn<User, Void> param) {
+                return new TableCell<>() {
+                    private final Button btnSupprimer = new Button("🗑️");
+                    {
+                        btnSupprimer.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 15; -fx-min-width: 30; -fx-min-height: 30; -fx-cursor: hand;");
+                        btnSupprimer.setOnAction(event -> {
+                            User user = getTableView().getItems().get(getIndex());
+                            handleSupprimer(user);
+                        });
+                    }
+                    @Override
+                    protected void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            setGraphic(btnSupprimer);
                         }
                     }
                 };
@@ -228,7 +244,7 @@ public class UtilisateursController implements AdminAware {
     }
 
     @FXML
-    void handleAjouterAdmin(ActionEvent event) {
+    void handleAjouter() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjoutAdmin.fxml"));
             Parent root = loader.load();
@@ -236,7 +252,6 @@ public class UtilisateursController implements AdminAware {
             stage.setTitle("Ajouter un Administrateur");
             stage.setScene(new Scene(root));
             stage.show();
-            
             // Refresh table after adding
             stage.setOnHidden(e -> loadData());
         } catch (IOException e) {

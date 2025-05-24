@@ -16,10 +16,20 @@ public class ClientService implements IService<Client> {
 
     @Override
     public void ajouter(Client client) {
-        // First add the user
-        String reqUser = "INSERT INTO user (nom_suser, prenom_user, email_user, password_user) VALUES (?,?,?,?)";
-        String reqClient = "INSERT INTO client (numero_tel, image_path, id_user) VALUES (?,?,?)";
+        // First check if email exists
+        String checkEmail = "SELECT COUNT(*) as count FROM user WHERE email_user = ?";
         try {
+            PreparedStatement checkStmt = connection.prepareStatement(checkEmail);
+            checkStmt.setString(1, client.getEmail_user());
+            ResultSet rs = checkStmt.executeQuery();
+            if (rs.next() && rs.getInt("count") > 0) {
+                throw new SQLException("Email already exists");
+            }
+
+            // If email doesn't exist, proceed with insertion
+            String reqUser = "INSERT INTO user (nom_suser, prenom_user, email_user, password_user) VALUES (?,?,?,?)";
+            String reqClient = "INSERT INTO client (numero_tel, image_path, id_user) VALUES (?,?,?)";
+            
             // Insert into user table
             PreparedStatement pstUser = connection.prepareStatement(reqUser, Statement.RETURN_GENERATED_KEYS);
             pstUser.setString(1, client.getNom_suser());
@@ -43,6 +53,7 @@ public class ClientService implements IService<Client> {
             System.out.println("Client ajouté");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            throw new RuntimeException("Erreur lors de l'ajout du client: " + e.getMessage());
         }
     }
 

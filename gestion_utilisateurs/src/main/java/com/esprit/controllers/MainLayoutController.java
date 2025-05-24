@@ -20,7 +20,7 @@ public class MainLayoutController {
     private StackPane contentArea;
 
     @FXML
-    private ScrollPane sidebarContainer;
+    private VBox sidebarContainer;
     
     private Admin currentAdmin;
     private SidebarController sidebarController;
@@ -37,7 +37,7 @@ public class MainLayoutController {
             sidebarController.setMainController(this);
             
             // Add the sidebar to the container
-            sidebarContainer.setContent(sidebar);
+            sidebarContainer.getChildren().add(sidebar);
             
             // Load initial content (e.g., dashboard)
             loadContent("/Dashboard.fxml");

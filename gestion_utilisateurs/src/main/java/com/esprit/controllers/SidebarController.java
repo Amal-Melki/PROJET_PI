@@ -59,7 +59,11 @@ public class SidebarController {
     @FXML
     void handleEvenements(ActionEvent event) {
         if (mainController != null) {
-            mainController.loadContent("/Evenements.fxml");
+            if (hasEventAccess()) {
+                mainController.loadContent("/Evenements.fxml");
+            } else {
+                showError("Accès refusé", "Vous n'avez pas les permissions nécessaires pour accéder aux événements.");
+            }
         } else {
             showError("Erreur de navigation", "Le contrôleur principal n'est pas initialisé.");
         }
@@ -68,7 +72,11 @@ public class SidebarController {
     @FXML
     void handleReservations(ActionEvent event) {
         if (mainController != null) {
-            mainController.loadContent("/Reservations.fxml");
+            if (hasEventAccess()) {
+                mainController.loadContent("/Reservations.fxml");
+            } else {
+                showError("Accès refusé", "Vous n'avez pas les permissions nécessaires pour accéder aux réservations.");
+            }
         } else {
             showError("Erreur de navigation", "Le contrôleur principal n'est pas initialisé.");
         }
@@ -93,6 +101,14 @@ public class SidebarController {
             e.printStackTrace();
             showError("Erreur", "Impossible de se déconnecter");
         }
+    }
+
+    private boolean hasEventAccess() {
+        if (currentAdmin == null) {
+            return false;
+        }
+        int role = currentAdmin.getRole();
+        return role == 0 || role == 1;
     }
 
     private void showError(String title, String content) {

@@ -70,10 +70,10 @@ public class NavigationController {
             // Set default admin image
             try {
                 Image adminImage = new Image(getClass().getResourceAsStream("/images/admin-avatar.png"));
-                if (adminImage.isError()) {
-                    loadDefaultAvatar();
+                if (adminImage != null && !adminImage.isError()) {
+                    userImageView.setImage(adminImage);
                 } else {
-                userImageView.setImage(adminImage);
+                    loadDefaultAvatar();
                 }
             } catch (Exception e) {
                 System.err.println("Error loading admin avatar: " + e.getMessage());
@@ -81,29 +81,39 @@ public class NavigationController {
             }
         } else if (!isAdmin && currentClient != null) {
             userNameLabel.setText(currentClient.getNom_suser() + " " + currentClient.getPrenom_user());
-            // Load client's image if available, otherwise use default
+            // Always try to load the client image if available
+            boolean imageLoaded = false;
             if (currentClient.getImage_path() != null && !currentClient.getImage_path().isEmpty()) {
+                String imagePath = currentClient.getImage_path();
                 try {
-                    File imageFile = new File(currentClient.getImage_path());
-                    if (imageFile.exists()) {
-                        Image clientImage = new Image(imageFile.toURI().toString());
-                        if (clientImage.isError()) {
-                            loadDefaultAvatar();
-                        } else {
-                        userImageView.setImage(clientImage);
+                    // Try to load from resources first
+                    Image clientImage = null;
+                    if (imagePath.startsWith("images/")) {
+                        clientImage = new Image(getClass().getResourceAsStream("/" + imagePath));
+                        if (clientImage != null && !clientImage.isError()) {
+                            userImageView.setImage(clientImage);
+                            imageLoaded = true;
                         }
-                    } else {
-                        loadDefaultAvatar();
+                    }
+                    // If not loaded from resources, try file system
+                    if (!imageLoaded) {
+                        File imageFile = imagePath.startsWith("images/") ? new File("src/main/resources/" + imagePath) : new File(imagePath);
+                        if (imageFile.exists()) {
+                            clientImage = new Image(imageFile.toURI().toString());
+                            if (clientImage != null && !clientImage.isError()) {
+                                userImageView.setImage(clientImage);
+                                imageLoaded = true;
+                            }
+                        }
                     }
                 } catch (Exception e) {
                     System.err.println("Error loading client image: " + e.getMessage());
-                    loadDefaultAvatar();
                 }
-            } else {
+            }
+            if (!imageLoaded) {
                 loadDefaultAvatar();
             }
         }
-        
         // Make user info visible
         userInfoBox.setVisible(true);
         userInfoBox.setManaged(true);
@@ -112,16 +122,16 @@ public class NavigationController {
     private void loadDefaultAvatar() {
         try {
             Image defaultImage = new Image(getClass().getResourceAsStream("/images/default-avatar.png"));
-            if (defaultImage.isError()) {
-                // If even the default avatar fails to load, create a simple colored circle
-                userImageView.setStyle("-fx-background-color: #cccccc; -fx-background-radius: 20;");
+            if (defaultImage != null && !defaultImage.isError()) {
+                userImageView.setImage(defaultImage);
             } else {
-            userImageView.setImage(defaultImage);
+                // Create a simple colored circle as fallback
+                userImageView.setStyle("-fx-background-color: #3498db; -fx-background-radius: 20;");
             }
         } catch (Exception e) {
-            System.err.println("Error loading default avatar: " + e.getMessage());
             // Create a simple colored circle as fallback
-            userImageView.setStyle("-fx-background-color: #cccccc; -fx-background-radius: 20;");
+            userImageView.setStyle("-fx-background-color: #3498db; -fx-background-radius: 20;");
+            System.out.println("Using fallback avatar style");
         }
     }
     
@@ -135,6 +145,9 @@ public class NavigationController {
         userImageView.setFitWidth(40);
         userImageView.setPreserveRatio(true);
         userImageView.setStyle("-fx-background-radius: 20; -fx-clip-path: circle;");
+        
+        // Set initial default avatar
+        loadDefaultAvatar();
     }
     
     @FXML

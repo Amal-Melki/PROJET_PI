@@ -6,28 +6,31 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 
-<VBox alignment="CENTER_LEFT" prefHeight="600.0" prefWidth="200.0" spacing="15" 
-      style="-fx-background-color: #ff7fa8;" 
+<VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="220.0" spacing="18" 
+      style="-fx-background-color: linear-gradient(to bottom, #2c3e50, #3498db); -fx-background-radius: 18; -fx-effect: dropshadow(gaussian, rgba(44,62,80,0.10), 10, 0, 0, 2);" 
       xmlns="http://javafx.com/javafx/17" 
       xmlns:fx="http://javafx.com/fxml/1" 
       fx:controller="com.esprit.controllers.SidebarController">
 
     <padding>
-        <Insets top="20" right="10" bottom="20" left="10"/>
+        <Insets top="28" right="10" bottom="28" left="10"/>
     </padding>
 
     <!-- Logo/Title -->
-    <Text text="Event Manager" 
-          style="-fx-fill: white; -fx-font-weight: bold;">
-        <font>
-            <Font name="Segoe UI Bold" size="20.0"/>
-        </font>
-    </Text>
+    <VBox alignment="CENTER" spacing="8">
+        <ImageView fitHeight="54" fitWidth="54" preserveRatio="true">
+            <Image url="@/logo.jpg"/>
+        </ImageView>
+        <Text text="Evencia" 
+              style="-fx-fill: white; -fx-font-weight: bold; -fx-font-size: 22px; -fx-font-family: 'Segoe UI';"/>
+    </VBox>
 
     <!-- Admin Name -->
     <Label fx:id="lblAdminName" 
-           style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-font-family: 'Segoe UI Semibold';"/>
+           style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 15px; -fx-font-family: 'Segoe UI Semibold'; -fx-padding: 10 0 0 0;"/>
 
     <!-- Dashboard Button -->
     <Button fx:id="btnDashboard" 
@@ -35,7 +38,7 @@
             prefHeight="45.0" 
             text="📊 Dashboard"
             onAction="#handleDashboard"
-            style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 25; -fx-font-family: 'Segoe UI Semibold'; -fx-cursor: hand;" />
+            style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 15px; -fx-background-radius: 12; -fx-cursor: hand; -fx-padding: 8 0;" />
 
     <!-- Utilisateurs Button -->
     <Button fx:id="btnUtilisateurs" 
@@ -43,7 +46,7 @@
             prefHeight="45.0" 
             text="👥 Utilisateurs"
             onAction="#handleUtilisateurs"
-            style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 25; -fx-font-family: 'Segoe UI Semibold'; -fx-cursor: hand;" />
+            style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 15px; -fx-background-radius: 12; -fx-cursor: hand; -fx-padding: 8 0;" />
 
     <!-- Evenements Button -->
     <Button fx:id="btnEvenements" 
@@ -51,7 +54,7 @@
             prefHeight="45.0" 
             text="🎉 Evenements"
             onAction="#handleEvenements"
-            style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 25; -fx-font-family: 'Segoe UI Semibold'; -fx-cursor: hand;" />
+            style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 15px; -fx-background-radius: 12; -fx-cursor: hand; -fx-padding: 8 0;" />
 
     <!-- Reservations Button -->
     <Button fx:id="btnReservations" 
@@ -59,7 +62,7 @@
             prefHeight="45.0" 
             text="📋 Reservations"
             onAction="#handleReservations"
-            style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 25; -fx-font-family: 'Segoe UI Semibold'; -fx-cursor: hand;" />
+            style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 15px; -fx-background-radius: 12; -fx-cursor: hand; -fx-padding: 8 0;" />
 
     <!-- Logout Button -->
     <Button fx:id="btnLogout" 
@@ -67,6 +70,6 @@
             prefHeight="45.0" 
             text="🚪 Déconnexion"
             onAction="#handleDeconnexion"
-            style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 25; -fx-font-family: 'Segoe UI Semibold'; -fx-cursor: hand;" />
+            style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 15px; -fx-background-radius: 12; -fx-cursor: hand; -fx-padding: 8 0;" />
 
 </VBox> 

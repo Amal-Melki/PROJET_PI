@@ -49,17 +49,36 @@ public class EditProfileController {
             telephoneField.setText(String.valueOf(client.getNumero_tel()));
             
             // Load profile image if exists
+            boolean imageLoaded = false;
             if (client.getImage_path() != null && !client.getImage_path().isEmpty()) {
+                String imagePath = client.getImage_path();
                 try {
-                    File imageFile = new File(client.getImage_path());
-                    if (imageFile.exists()) {
-                        Image image = new Image(new FileInputStream(imageFile));
-                        profileImageView.setImage(image);
-                        currentImagePath = client.getImage_path();
+                    // Try to load from resources first
+                    if (imagePath.startsWith("images/")) {
+                        Image image = new Image(getClass().getResourceAsStream("/" + imagePath));
+                        if (image != null && !image.isError()) {
+                            profileImageView.setImage(image);
+                            currentImagePath = imagePath;
+                            imageLoaded = true;
+                        }
                     }
-                } catch (IOException e) {
+                    // If not loaded from resources, try file system
+                    if (!imageLoaded) {
+                        File imageFile = imagePath.startsWith("images/") ? new File("src/main/resources/" + imagePath) : new File(imagePath);
+                        if (imageFile.exists()) {
+                            Image image = new Image(new FileInputStream(imageFile));
+                            profileImageView.setImage(image);
+                            currentImagePath = imageFile.getPath();
+                            imageLoaded = true;
+                        }
+                    }
+                } catch (Exception e) {
                     System.err.println("Error loading profile image: " + e.getMessage());
                 }
+            }
+            if (!imageLoaded) {
+                // Fallback: colored circle or default image
+                profileImageView.setStyle("-fx-background-color: #3498db; -fx-background-radius: 75;");
             }
         }
     }
