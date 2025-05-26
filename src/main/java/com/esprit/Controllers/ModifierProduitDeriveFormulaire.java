@@ -2,7 +2,7 @@ package com.esprit.Controllers;
 
 
 import com.esprit.modules.produits.ProduitDerive;
-import com.esprit.services.produits.ServiceProduitDerive;
+import com.esprit.services.produits.Admin.ServiceProduitDerive;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -72,6 +72,19 @@ public class ModifierProduitDeriveFormulaire {
             alert.setHeaderText(null);
             alert.setContentText("Prix et stock doivent être des nombres valides !");
             alert.show();
+        }
+    }
+
+    @FXML
+    private void handleInsererImage(ActionEvent event) {
+        javafx.stage.FileChooser fileChooser = new javafx.stage.FileChooser();
+        fileChooser.setTitle("Sélectionner une image");
+        fileChooser.getExtensionFilters().addAll(
+                new javafx.stage.FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg", "*.gif")
+        );
+        java.io.File selectedFile = fileChooser.showOpenDialog(btnModifier.getScene().getWindow());
+        if (selectedFile != null) {
+            tfImageUrl.setText(selectedFile.toURI().toString());
         }
     }
 }

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.esprit.Controllers.AdminProduitDerive">
+
+    <center>
+        <VBox spacing="15" alignment="TOP_CENTER" padding="20,20,20,20">
+            <Label text="Gestion des Produits Dérivés - Admin" style="-fx-font-size: 20px; -fx-font-weight: bold;" />
+
+            <TableView fx:id="tableProduits" prefHeight="400" prefWidth="900">
+                <columns>
+                    <TableColumn fx:id="colNom" text="Nom" prefWidth="150"/>
+                    <TableColumn fx:id="colCategorie" text="Catégorie" prefWidth="150"/>
+                    <TableColumn fx:id="colPrix" text="Prix" prefWidth="100"/>
+                    <TableColumn fx:id="colStock" text="Stock" prefWidth="100"/>
+                    <TableColumn fx:id="colDescription" text="Description" prefWidth="200"/>
+                    <TableColumn fx:id="colImageUrl" text="Image" prefWidth="150"/>
+                    <TableColumn fx:id="colAction" text="Actions" prefWidth="200"/>
+                </columns>
+            </TableView>
+
+            <Button text="Retour à l'accueil" onAction="#retourAccueil"/>
+        </VBox>
+    </center>
+</BorderPane>

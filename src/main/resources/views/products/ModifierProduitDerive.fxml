@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<Pane xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.esprit.Controllers.ModifierProduitDerive"
+      prefHeight="550.0" prefWidth="820.0"
+      style="-fx-background-color: linear-gradient(to bottom, #ffe6eb, #ffc0cb); -fx-padding: 20;">
+
+    <children>
+
+        <!-- Bouton de retour -->
+        <Button fx:id="btnRetourAccueil"
+                layoutX="680.0" layoutY="20.0"
+                text="↩ Retour"
+                onAction="#retourAccueil"
+                style="-fx-background-color: #ff7fa8; -fx-text-fill: white; -fx-font-weight: bold;
+                       -fx-font-size: 13px; -fx-background-radius: 20; -fx-cursor: hand;
+                       -fx-padding: 6 12 6 12;" />
+
+        <!-- Titre principal avec logo -->
+        <HBox layoutX="200.0" layoutY="50.0" spacing="10" alignment="CENTER_LEFT">
+            <ImageView fitHeight="40" fitWidth="40" pickOnBounds="true" preserveRatio="true">
+                <image>
+                    <Image url="@../images/logo_produits.png" />
+                </image>
+            </ImageView>
+            <Text text="Modifier Produits Dérivés" style="-fx-fill: white;">
+                <font>
+                    <Font name="Segoe UI Bold" size="30.0" />
+                </font>
+            </Text>
+        </HBox>
+
+        <!-- Filtres et recherche -->
+        <ComboBox fx:id="cbType" layoutX="10.0" layoutY="90.0" prefWidth="150.0" onAction="#handleFiltrer" />
+        <ComboBox fx:id="cbStatut" layoutX="170.0" layoutY="90.0" prefWidth="150.0" onAction="#handleFiltrer" />
+        <TextField fx:id="tfRecherche" layoutX="650.0" layoutY="90.0" prefWidth="150.0" promptText="Recherche..." onKeyReleased="#handleFiltrer" />
+
+        <!-- Tableau stylisé -->
+        <TableView fx:id="tableProduits"
+                   layoutX="10.0" layoutY="130.0"
+                   prefWidth="800.0" prefHeight="200.0"
+                   style="-fx-background-color: white; -fx-border-radius: 15px;
+                          -fx-background-radius: 15px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 4);">
+            <columns>
+                <TableColumn fx:id="colNom" prefWidth="100.0" text="Nom" />
+                <TableColumn fx:id="colCategorie" prefWidth="100.0" text="Catégorie" />
+                <TableColumn fx:id="colPrix" prefWidth="80.0" text="Prix" />
+                <TableColumn fx:id="colStock" prefWidth="80.0" text="Stock" />
+                <TableColumn fx:id="colDescription" prefWidth="180.0" text="Description" />
+                <TableColumn fx:id="colImageUrl" prefWidth="180.0" text="URL Image" />
+                <TableColumn fx:id="colAction" prefWidth="100.0" text="Action" />
+            </columns>
+        </TableView>
+
+        <!-- Formulaire d'édition inline -->
+        <Pane fx:id="formPane" layoutX="10.0" layoutY="340.0" prefWidth="800.0" prefHeight="200.0" visible="false" managed="false" style="-fx-background-color: white; -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-padding: 15;">
+            <children>
+                <TextField fx:id="tfNomEdit" layoutX="20.0" layoutY="20.0" promptText="Nom" prefWidth="200.0" />
+                <ComboBox fx:id="cbCategorieEdit" layoutX="240.0" layoutY="20.0" prefWidth="150.0" />
+                <TextField fx:id="tfPrixEdit" layoutX="410.0" layoutY="20.0" promptText="Prix" prefWidth="100.0" />
+                <TextField fx:id="tfStockEdit" layoutX="530.0" layoutY="20.0" promptText="Stock" prefWidth="100.0" />
+                <TextArea fx:id="taDescriptionEdit" layoutX="20.0" layoutY="60.0" prefWidth="400.0" prefHeight="80.0" promptText="Description" />
+                <TextField fx:id="tfImageUrlEdit" layoutX="440.0" layoutY="60.0" promptText="URL Image" prefWidth="190.0" />
+                <Button fx:id="btnSaveEdit" layoutX="650.0" layoutY="60.0" mnemonicParsing="false" text="Enregistrer" onAction="#saveEdit" style="-fx-background-color: #ff8cb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 20; -fx-cursor: hand;" />
+                <Button fx:id="btnCancelEdit" layoutX="650.0" layoutY="110.0" mnemonicParsing="false" text="Annuler" onAction="#cancelEdit" style="-fx-background-color: #e57373; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 20; -fx-cursor: hand;" />
+            </children>
+        </Pane>
+
+    </children>
+</Pane>
