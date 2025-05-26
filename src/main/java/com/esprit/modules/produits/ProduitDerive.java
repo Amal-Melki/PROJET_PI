@@ -11,9 +11,14 @@ public class ProduitDerive {
     private final StringProperty description = new SimpleStringProperty();
     private final StringProperty imageUrl = new SimpleStringProperty();
 
+    // Constructeur par défaut (utile pour les TableViews ou initialisation vide)
     public ProduitDerive() {
     }
 
+    /**
+     * Constructeur complet pour un ProduitDerive, incluant toutes les propriétés.
+     * Utilisé généralement pour la création ou la lecture complète d'un objet.
+     */
     public ProduitDerive(int id, String nom, String categorie, double prix, int stock, String description, String imageUrl) {
         this.id.set(id);
         this.nom.set(nom);
@@ -24,6 +29,9 @@ public class ProduitDerive {
         this.imageUrl.set(imageUrl);
     }
 
+    /**
+     * Constructeur pour l'ajout d'un nouveau produit (sans ID, car l'ID est auto-généré par la base de données).
+     */
     public ProduitDerive(String nom, String categorie, double prix, int stock, String description, String imageUrl) {
         this.nom.set(nom);
         this.categorie.set(categorie);
@@ -33,10 +41,22 @@ public class ProduitDerive {
         this.imageUrl.set(imageUrl);
     }
 
-    public ProduitDerive(int i, String nom, String type, double prix, int quantite, int seuilAlerte, String description, String cheminImage, Object o) {
+    /**
+     * Constructeur spécifique pour la récupération des détails d'un produit depuis la DB,
+     * correspondant aux colonnes sélectionnées dans ServiceProduitDetails (sans le stock).
+     * C'est ce constructeur qui était vide et causait le problème.
+     */
+    public ProduitDerive(int id, String nom, String categorie, String description, double prix, String imageUrl) {
+        this.id.set(id);
+        this.nom.set(nom);
+        this.categorie.set(categorie);
+        this.description.set(description);
+        this.prix.set(prix);
+        this.imageUrl.set(imageUrl);
+        // Le stock est laissé à sa valeur par défaut (0) car non fourni dans ce constructeur
     }
 
-    // Getters classiques
+    // --- Les getters classiques (pour accéder aux valeurs) ---
     public int getId() {
         return id.get();
     }
@@ -93,7 +113,7 @@ public class ProduitDerive {
         this.imageUrl.set(imageUrl);
     }
 
-    // Properties pour le binding avec TableView
+    // --- Les Property getters (pour le binding JavaFX) ---
     public IntegerProperty idProperty() {
         return id;
     }
@@ -122,6 +142,7 @@ public class ProduitDerive {
         return imageUrl;
     }
 
+    // Méthode toString pour un affichage utile de l'objet
     @Override
     public String toString() {
         return "ProduitDerive{" +

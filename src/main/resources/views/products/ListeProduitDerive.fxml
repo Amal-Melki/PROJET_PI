@@ -6,7 +6,7 @@
 
 <Pane xmlns="http://javafx.com/javafx/17"
       xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.esprit.Controllers.ListeProduitDerive"
+      fx:controller="com.esprit.Controllers.Admin.ListeProduitDerive"
       prefHeight="650.0" prefWidth="800.0"
       style="-fx-background-color: pink;">
 
@@ -22,7 +22,7 @@
 
         <ComboBox fx:id="cbType" layoutX="30.0" layoutY="60.0" prefWidth="150.0" onAction="#handleFiltrer" />
         <ComboBox fx:id="cbStatut" layoutX="200.0" layoutY="60.0" prefWidth="150.0" onAction="#handleFiltrer" />
-        <TextField fx:id="tfRecherche" layoutX="620.0" layoutY="60.0" prefWidth="150.0" promptText="Recherche..." onKeyReleased="#handleFiltrer" />
+        <TextField fx:id="tfRecherche" layoutX="620.0" layoutY="60.0" prefWidth="150.0" promptText="Recherche de la liste des produits" onKeyReleased="#handleFiltrer" />
 
         <!-- Titre Liste Produits Dérivés -->
         <Text text="📦 Liste des Produits Dérivés"

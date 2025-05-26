@@ -7,20 +7,22 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.util.Objects;
 
 public class MainGUI extends Application {
 
     @Override
     public void start(Stage primaryStage) {
         try {
-            // Load the FXML file and assign it to the root variable
-Parent root = FXMLLoader.load(getClass().getResource("/products/AccueilProduitDerive.fxml"));
+            // Load the FXML file for the User interface
+            URL location = getClass().getResource("/views/SelectionInterface.fxml");
+            Parent root = FXMLLoader.load(Objects.requireNonNull(location, "FXML file not found at /views/User/AffichageProduitsUser.fxml"));
 
-            primaryStage.setTitle("🏠 Accueil - Gestion Produits Dérivés");
+            primaryStage.setTitle("Découvrez nos Produits");
             primaryStage.setScene(new Scene(root));
             primaryStage.show();
         } catch (Exception e) {
-            System.out.println("Erreur lors du chargement du FXML:");
+            System.out.println("Erreur lors du chargement du FXML de l'interface utilisateur:");
             e.printStackTrace();
         }
     }

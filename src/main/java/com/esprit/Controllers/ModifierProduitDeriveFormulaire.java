@@ -2,7 +2,7 @@ package com.esprit.Controllers;
 
 
 import com.esprit.modules.produits.ProduitDerive;
-import com.esprit.services.produits.ServiceProduitDerive;
+import com.esprit.services.produits.Admin.ServiceProduitDerive;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;

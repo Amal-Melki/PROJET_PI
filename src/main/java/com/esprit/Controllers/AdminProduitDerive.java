@@ -1,7 +1,7 @@
 package com.esprit.Controllers;
 
 import com.esprit.modules.produits.ProduitDerive;
-import com.esprit.services.produits.ServiceProduitDerive;
+import com.esprit.services.produits.Admin.ServiceProduitDerive;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;

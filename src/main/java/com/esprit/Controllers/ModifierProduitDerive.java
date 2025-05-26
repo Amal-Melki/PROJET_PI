@@ -1,7 +1,7 @@
 package com.esprit.Controllers;
 
 import com.esprit.modules.produits.ProduitDerive;
-import com.esprit.services.produits.ServiceProduitDerive;
+import com.esprit.services.produits.Admin.ServiceProduitDerive;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -162,7 +162,7 @@ public class ModifierProduitDerive {
     @FXML
     private void retourAccueil(ActionEvent event) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/views/Accueil.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("views/Accueil.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("Accueil");
