@@ -60,12 +60,16 @@ public class InscriptionController {
         try {
             // Try to load default image
             Image defaultImage = new Image(getClass().getResourceAsStream("/images/default.jpg"));
-            if (defaultImage != null) {
+            if (defaultImage != null && !defaultImage.isError()) {
                 imgPreview.setImage(defaultImage);
+            } else {
+                // Create a simple colored circle as fallback
+                imgPreview.setStyle("-fx-background-color: #3498db; -fx-background-radius: 60;");
             }
         } catch (Exception e) {
-            // If default image is not available, just leave the ImageView empty
-            System.out.println("Default image not found: " + e.getMessage());
+            // If default image is not available, create a simple colored circle
+            imgPreview.setStyle("-fx-background-color: #3498db; -fx-background-radius: 60;");
+            System.out.println("Using fallback avatar style");
         }
     }
 
@@ -99,7 +103,15 @@ public class InscriptionController {
 
                 // Store the relative path for database
                 selectedImagePath = "images/" + fileName;
+                
+                // Verify the file exists after copying
+                if (!Files.exists(targetPath)) {
+                    throw new IOException("Failed to save image file");
+                }
+                
+                System.out.println("Image saved successfully at: " + targetPath.toString());
             } catch (IOException e) {
+                System.err.println("Error saving image: " + e.getMessage());
                 showAlert("Erreur lors du chargement de l'image: " + e.getMessage(), Alert.AlertType.ERROR);
             }
         }
@@ -119,6 +131,21 @@ public class InscriptionController {
         return -1;
     }
 
+    private boolean isEmailExists(String email) {
+        String req = "SELECT COUNT(*) as count FROM user WHERE email = ? FOR UPDATE";
+        try {
+            PreparedStatement pst = connection.prepareStatement(req);
+            pst.setString(1, email);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("count") > 0;
+            }
+        } catch (SQLException e) {
+            System.out.println("Error checking email existence: " + e.getMessage());
+        }
+        return false;
+    }
+
     @FXML
     private void handleInscription() {
         if (!validateInputs()) {
@@ -126,57 +153,69 @@ public class InscriptionController {
         }
 
         try {
-            // First, create the User
-            User user = new User(
-                txtNom.getText(),
-                txtPrenom.getText(),
-                txtEmail.getText(),
-                txtPassword.getText()
-            );
-            userService.ajouter(user);
-
-            // Get the ID of the newly created user
-            int userId = getLastInsertedUserId();
-            if (userId == -1) {
-                throw new Exception("Failed to get user ID");
-            }
-
-            // Then, create the Client
-            Client client = new Client(
-                Integer.parseInt(txtNumeroTel.getText()),
-                selectedImagePath != null ? selectedImagePath : "images/default.jpg",
-                txtNom.getText(),
-                txtPrenom.getText(),
-                txtEmail.getText(),
-                txtPassword.getText()
-            );
-            clientService.ajouter(client);
-
-            // Send welcome email using the registration email service
-            registrationEmailService.sendWelcomeEmail(
-                txtEmail.getText(),
-                txtPrenom.getText(),
-                txtNom.getText()
-            );
-
-            showAlert("Inscription réussie ! Un email de bienvenue vous a été envoyé.", Alert.AlertType.INFORMATION);
+            // Start transaction
+            connection.setAutoCommit(false);
             
-            // Load the login view
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Login.fxml"));
-                Parent root = loader.load();
+                // Set default image path if none selected
+                String imagePath = selectedImagePath;
+                if (imagePath == null || imagePath.isEmpty()) {
+                    imagePath = "images/default.jpg";
+                }
+
+                // Create the Client (which should handle User creation internally)
+                Client client = new Client(
+                    Integer.parseInt(txtNumeroTel.getText()),
+                    imagePath,
+                    txtNom.getText(),
+                    txtPrenom.getText(),
+                    txtEmail.getText(),
+                    txtPassword.getText()
+                );
                 
-                // Get the current stage
-                Stage stage = (Stage) txtNom.getScene().getWindow();
+                // Add the client (which should handle both User and Client tables)
+                clientService.ajouter(client);
+
+                // Send welcome email using the registration email service
+                registrationEmailService.sendWelcomeEmail(
+                    txtEmail.getText(),
+                    txtPrenom.getText(),
+                    txtNom.getText()
+                );
+
+                // Commit transaction
+                connection.commit();
                 
-                // Set the new scene
-                Scene scene = new Scene(root);
-                stage.setScene(scene);
-                stage.setTitle("Connexion");
-                stage.show();
-            } catch (IOException e) {
-                e.printStackTrace();
-                showAlert("Erreur lors du chargement de la page de connexion: " + e.getMessage(), Alert.AlertType.ERROR);
+                showAlert("Inscription réussie ! Un email de bienvenue vous a été envoyé.", Alert.AlertType.INFORMATION);
+                
+                // Load the login view
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/Login.fxml"));
+                    Parent root = loader.load();
+                    
+                    // Get the current stage
+                    Stage stage = (Stage) txtNom.getScene().getWindow();
+                    
+                    // Set the new scene
+                    Scene scene = new Scene(root);
+                    stage.setScene(scene);
+                    stage.setTitle("Connexion");
+                    stage.show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    showAlert("Erreur lors du chargement de la page de connexion: " + e.getMessage(), Alert.AlertType.ERROR);
+                }
+            } catch (RuntimeException e) {
+                // Rollback transaction on error
+                connection.rollback();
+                if (e.getMessage().contains("Email already exists")) {
+                    showAlert("Cette adresse email est déjà utilisée. Veuillez utiliser une autre adresse email.", Alert.AlertType.ERROR);
+                } else {
+                    throw e;
+                }
+            } finally {
+                // Reset auto-commit
+                connection.setAutoCommit(true);
             }
         } catch (Exception e) {
             showAlert("Erreur lors de l'inscription: " + e.getMessage(), Alert.AlertType.ERROR);

@@ -8,96 +8,115 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.BorderPane?>
 
-<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.esprit.controllers.InscriptionController"
-      alignment="CENTER" spacing="20" style="-fx-background-color: pink;"
-      prefHeight="800.0" prefWidth="400.0">
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="com.esprit.controllers.InscriptionController"
+            style="-fx-background-color: linear-gradient(to bottom right, #2c3e50, #3498db);">
     
-    <padding>
-        <Insets top="40" right="40" bottom="40" left="40"/>
-    </padding>
+    <center>
+        <StackPane>
+            <!-- Registration Form Container -->
+            <VBox alignment="CENTER" spacing="20" style="-fx-background-color: rgba(255, 255, 255, 0.95); -fx-background-radius: 20;"
+                  maxWidth="500" maxHeight="800">
+                
+                <padding>
+                    <Insets top="40" right="40" bottom="40" left="40"/>
+                </padding>
 
-    <!-- Title -->
-    <Text text="Inscription" style="-fx-fill: white;">
-        <font>
-            <Font name="Segoe UI Bold" size="30.0"/>
-        </font>
-    </Text>
+                <!-- Title -->
+                <VBox alignment="CENTER" spacing="10">
+                    <Text text="Créer un compte" style="-fx-fill: #2c3e50;">
+                        <font>
+                            <Font name="Segoe UI Bold" size="28.0"/>
+                        </font>
+                    </Text>
+                    <Text text="Rejoignez notre communauté" style="-fx-fill: #7f8c8d;">
+                        <font>
+                            <Font name="Segoe UI" size="14.0"/>
+                        </font>
+                    </Text>
+                </VBox>
 
-    <!-- Form Fields -->
-    <VBox spacing="15" maxWidth="400">
-        <!-- Image Upload -->
-        <VBox spacing="5" alignment="CENTER">
-            <ImageView fx:id="imgPreview" fitWidth="150" fitHeight="150" style="-fx-background-color: white; -fx-background-radius: 75;"/>
-            <Button fx:id="btnUploadImage" 
-                    text="Choisir une photo" 
-                    onAction="#handleImageUpload"
-                    style="-fx-background-color: white; -fx-text-fill: #ff7fa8; -fx-font-weight: bold; -fx-background-radius: 25; -fx-cursor: hand;"/>
-        </VBox>
+                <!-- Form Fields -->
+                <VBox spacing="15" maxWidth="400">
+                    <!-- Image Upload -->
+                    <VBox spacing="5" alignment="CENTER">
+                        <ImageView fx:id="imgPreview" fitWidth="120" fitHeight="120" 
+                                 style="-fx-background-color: white; -fx-background-radius: 60; -fx-border-color: #bdc3c7; -fx-border-radius: 60;"/>
+                        <Button fx:id="btnUploadImage" 
+                                text="Choisir une photo" 
+                                onAction="#handleImageUpload"
+                                style="-fx-background-color: white; -fx-text-fill: #3498db; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 10; -fx-border-color: #bdc3c7; -fx-border-radius: 10; -fx-cursor: hand;"/>
+                    </VBox>
 
-        <!-- Nom Field -->
-        <VBox spacing="5">
-            <Label text="Nom" style="-fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold;"/>
-            <TextField fx:id="txtNom" 
-                      prefHeight="40" 
-                      style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white; -fx-background-color: white;"/>
-        </VBox>
+                    <!-- Nom Field -->
+                    <VBox spacing="5">
+                        <Label text="Nom" style="-fx-text-fill: #2c3e50; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+                        <TextField fx:id="txtNom" 
+                                  prefHeight="45" 
+                                  style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #bdc3c7; -fx-background-color: white; -fx-font-size: 14px;"/>
+                    </VBox>
 
-        <!-- Prénom Field -->
-        <VBox spacing="5">
-            <Label text="Prénom" style="-fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold;"/>
-            <TextField fx:id="txtPrenom" 
-                      prefHeight="40" 
-                      style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white; -fx-background-color: white;"/>
-        </VBox>
+                    <!-- Prénom Field -->
+                    <VBox spacing="5">
+                        <Label text="Prénom" style="-fx-text-fill: #2c3e50; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+                        <TextField fx:id="txtPrenom" 
+                                  prefHeight="45" 
+                                  style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #bdc3c7; -fx-background-color: white; -fx-font-size: 14px;"/>
+                    </VBox>
 
-        <!-- Numéro de téléphone Field -->
-        <VBox spacing="5">
-            <Label text="Numéro de téléphone" style="-fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold;"/>
-            <TextField fx:id="txtNumeroTel" 
-                      prefHeight="40" 
-                      style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white; -fx-background-color: white;"/>
-        </VBox>
+                    <!-- Numéro de téléphone Field -->
+                    <VBox spacing="5">
+                        <Label text="Numéro de téléphone" style="-fx-text-fill: #2c3e50; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+                        <TextField fx:id="txtNumeroTel" 
+                                  prefHeight="45" 
+                                  style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #bdc3c7; -fx-background-color: white; -fx-font-size: 14px;"/>
+                    </VBox>
 
-        <!-- Email Field -->
-        <VBox spacing="5">
-            <Label text="Email" style="-fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold;"/>
-            <TextField fx:id="txtEmail" 
-                      prefHeight="40" 
-                      style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white; -fx-background-color: white;"/>
-        </VBox>
+                    <!-- Email Field -->
+                    <VBox spacing="5">
+                        <Label text="Email" style="-fx-text-fill: #2c3e50; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+                        <TextField fx:id="txtEmail" 
+                                  prefHeight="45" 
+                                  style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #bdc3c7; -fx-background-color: white; -fx-font-size: 14px;"/>
+                    </VBox>
 
-        <!-- Password Field -->
-        <VBox spacing="5">
-            <Label text="Mot de passe" style="-fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold;"/>
-            <PasswordField fx:id="txtPassword" 
-                          prefHeight="40" 
-                          style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white; -fx-background-color: white;"/>
-        </VBox>
+                    <!-- Password Field -->
+                    <VBox spacing="5">
+                        <Label text="Mot de passe" style="-fx-text-fill: #2c3e50; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+                        <PasswordField fx:id="txtPassword" 
+                                      prefHeight="45" 
+                                      style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #bdc3c7; -fx-background-color: white; -fx-font-size: 14px;"/>
+                    </VBox>
 
-        <!-- Confirm Password Field -->
-        <VBox spacing="5">
-            <Label text="Confirmer le mot de passe" style="-fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold;"/>
-            <PasswordField fx:id="txtConfirmPassword" 
-                          prefHeight="40" 
-                          style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white; -fx-background-color: white;"/>
-        </VBox>
+                    <!-- Confirm Password Field -->
+                    <VBox spacing="5">
+                        <Label text="Confirmer le mot de passe" style="-fx-text-fill: #2c3e50; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+                        <PasswordField fx:id="txtConfirmPassword" 
+                                      prefHeight="45" 
+                                      style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #bdc3c7; -fx-background-color: white; -fx-font-size: 14px;"/>
+                    </VBox>
 
-        <!-- Buttons -->
-        <HBox alignment="CENTER" spacing="20" style="-fx-padding: 20 0 0 0;">
-            <Button fx:id="btnInscrire" 
-                    text="S'inscrire" 
-                    prefWidth="150" 
-                    prefHeight="45"
-                    onAction="#handleInscription"
-                    style="-fx-background-color: #ff7fa8; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px; -fx-background-radius: 25; -fx-cursor: hand;"/>
-            
-            <Button fx:id="btnAnnuler" 
-                    text="Annuler" 
-                    prefWidth="150" 
-                    prefHeight="45"
-                    onAction="#handleAnnuler"
-                    style="-fx-background-color: white; -fx-text-fill: #ff7fa8; -fx-font-weight: bold; -fx-font-size: 16px; -fx-background-radius: 25; -fx-cursor: hand;"/>
-        </HBox>
-    </VBox>
-</VBox> 
+                    <!-- Buttons -->
+                    <HBox alignment="CENTER" spacing="20" style="-fx-padding: 20 0 0 0;">
+                        <Button fx:id="btnInscrire" 
+                                text="S'inscrire" 
+                                prefWidth="200" 
+                                prefHeight="45"
+                                onAction="#handleInscription"
+                                style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px; -fx-background-radius: 10; -fx-cursor: hand;"/>
+                        
+                        <Button fx:id="btnAnnuler" 
+                                text="Annuler" 
+                                prefWidth="200" 
+                                prefHeight="45"
+                                onAction="#handleAnnuler"
+                                style="-fx-background-color: white; -fx-text-fill: #2c3e50; -fx-font-weight: bold; -fx-font-size: 16px; -fx-background-radius: 10; -fx-border-color: #bdc3c7; -fx-border-radius: 10; -fx-cursor: hand;"/>
+                    </HBox>
+                </VBox>
+            </VBox>
+        </StackPane>
+    </center>
+</BorderPane> 

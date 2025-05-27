@@ -65,63 +65,69 @@ public class NavigationController {
     }
     
     private void updateUserInfo() {
-        if (isAdmin && currentAdmin != null) {
-            userNameLabel.setText("Admin: " + currentAdmin.getNom_suser() + " " + currentAdmin.getPrenom_user());
-            // Set default admin image
-            try {
-                Image adminImage = new Image(getClass().getResourceAsStream("/images/admin-avatar.png"));
-                if (adminImage.isError()) {
-                    loadDefaultAvatar();
-                } else {
-                userImageView.setImage(adminImage);
-                }
-            } catch (Exception e) {
-                System.err.println("Error loading admin avatar: " + e.getMessage());
-                loadDefaultAvatar();
-            }
-        } else if (!isAdmin && currentClient != null) {
+        if (currentClient != null) {
             userNameLabel.setText(currentClient.getNom_suser() + " " + currentClient.getPrenom_user());
-            // Load client's image if available, otherwise use default
-            if (currentClient.getImage_path() != null && !currentClient.getImage_path().isEmpty()) {
+            
+            // Try to load the image
+            String imagePath = currentClient.getImage_path();
+            if (imagePath != null && !imagePath.isEmpty()) {
                 try {
-                    File imageFile = new File(currentClient.getImage_path());
-                    if (imageFile.exists()) {
-                        Image clientImage = new Image(imageFile.toURI().toString());
-                        if (clientImage.isError()) {
-                            loadDefaultAvatar();
-                        } else {
-                        userImageView.setImage(clientImage);
+                    // First try to load as a resource (for default images)
+                    if (imagePath.startsWith("images/")) {
+                        Image image = new Image(getClass().getResourceAsStream("/" + imagePath));
+                        if (image != null && !image.isError()) {
+                            userImageView.setImage(image);
+                            return;
                         }
-                    } else {
-                        loadDefaultAvatar();
                     }
                 } catch (Exception e) {
-                    System.err.println("Error loading client image: " + e.getMessage());
-                    loadDefaultAvatar();
+                    System.out.println("Error loading client image from resources: " + e.getMessage());
                 }
-            } else {
-                loadDefaultAvatar();
+                
+                try {
+                    // If resource loading fails, try to load as a file
+                    File imageFile;
+                    if (imagePath.startsWith("images/")) {
+                        // If it's a relative path, look in the resources directory
+                        imageFile = new File("src/main/resources/" + imagePath);
+                    } else {
+                        // If it's an absolute path, use it directly
+                        imageFile = new File(imagePath);
+                    }
+                    
+                    if (imageFile.exists()) {
+                        Image image = new Image(imageFile.toURI().toString());
+                        if (image != null && !image.isError()) {
+                            userImageView.setImage(image);
+                            return;
+                        }
+                    }
+                } catch (Exception e) {
+                    System.out.println("Error loading client image from file system: " + e.getMessage());
+                }
             }
+            
+            // If all attempts fail, load default avatar
+            loadDefaultAvatar();
+        } else if (currentAdmin != null) {
+            userNameLabel.setText(currentAdmin.getNom_suser() + " " + currentAdmin.getPrenom_user());
+            loadDefaultAvatar();
         }
-        
-        // Make user info visible
-        userInfoBox.setVisible(true);
-        userInfoBox.setManaged(true);
     }
     
     private void loadDefaultAvatar() {
         try {
             Image defaultImage = new Image(getClass().getResourceAsStream("/images/default-avatar.png"));
-            if (defaultImage.isError()) {
-                // If even the default avatar fails to load, create a simple colored circle
-                userImageView.setStyle("-fx-background-color: #cccccc; -fx-background-radius: 20;");
+            if (defaultImage != null && !defaultImage.isError()) {
+                userImageView.setImage(defaultImage);
             } else {
-            userImageView.setImage(defaultImage);
+                // Create a simple colored circle as fallback
+                userImageView.setStyle("-fx-background-color: #3498db; -fx-background-radius: 20;");
             }
         } catch (Exception e) {
-            System.err.println("Error loading default avatar: " + e.getMessage());
             // Create a simple colored circle as fallback
-            userImageView.setStyle("-fx-background-color: #cccccc; -fx-background-radius: 20;");
+            userImageView.setStyle("-fx-background-color: #3498db; -fx-background-radius: 20;");
+            System.out.println("Using fallback avatar style");
         }
     }
     
@@ -135,6 +141,9 @@ public class NavigationController {
         userImageView.setFitWidth(40);
         userImageView.setPreserveRatio(true);
         userImageView.setStyle("-fx-background-radius: 20; -fx-clip-path: circle;");
+        
+        // Set initial default avatar
+        loadDefaultAvatar();
     }
     
     @FXML

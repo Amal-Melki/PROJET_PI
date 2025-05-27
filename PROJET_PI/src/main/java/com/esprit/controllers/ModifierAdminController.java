@@ -50,7 +50,7 @@ public class ModifierAdminController implements Initializable {
                 comboRole.setValue("Fournisseur");
                 break;
             case 3:
-                comboRole.setValue("Hôte");
+                comboRole.setValue("Moderateur");
                 break;
         }
     }
@@ -61,7 +61,7 @@ public class ModifierAdminController implements Initializable {
         comboRole.setItems(FXCollections.observableArrayList(
             "Organisateur",
             "Fournisseur",
-            "Hôte"
+            "Moderateur"
         ));
     }
 
@@ -81,7 +81,7 @@ public class ModifierAdminController implements Initializable {
                 case "Fournisseur":
                     roleValue = 2;
                     break;
-                case "Hôte":
+                case "Moderateur":
                     roleValue = 3;
                     break;
                 default:

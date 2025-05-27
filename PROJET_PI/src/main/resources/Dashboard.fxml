@@ -4,81 +4,60 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
 
-<VBox spacing="20" style="-fx-background-color: white; -fx-background-radius: 10;">
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.esprit.controllers.DashboardController" spacing="24" style="-fx-background-color: white; -fx-background-radius: 16;">
     <padding>
-        <Insets top="20" right="20" bottom="20" left="20"/>
+        <Insets top="32" right="32" bottom="32" left="32"/>
     </padding>
 
-    <!-- Title -->
-    <Text text="Tableau de Bord" 
-          style="-fx-fill: #ff7fa8; -fx-font-weight: bold;">
-        <font>
-            <Font name="Segoe UI Bold" size="24.0"/>
-        </font>
-    </Text>
+    <!-- Title & Welcome -->
+    <HBox alignment="CENTER_LEFT" spacing="18">
+        <ImageView fitHeight="48" fitWidth="48" preserveRatio="true">
+            <Image url="@/logo.jpg"/>
+        </ImageView>
+        <VBox>
+            <Text text="Tableau de Bord" style="-fx-fill: #3498db; -fx-font-weight: bold;">
+                <font>
+                    <Font name="Segoe UI Bold" size="28.0"/>
+                </font>
+            </Text>
+            <Text text="Bienvenue dans votre application de gestion d'événements" style="-fx-fill: #666666;">
+                <font>
+                    <Font name="Segoe UI" size="16.0"/>
+                </font>
+            </Text>
+        </VBox>
+    </HBox>
 
-    <!-- Welcome Message -->
-    <Text text="Bienvenue dans votre application de gestion d'événements" 
-          style="-fx-fill: #666666;">
-        <font>
-            <Font name="Segoe UI" size="16.0"/>
-        </font>
-    </Text>
-
-    <!-- Content Area -->
-    <VBox spacing="10" style="-fx-background-color: #f8f8f8; -fx-background-radius: 5; -fx-padding: 15;">
-        <Text text="Statistiques rapides" 
-              style="-fx-fill: #ff7fa8; -fx-font-weight: bold;">
-            <font>
-                <Font name="Segoe UI Semibold" size="18.0"/>
-            </font>
-        </Text>
-        
-        <GridPane hgap="20" vgap="10">
-            <padding>
-                <Insets top="10" right="10" bottom="10" left="10"/>
-            </padding>
-            
-            <!-- Stats Cards -->
-            <VBox style="-fx-background-color: white; -fx-background-radius: 5; -fx-padding: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
-                <Text text="Utilisateurs" style="-fx-fill: #666666;">
-                    <font>
-                        <Font name="Segoe UI" size="14.0"/>
-                    </font>
-                </Text>
-                <Text text="0" style="-fx-fill: #ff7fa8; -fx-font-weight: bold;">
-                    <font>
-                        <Font name="Segoe UI Bold" size="24.0"/>
-                    </font>
-                </Text>
-            </VBox>
-            
-            <VBox style="-fx-background-color: white; -fx-background-radius: 5; -fx-padding: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
-                <Text text="Événements" style="-fx-fill: #666666;">
-                    <font>
-                        <Font name="Segoe UI" size="14.0"/>
-                    </font>
-                </Text>
-                <Text text="0" style="-fx-fill: #ff7fa8; -fx-font-weight: bold;">
-                    <font>
-                        <Font name="Segoe UI Bold" size="24.0"/>
-                    </font>
-                </Text>
-            </VBox>
-            
-            <VBox style="-fx-background-color: white; -fx-background-radius: 5; -fx-padding: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
-                <Text text="Réservations" style="-fx-fill: #666666;">
-                    <font>
-                        <Font name="Segoe UI" size="14.0"/>
-                    </font>
-                </Text>
-                <Text text="0" style="-fx-fill: #ff7fa8; -fx-font-weight: bold;">
-                    <font>
-                        <Font name="Segoe UI Bold" size="24.0"/>
-                    </font>
-                </Text>
-            </VBox>
-        </GridPane>
-    </VBox>
+    <!-- Charts Section -->
+    <HBox spacing="32" alignment="CENTER">
+        <!-- User Types PieChart -->
+        <VBox alignment="CENTER" spacing="10">
+            <Label text="Répartition des Utilisateurs" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #3498db;"/>
+            <PieChart fx:id="userTypePieChart" prefWidth="320" prefHeight="240"/>
+        </VBox>
+        <!-- Events BarChart -->
+        <VBox alignment="CENTER" spacing="10">
+            <Label text="Événements (Réservés vs Non Réservés)" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #3498db;"/>
+            <BarChart fx:id="eventsBarChart" prefWidth="320" prefHeight="240">
+                <xAxis>
+                    <CategoryAxis fx:id="eventsCategoryAxis" label="Type"/>
+                </xAxis>
+                <yAxis>
+                    <NumberAxis fx:id="eventsNumberAxis" label="Nombre"/>
+                </yAxis>
+            </BarChart>
+        </VBox>
+        <!-- Reservation Status PieChart -->
+        <VBox alignment="CENTER" spacing="10">
+            <Label text="Statut des Réservations" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #3498db;"/>
+            <PieChart fx:id="reservationStatusPieChart" prefWidth="320" prefHeight="240"/>
+        </VBox>
+    </HBox>
 </VBox> 

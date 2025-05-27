@@ -38,7 +38,7 @@ public class AjoutAdminController implements Initializable {
         comboRole.setItems(FXCollections.observableArrayList(
             "Organisateur",
             "Fournisseur",
-            "Hôte"
+            "Moderateur"
         ));
         comboRole.getSelectionModel().selectFirst(); // Select first item by default
     }
@@ -60,7 +60,7 @@ public class AjoutAdminController implements Initializable {
                 case "Fournisseur":
                     roleValue = 2;
                     break;
-                case "Hôte":
+                case "Moderateur":
                     roleValue = 3;
                     break;
                 default:
