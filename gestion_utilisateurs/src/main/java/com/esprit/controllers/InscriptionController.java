@@ -103,7 +103,15 @@ public class InscriptionController {
 
                 // Store the relative path for database
                 selectedImagePath = "images/" + fileName;
+                
+                // Verify the file exists after copying
+                if (!Files.exists(targetPath)) {
+                    throw new IOException("Failed to save image file");
+                }
+                
+                System.out.println("Image saved successfully at: " + targetPath.toString());
             } catch (IOException e) {
+                System.err.println("Error saving image: " + e.getMessage());
                 showAlert("Erreur lors du chargement de l'image: " + e.getMessage(), Alert.AlertType.ERROR);
             }
         }
@@ -149,10 +157,16 @@ public class InscriptionController {
             connection.setAutoCommit(false);
             
             try {
+                // Set default image path if none selected
+                String imagePath = selectedImagePath;
+                if (imagePath == null || imagePath.isEmpty()) {
+                    imagePath = "images/default.jpg";
+                }
+
                 // Create the Client (which should handle User creation internally)
                 Client client = new Client(
                     Integer.parseInt(txtNumeroTel.getText()),
-                    selectedImagePath != null ? selectedImagePath : "images/default.jpg",
+                    imagePath,
                     txtNom.getText(),
                     txtPrenom.getText(),
                     txtEmail.getText(),

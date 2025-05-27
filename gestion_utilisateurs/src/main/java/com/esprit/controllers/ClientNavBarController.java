@@ -19,6 +19,9 @@ public class ClientNavBarController {
     private Button btnAccueil;
 
     @FXML
+    private Button btnEvenements;
+
+    @FXML
     private ImageView imgClient;
 
     @FXML
@@ -58,6 +61,21 @@ public class ClientNavBarController {
             stage.setScene(new Scene(root));
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleEvenements() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Evenements.fxml"));
+            Parent root = loader.load();
+            
+            // Get the main content area (center of BorderPane)
+            BorderPane mainLayout = (BorderPane) btnEvenements.getScene().getRoot();
+            mainLayout.setCenter(root);
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible de charger la vue des événements");
         }
     }
 

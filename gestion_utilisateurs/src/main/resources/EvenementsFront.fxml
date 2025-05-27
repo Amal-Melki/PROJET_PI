@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.control.ScrollPane?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="com.esprit.controllers.EvenementsFrontController">
+    
+    <center>
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER">
+            <VBox spacing="20" style="-fx-background-color: white;">
+                <padding>
+                    <Insets top="20" right="20" bottom="20" left="20"/>
+                </padding>
+                
+                <HBox alignment="CENTER_LEFT" spacing="20">
+                    <Label text="Découvrez nos événements" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #333333;"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="btnCalendar" text="Voir le Calendrier" 
+                            onAction="#handleCalendarView"
+                            style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20;"/>
+                    <Button fx:id="btnMap" text="Voir sur la Carte" 
+                            onAction="#handleMapView"
+                            style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20;"/>
+                </HBox>
+                
+                <FlowPane fx:id="eventsContainer" hgap="20" vgap="20" prefWrapLength="1000">
+                    <!-- Event cards will be added here dynamically -->
+                </FlowPane>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane> 

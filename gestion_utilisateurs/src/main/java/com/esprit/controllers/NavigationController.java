@@ -26,6 +26,12 @@ public class NavigationController {
     private Button btnAccueil;
     
     @FXML
+    private Button btnEvenements;
+    
+    @FXML
+    private Button btnGestionEvenements;
+    
+    @FXML
     private Button btnDeconnexion;
     
     @FXML
@@ -43,6 +49,9 @@ public class NavigationController {
     
     public void setAdminMode(boolean isAdmin) {
         this.isAdmin = isAdmin;
+        // Show/hide admin-specific buttons
+        btnGestionEvenements.setVisible(isAdmin);
+        btnGestionEvenements.setManaged(isAdmin);
     }
     
     public void setCurrentUser(Client client) {
@@ -56,58 +65,54 @@ public class NavigationController {
     }
     
     private void updateUserInfo() {
-        if (isAdmin && currentAdmin != null) {
-            userNameLabel.setText("Admin: " + currentAdmin.getNom_suser() + " " + currentAdmin.getPrenom_user());
-            // Set default admin image
-            try {
-                Image adminImage = new Image(getClass().getResourceAsStream("/images/admin-avatar.png"));
-                if (adminImage != null && !adminImage.isError()) {
-                    userImageView.setImage(adminImage);
-                } else {
-                    loadDefaultAvatar();
-                }
-            } catch (Exception e) {
-                System.err.println("Error loading admin avatar: " + e.getMessage());
-                loadDefaultAvatar();
-            }
-        } else if (!isAdmin && currentClient != null) {
+        if (currentClient != null) {
             userNameLabel.setText(currentClient.getNom_suser() + " " + currentClient.getPrenom_user());
-            // Always try to load the client image if available
-            boolean imageLoaded = false;
-            if (currentClient.getImage_path() != null && !currentClient.getImage_path().isEmpty()) {
-                String imagePath = currentClient.getImage_path();
+            
+            // Try to load the image
+            String imagePath = currentClient.getImage_path();
+            if (imagePath != null && !imagePath.isEmpty()) {
                 try {
-                    // Try to load from resources first
-                    Image clientImage = null;
+                    // First try to load as a resource (for default images)
                     if (imagePath.startsWith("images/")) {
-                        clientImage = new Image(getClass().getResourceAsStream("/" + imagePath));
-                        if (clientImage != null && !clientImage.isError()) {
-                            userImageView.setImage(clientImage);
-                            imageLoaded = true;
-                        }
-                    }
-                    // If not loaded from resources, try file system
-                    if (!imageLoaded) {
-                        File imageFile = imagePath.startsWith("images/") ? new File("src/main/resources/" + imagePath) : new File(imagePath);
-                        if (imageFile.exists()) {
-                            clientImage = new Image(imageFile.toURI().toString());
-                            if (clientImage != null && !clientImage.isError()) {
-                                userImageView.setImage(clientImage);
-                                imageLoaded = true;
-                            }
+                        Image image = new Image(getClass().getResourceAsStream("/" + imagePath));
+                        if (image != null && !image.isError()) {
+                            userImageView.setImage(image);
+                            return;
                         }
                     }
                 } catch (Exception e) {
-                    System.err.println("Error loading client image: " + e.getMessage());
+                    System.out.println("Error loading client image from resources: " + e.getMessage());
+                }
+                
+                try {
+                    // If resource loading fails, try to load as a file
+                    File imageFile;
+                    if (imagePath.startsWith("images/")) {
+                        // If it's a relative path, look in the resources directory
+                        imageFile = new File("src/main/resources/" + imagePath);
+                    } else {
+                        // If it's an absolute path, use it directly
+                        imageFile = new File(imagePath);
+                    }
+                    
+                    if (imageFile.exists()) {
+                        Image image = new Image(imageFile.toURI().toString());
+                        if (image != null && !image.isError()) {
+                            userImageView.setImage(image);
+                            return;
+                        }
+                    }
+                } catch (Exception e) {
+                    System.out.println("Error loading client image from file system: " + e.getMessage());
                 }
             }
-            if (!imageLoaded) {
-                loadDefaultAvatar();
-            }
+            
+            // If all attempts fail, load default avatar
+            loadDefaultAvatar();
+        } else if (currentAdmin != null) {
+            userNameLabel.setText(currentAdmin.getNom_suser() + " " + currentAdmin.getPrenom_user());
+            loadDefaultAvatar();
         }
-        // Make user info visible
-        userInfoBox.setVisible(true);
-        userInfoBox.setManaged(true);
     }
     
     private void loadDefaultAvatar() {
@@ -145,6 +150,32 @@ public class NavigationController {
     private void handleAccueil() {
         loadView("/Accueil.fxml");
         updateButtonStyles(btnAccueil);
+    }
+    
+    @FXML
+    public void handleEvenements() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/EvenementsFront.fxml"));
+            Parent view = loader.load();
+            
+            // Get the controller and set the current client
+            EvenementsFrontController controller = loader.getController();
+            if (!isAdmin && currentClient != null) {
+                controller.setCurrentClient(currentClient);
+            }
+            
+            contentArea.getChildren().clear();
+            contentArea.getChildren().add(view);
+            updateButtonStyles(btnEvenements);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    @FXML
+    private void handleGestionEvenements() {
+        loadView("/Evenements.fxml");
+        updateButtonStyles(btnGestionEvenements);
     }
     
     @FXML
@@ -212,6 +243,8 @@ public class NavigationController {
     private void updateButtonStyles(Button activeButton) {
         // Reset all buttons to default style
         btnAccueil.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;");
+        btnEvenements.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;");
+        btnGestionEvenements.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;");
         
         // Set active button style
         activeButton.setStyle("-fx-background-color: rgba(255,255,255,0.2); -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-background-radius: 5;");
