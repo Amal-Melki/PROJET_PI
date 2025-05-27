@@ -19,6 +19,14 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 
+// Ajouts pour l'affichage détaillé dans la ListView si vous voulez
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
+
+
 public class PanierController {
 
     @FXML
@@ -31,43 +39,74 @@ public class PanierController {
 
     @FXML
     public void initialize() {
+        // Au lieu de FXCollections.observableArrayList(servicePanier.getProduitsDansPanier());
+        // Nous allons charger et afficher les éléments de manière plus détaillée
+        loadPanierItems();
+    }
+
+    private void loadPanierItems() {
         produitsDansPanier = FXCollections.observableArrayList(servicePanier.getProduitsDansPanier());
         panierListView.setItems(produitsDansPanier);
         updateTotalPrice();
 
         panierListView.setCellFactory(param -> new javafx.scene.control.ListCell<ProduitDerive>() {
+            private final HBox hbox = new HBox(10);
+            private final Label nameLabel = new Label();
+            private final Label priceLabel = new Label();
+            private final Button removeButton = new Button("X");
+
+            {
+                hbox.setAlignment(Pos.CENTER_LEFT);
+                hbox.setPadding(new Insets(5, 0, 5, 0));
+                nameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
+                priceLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #ff8fb3;");
+                removeButton.setStyle("-fx-background-color: #f06292; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 3; -fx-font-size: 10px;");
+
+                HBox.setHgrow(nameLabel, Priority.ALWAYS); // Permet au nom de prendre l'espace
+                hbox.getChildren().addAll(nameLabel, priceLabel, removeButton);
+
+                removeButton.setOnAction(event -> {
+                    ProduitDerive itemToRemove = getItem();
+                    if (itemToRemove != null) {
+                        servicePanier.removeProduitFromPanier(itemToRemove);
+                        produitsDansPanier.remove(itemToRemove); // Mise à jour de l'ObservableList
+                        updateTotalPrice();
+                        showAlert(Alert.AlertType.INFORMATION, "Suppression", itemToRemove.getNom() + " a été retiré du panier.");
+                    }
+                });
+            }
+
             @Override
             protected void updateItem(ProduitDerive item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) {
-                    setText(null);
+                    setGraphic(null);
                 } else {
-                    setText(item.getNom() + " - " + String.format("%.2f TND", item.getPrix()));
+                    nameLabel.setText(item.getNom());
+                    priceLabel.setText(String.format("%.2f TND", item.getPrix()));
+                    setGraphic(hbox);
                 }
             }
         });
     }
 
+
     private void updateTotalPrice() {
-        double total = 0;
-        for (ProduitDerive p : produitsDansPanier) {
-            total += p.getPrix();
-        }
-        totalPriceLabel.setText(String.format("Total: %.2f TND", total));
+        totalPriceLabel.setText(String.format("Total: %.2f TND", servicePanier.calculerTotalPanier()));
     }
 
     @FXML
     private void handlePayment(ActionEvent event) {
-        if (produitsDansPanier.isEmpty()) {
+        if (servicePanier.getProduitsDansPanier().isEmpty()) {
             showAlert(Alert.AlertType.WARNING, "Panier vide", "Votre panier est vide. Ajoutez des produits avant de payer.");
             return;
         }
 
         try {
             // **CHEMIN CLÉ** : Assurez-vous que ce chemin est correct par rapport à votre dossier 'resources'
+            // D'après votre FXML Panier.fxml, votre PaymentForm.fxml est dans /views/User/
             URL location = getClass().getResource("/views/User/PaymentForm.fxml");
 
-            // Ajout d'une vérification explicite pour le cas où la ressource n'est pas trouvée
             if (location == null) {
                 throw new IOException("FXML file not found at /views/User/PaymentForm.fxml. Check your project structure.");
             }
@@ -77,7 +116,7 @@ public class PanierController {
             PaymentFormController paymentFormController = loader.getController();
 
             // Passer le total au formulaire de paiement
-            paymentFormController.setTotalAmount(getTotalPrice());
+            paymentFormController.setTotalAmount(servicePanier.calculerTotalPanier());
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Scene scene = new Scene(paymentFormRoot);
@@ -89,16 +128,8 @@ public class PanierController {
             System.err.println("ERREUR (PanierController): Erreur lors du chargement du formulaire de paiement: " + e.getMessage());
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible d'ouvrir le formulaire de paiement. " +
-                    "Vérifiez que PaymentForm.fxml est dans 'src/main/resources/views/products/User' et que son contenu est valide. Détails: " + e.getMessage());
+                    "Vérifiez que PaymentForm.fxml est dans 'src/main/resources/views/User' et que son contenu est valide. Détails: " + e.getMessage());
         }
-    }
-
-    private double getTotalPrice() {
-        double total = 0;
-        for (ProduitDerive p : produitsDansPanier) {
-            total += p.getPrix();
-        }
-        return total;
     }
 
     @FXML
