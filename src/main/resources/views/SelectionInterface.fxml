@@ -29,11 +29,7 @@
         <Circle radius="75.0" fill="transparent" stroke="white" strokeWidth="2.0" />
 
         <ImageView fitHeight="150.0" fitWidth="150.0" preserveRatio="true"> <image>
-<<<<<<< HEAD
             <Image url="@/images/Event-Planner.jpg"/>
-=======
-            <Image url="@/images/Event Planner.png"/>
->>>>>>> e629795d3374ae43688bf5eaeaceb0d3f9cde727
         </image>
             <clip>
                 <Circle centerX="75.0" centerY="75.0" radius="75.0" />

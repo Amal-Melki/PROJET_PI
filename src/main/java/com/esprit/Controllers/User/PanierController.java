@@ -2,11 +2,6 @@ package com.esprit.Controllers.User;
 
 import com.esprit.modules.produits.ProduitDerive;
 import com.esprit.services.produits.User.ServicePanier;
-<<<<<<< HEAD
-=======
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
->>>>>>> e629795d3374ae43688bf5eaeaceb0d3f9cde727
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,7 +10,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
-<<<<<<< HEAD
 import javafx.scene.control.Button; // Needed for quantity buttons
 import javafx.scene.layout.HBox;    // Needed for dynamic item layout
 import javafx.scene.layout.Priority; // Needed for dynamic item layout
@@ -30,52 +24,22 @@ import java.net.URL;
 import java.util.Map;
 import java.util.Objects;
 
-=======
-import javafx.scene.control.ListView;
-import javafx.stage.Stage;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.Objects;
-
-// Ajouts pour l'affichage détaillé dans la ListView si vous voulez
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-
->>>>>>> e629795d3374ae43688bf5eaeaceb0d3f9cde727
 
 public class PanierController {
 
     @FXML
-<<<<<<< HEAD
     private VBox cartItemsVBox; // This will hold our dynamically added product HBoxes
-=======
-    private ListView<ProduitDerive> panierListView;
->>>>>>> e629795d3374ae43688bf5eaeaceb0d3f9cde727
     @FXML
     private Label totalPriceLabel;
 
     private ServicePanier servicePanier = new ServicePanier();
-<<<<<<< HEAD
 
     @FXML
     public void initialize() {
-=======
-    private ObservableList<ProduitDerive> produitsDansPanier;
-
-    @FXML
-    public void initialize() {
-        // Au lieu de FXCollections.observableArrayList(servicePanier.getProduitsDansPanier());
-        // Nous allons charger et afficher les éléments de manière plus détaillée
->>>>>>> e629795d3374ae43688bf5eaeaceb0d3f9cde727
         loadPanierItems();
     }
 
     private void loadPanierItems() {
-<<<<<<< HEAD
         cartItemsVBox.getChildren().clear(); // Clear existing items
 
         Map<ProduitDerive, Integer> panierItems = servicePanier.getPanierItemsWithQuantities();
@@ -150,51 +114,6 @@ public class PanierController {
         hbox.getChildren().addAll(nameLabel, priceLabel, removeQtyButton, quantityLabel, addQtyButton, deleteItemButton);
 
         return hbox;
-=======
-        produitsDansPanier = FXCollections.observableArrayList(servicePanier.getProduitsDansPanier());
-        panierListView.setItems(produitsDansPanier);
-        updateTotalPrice();
-
-        panierListView.setCellFactory(param -> new javafx.scene.control.ListCell<ProduitDerive>() {
-            private final HBox hbox = new HBox(10);
-            private final Label nameLabel = new Label();
-            private final Label priceLabel = new Label();
-            private final Button removeButton = new Button("X");
-
-            {
-                hbox.setAlignment(Pos.CENTER_LEFT);
-                hbox.setPadding(new Insets(5, 0, 5, 0));
-                nameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
-                priceLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #ff8fb3;");
-                removeButton.setStyle("-fx-background-color: #f06292; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 3; -fx-font-size: 10px;");
-
-                HBox.setHgrow(nameLabel, Priority.ALWAYS); // Permet au nom de prendre l'espace
-                hbox.getChildren().addAll(nameLabel, priceLabel, removeButton);
-
-                removeButton.setOnAction(event -> {
-                    ProduitDerive itemToRemove = getItem();
-                    if (itemToRemove != null) {
-                        servicePanier.removeProduitFromPanier(itemToRemove);
-                        produitsDansPanier.remove(itemToRemove); // Mise à jour de l'ObservableList
-                        updateTotalPrice();
-                        showAlert(Alert.AlertType.INFORMATION, "Suppression", itemToRemove.getNom() + " a été retiré du panier.");
-                    }
-                });
-            }
-
-            @Override
-            protected void updateItem(ProduitDerive item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setGraphic(null);
-                } else {
-                    nameLabel.setText(item.getNom());
-                    priceLabel.setText(String.format("%.2f TND", item.getPrix()));
-                    setGraphic(hbox);
-                }
-            }
-        });
->>>>>>> e629795d3374ae43688bf5eaeaceb0d3f9cde727
     }
 
 
@@ -204,22 +123,13 @@ public class PanierController {
 
     @FXML
     private void handlePayment(ActionEvent event) {
-<<<<<<< HEAD
         // You should now check if the map is empty, not just the list
         if (servicePanier.getPanierItemsWithQuantities().isEmpty()) {
-=======
-        if (servicePanier.getProduitsDansPanier().isEmpty()) {
->>>>>>> e629795d3374ae43688bf5eaeaceb0d3f9cde727
             showAlert(Alert.AlertType.WARNING, "Panier vide", "Votre panier est vide. Ajoutez des produits avant de payer.");
             return;
         }
 
         try {
-<<<<<<< HEAD
-=======
-            // **CHEMIN CLÉ** : Assurez-vous que ce chemin est correct par rapport à votre dossier 'resources'
-            // D'après votre FXML Panier.fxml, votre PaymentForm.fxml est dans /views/User/
->>>>>>> e629795d3374ae43688bf5eaeaceb0d3f9cde727
             URL location = getClass().getResource("/views/User/PaymentForm.fxml");
 
             if (location == null) {
