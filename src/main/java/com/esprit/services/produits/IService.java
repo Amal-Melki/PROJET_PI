@@ -1,5 +1,7 @@
 package com.esprit.services.produits;
 
+import com.esprit.modules.produits.ProduitDerive;
+
 import java.util.List;
 
 public interface IService<T> {
@@ -7,4 +9,5 @@ public interface IService<T> {
     void modifier(T t);
     void supprimer(T t);
     List<T> recuperer();
+    boolean modifierProd(ProduitDerive produit);
 }

@@ -1,13 +1,17 @@
-package com.esprit.Controllers;
+// AjouterProduitDerive.java
+package com.esprit.Controllers.Admin;
 
 import com.esprit.modules.produits.ProduitDerive;
-import com.esprit.services.produits.ServiceProduitDerive;
+import com.esprit.services.produits.Admin.ServiceProduitDerive;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
+import java.io.File;
 
 public class AjoutProduitDerive {
 
@@ -31,6 +35,8 @@ public class AjoutProduitDerive {
 
     @FXML
     private Button btnAjouter;
+    @FXML
+    private Button btnImage;
 
     @FXML
     private Button btnRetour;
@@ -83,27 +89,44 @@ public class AjoutProduitDerive {
                 alert.setHeaderText(null);
                 alert.setContentText("Produit ajouté avec succès.");
                 alert.showAndWait();
-                fermerFenetre();
+                //reintialiser les champs
+                tfNom.clear();
+                tfPrix.clear();
+                tfQuantite.clear();
+                tfSeuilAlerte.clear();
+                taDescription.clear();
+                lblImagePath.setText("Aucune image sélectionnée");
+                imagePath = null;
             } else {
                 afficherErreur("Erreur lors de l'ajout du produit.");
             }
         } catch (NumberFormatException e) {
-            afficherErreur("Veuillez entrer des valeurs numériques valides pour le prix, la quantité et le seuil d'alerte.");
+            afficherErreur("Veuillez entrer des valeurs numériques valides pour le prix et la quantité.");
         }
     }
 
     @FXML
     private void choisirImage() {
-        // Implement image chooser logic here
-        // For now, just simulate image selection
-        imagePath = "path/to/selected/image.png";
-        lblImagePath.setText(imagePath);
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Sélectionner une image");
+
+        // Définir les filtres pour les types de fichiers image (optionnel)
+        FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter("Images (*.png, *.jpg, *.jpeg, *.gif)", "*.png", "*.jpg", "*.jpeg", "*.gif");
+        fileChooser.getExtensionFilters().add(imageFilter);
+
+        // Ouvrir la boîte de dialogue pour choisir le fichier
+        File selectedFile = fileChooser.showOpenDialog((Stage) btnImage.getScene().getWindow());
+
+        if (selectedFile != null) {
+            imagePath = selectedFile.getAbsolutePath();
+            lblImagePath.setText(imagePath);
+        }
     }
 
     @FXML
     private void retourAccueil() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/products/AccueilProduitDerive.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/products/AccueilProduitDerive.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) btnRetour.getScene().getWindow();
             stage.setScene(new Scene(root));

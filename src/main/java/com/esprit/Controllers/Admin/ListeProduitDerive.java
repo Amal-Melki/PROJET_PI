@@ -1,29 +1,29 @@
-package com.esprit.Controllers;
+// ListeProduitDerive.java
+package com.esprit.Controllers.Admin;
 
 import com.esprit.modules.produits.ProduitDerive;
-import com.esprit.services.produits.ServiceProduitDerive;
+import com.esprit.services.produits.Admin.ServiceProduitDerive;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
-import javafx.geometry.Pos;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import javafx.util.converter.DoubleStringConverter;
+import javafx.util.converter.IntegerStringConverter;
 
 import java.io.IOException;
-
-import com.esprit.Controllers.ModifierProduitDerive;
 
 public class ListeProduitDerive {
     @FXML private TableView<ProduitDerive> tableProduits;
     @FXML private TableColumn<ProduitDerive, String> colNom;
-
     @FXML private TableColumn<ProduitDerive, String> colCategorie;
     @FXML private TableColumn<ProduitDerive, Double> colPrix;
     @FXML private TableColumn<ProduitDerive, Integer> colStock;
@@ -52,13 +52,47 @@ public class ListeProduitDerive {
         tfRecherche.textProperty().addListener((observable, oldValue, newValue) -> handleFiltrer());
         cbType.setOnAction(event -> handleFiltrer());
         cbStatut.setOnAction(event -> handleFiltrer());
+
+        // Make the TableView editable
+        tableProduits.setEditable(true);
     }
 
     private void configurerColonnes() {
         colNom.setCellValueFactory(new PropertyValueFactory<>("nom"));
+        colNom.setCellFactory(TextFieldTableCell.forTableColumn());
+        colNom.setOnEditCommit(event -> {
+            event.getRowValue().setNom(event.getNewValue());
+        });
+
         colCategorie.setCellValueFactory(new PropertyValueFactory<>("categorie"));
+        colCategorie.setCellFactory(TextFieldTableCell.forTableColumn());
+        colCategorie.setOnEditCommit(event -> {
+            event.getRowValue().setCategorie(event.getNewValue());
+        });
+
         colPrix.setCellValueFactory(new PropertyValueFactory<>("prix"));
+        colPrix.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
+        colPrix.setOnEditCommit(event -> {
+            try {
+                event.getRowValue().setPrix(event.getNewValue());
+            } catch (NumberFormatException e) {
+                afficherAlerte("Erreur", "Le prix doit être un nombre valide.");
+                tableProduits.refresh();
+            }
+        });
+
         colStock.setCellValueFactory(new PropertyValueFactory<>("stock"));
+        colStock.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+        colStock.setOnEditCommit(event -> {
+            try {
+                event.getRowValue().setStock(event.getNewValue());
+            } catch (NumberFormatException e) {
+                afficherAlerte("Erreur", "Le stock doit être un nombre entier valide.");
+                tableProduits.refresh();
+            }
+        });
+
+        colImageUrl.setCellValueFactory(new PropertyValueFactory<>("imageUrl"));
     }
 
     private void chargerProduits() {
@@ -76,7 +110,7 @@ public class ListeProduitDerive {
 
     private void ajouterColonneAction() {
         colAction.setCellFactory(param -> new TableCell<>() {
-            private final Button btnModifier = new Button("Modifier");
+            private final Button btnModifier = new Button("Enregistrer");
             private final Button btnSupprimer = new Button("Supprimer");
             private final HBox box = new HBox(10, btnModifier, btnSupprimer);
 
@@ -89,13 +123,13 @@ public class ListeProduitDerive {
                         "-fx-cursor: hand;" +
                         "-fx-padding: 4 10 4 10;";
 
-                btnModifier.setStyle("-fx-background-color: #ff8cb3;" + styleCommun);
+                btnModifier.setStyle("-fx-background-color: #4CAF50;" + styleCommun);
                 btnSupprimer.setStyle("-fx-background-color: #e57373;" + styleCommun);
 
                 btnModifier.setOnAction(event -> {
                     ProduitDerive produit = getTableView().getItems().get(getIndex());
                     if (produit != null) {
-                        handleModifierProduit(produit);
+                        handleEnregistrerModification(produit);
                     }
                 });
 
@@ -115,28 +149,13 @@ public class ListeProduitDerive {
         });
     }
 
-    private void handleModifierProduit(ProduitDerive produit) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/products/ModifierProduitDerive.fxml"));
-            Parent root = loader.load();
-
-            // Pass selected product to the modification controller
-            com.esprit.Controllers.ModifierProduitDerive controller = loader.getController();
-            // ModifierProduitDerive does not have setProduit method, so remove this call or implement it
-            // For now, remove the call to setProduit
-
-            Stage stage = new Stage();
-            stage.setTitle("Modifier un produit dérivé");
-            stage.setScene(new Scene(root));
-            stage.show();
-
-            // Refresh product list when modification window is closed
-            stage.setOnHiding(event -> {
-                chargerProduits();
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-            afficherAlerte("Erreur", "Impossible d'ouvrir la vue de modification.");
+    private void handleEnregistrerModification(ProduitDerive produit) {
+        boolean success = produitService.modifierProd(produit);
+        if (success) {
+            afficherAlerte("Succès", "Produit mis à jour avec succès.");
+            chargerProduits();
+        } else {
+            afficherAlerte("Erreur", "Échec de la mise à jour du produit.");
         }
     }
 
@@ -165,9 +184,6 @@ public class ListeProduitDerive {
         String statut = cbStatut.getValue();
         String recherche = tfRecherche.getText().toLowerCase();
 
-        System.out.println("Recherche: " + recherche);
-        System.out.println("Type: " + type + ", Statut: " + statut);
-
         ObservableList<ProduitDerive> produitsFiltres = FXCollections.observableArrayList();
 
         for (ProduitDerive produit : produitsList) {
@@ -184,62 +200,19 @@ public class ListeProduitDerive {
             }
         }
 
-        System.out.println("Produits filtrés: " + produitsFiltres.size());
-
         tableProduits.setItems(produitsFiltres);
     }
 
     @FXML
     private void handleModifier() {
-        ProduitDerive produitSelectionne = tableProduits.getSelectionModel().getSelectedItem();
-        if (produitSelectionne != null) {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/products/ModifierProduitDerive.fxml"));
-                Parent root = loader.load();
-
-                // Pass selected product to the modification controller
-                com.esprit.Controllers.ModifierProduitDerive controller = loader.getController();
-                // ModifierProduitDerive does not have setProduit method, so remove this call or implement it
-                // For now, remove the call to setProduit
-
-                Stage stage = new Stage();
-                stage.setTitle("Modifier un produit dérivé");
-                stage.setScene(new Scene(root));
-                stage.show();
-
-                // Refresh product list when modification window is closed
-                stage.setOnHiding(event -> {
-                    chargerProduits();
-                });
-            } catch (IOException e) {
-                e.printStackTrace();
-                afficherAlerte("Erreur", "Impossible d'ouvrir la vue de modification.");
-            }
-        } else {
-            afficherAlerte("Aucun produit sélectionné", "Veuillez sélectionner un produit à modifier.");
-        }
+        // This method is no longer needed
     }
 
     @FXML
     private void handleSupprimer() {
         ProduitDerive produitSelectionne = tableProduits.getSelectionModel().getSelectedItem();
         if (produitSelectionne != null) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Confirmation de suppression");
-            alert.setHeaderText("Supprimer le produit : " + produitSelectionne.getNom());
-            alert.setContentText("Êtes-vous sûr de vouloir supprimer ce produit définitivement ?");
-
-            alert.showAndWait().ifPresent(response -> {
-                if (response == ButtonType.OK) {
-                    boolean success = produitService.supprimerProduit(produitSelectionne.getId());
-                    if (success) {
-                        afficherAlerte("Succès", "Produit supprimé avec succès.");
-                        chargerProduits();
-                    } else {
-                        afficherAlerte("Erreur", "Échec de la suppression du produit.");
-                    }
-                }
-            });
+            handleSupprimerProduit(produitSelectionne);
         } else {
             afficherAlerte("Aucun produit sélectionné", "Veuillez sélectionner un produit à supprimer.");
         }
@@ -273,7 +246,6 @@ public class ListeProduitDerive {
             stage.setScene(new Scene(root));
             stage.show();
 
-            // Refresh product list when add product window is closed
             stage.setOnHiding(event -> {
                 chargerProduits();
             });
@@ -286,7 +258,7 @@ public class ListeProduitDerive {
     @FXML
     private void retourAccueil() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/products/AccueilProduitDerive.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/products/AccueilProduitDerive.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) btnRetourAccueil.getScene().getWindow();
             stage.setScene(new Scene(root));
@@ -294,5 +266,4 @@ public class ListeProduitDerive {
             e.printStackTrace();
         }
     }
-
 }
