@@ -1,6 +1,7 @@
 package com.esprit.services.produits.User;
 
 import com.esprit.modules.produits.ProduitDerive;
+<<<<<<< HEAD
 import java.util.LinkedHashMap; // Use LinkedHashMap to maintain insertion order
 import java.util.Map;
 import java.util.List;
@@ -16,11 +17,28 @@ public class ServicePanier {
             // If product already exists, increment quantity
             panier.put(produit, panier.getOrDefault(produit, 0) + 1);
             System.out.println("Produit ajouté au panier ou quantité augmentée: " + produit.getNom() + " (Quantité: " + panier.get(produit) + ")");
+=======
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator; // Ajouté pour removeProduitFromPanier
+import java.util.List;
+
+public class ServicePanier {
+    // Ceci est une simulation de panier en mémoire.
+    // Dans une vraie application, cela pourrait être persistant (DB, session, etc.)
+    private static final List<ProduitDerive> panier = new ArrayList<>();
+
+    public boolean ajouterProduitAuPanier(ProduitDerive produit) {
+        if (produit != null) {
+            panier.add(produit);
+            System.out.println("Produit ajouté au panier: " + produit.getNom());
+>>>>>>> e629795d3374ae43688bf5eaeaceb0d3f9cde727
             return true;
         }
         return false;
     }
 
+<<<<<<< HEAD
     // New method to adjust quantity
     public void setProduitQuantity(ProduitDerive produit, int quantity) {
         if (produit != null) {
@@ -47,6 +65,10 @@ public class ServicePanier {
     // New method to get all cart items with quantities (useful for display and calculations)
     public Map<ProduitDerive, Integer> getPanierItemsWithQuantities() {
         return new LinkedHashMap<>(panier); // Return a copy
+=======
+    public List<ProduitDerive> getProduitsDansPanier() {
+        return new ArrayList<>(panier); // Retourne une COPIE pour éviter les ConcurrentModificationException
+>>>>>>> e629795d3374ae43688bf5eaeaceb0d3f9cde727
     }
 
     public void clearPanier() {
@@ -55,6 +77,7 @@ public class ServicePanier {
     }
 
     public double calculerTotalPanier() {
+<<<<<<< HEAD
         return panier.entrySet().stream()
                 .mapToDouble(entry -> entry.getKey().getPrix() * entry.getValue()) // Price * Quantity
                 .sum();
@@ -66,6 +89,23 @@ public class ServicePanier {
             panier.remove(produitToRemove);
             System.out.println("Produit retiré du panier: " + produitToRemove.getNom());
             return true;
+=======
+        return panier.stream()
+                .mapToDouble(ProduitDerive::getPrix)
+                .sum();
+    }
+
+    public boolean removeProduitFromPanier(ProduitDerive produitToRemove) {
+        Iterator<ProduitDerive> iterator = panier.iterator();
+        while (iterator.hasNext()) {
+            ProduitDerive produit = iterator.next();
+            // Comparaison basée sur l'ID du produit pour s'assurer de retirer le bon article
+            if (produit.getId() == produitToRemove.getId()) {
+                iterator.remove();
+                System.out.println("Produit retiré du panier: " + produitToRemove.getNom());
+                return true;
+            }
+>>>>>>> e629795d3374ae43688bf5eaeaceb0d3f9cde727
         }
         return false;
     }

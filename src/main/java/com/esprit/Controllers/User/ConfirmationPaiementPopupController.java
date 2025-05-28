@@ -17,7 +17,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+<<<<<<< HEAD
 import java.util.Map; // Import Map
+=======
+import java.util.List;
+>>>>>>> e629795d3374ae43688bf5eaeaceb0d3f9cde727
 import java.awt.Desktop; // Import nécessaire pour Desktop
 
 public class ConfirmationPaiementPopupController {
@@ -31,10 +35,16 @@ public class ConfirmationPaiementPopupController {
 
     @FXML
     private void handleDownloadPdf(ActionEvent event) {
+<<<<<<< HEAD
         // Now get the map of products with their quantities
         Map<ProduitDerive, Integer> panierItems = servicePanier.getPanierItemsWithQuantities();
 
         if (panierItems.isEmpty()) {
+=======
+        List<ProduitDerive> produitsDansPanier = servicePanier.getProduitsDansPanier();
+
+        if (produitsDansPanier.isEmpty()) {
+>>>>>>> e629795d3374ae43688bf5eaeaceb0d3f9cde727
             showAlert(Alert.AlertType.WARNING, "Panier Vide", "Impossible de générer une facture pour un panier vide.");
             return;
         }
@@ -50,8 +60,12 @@ public class ConfirmationPaiementPopupController {
 
         if (file != null) {
             try {
+<<<<<<< HEAD
                 // Pass the map to the PDF generation method
                 generatePdfInvoice(file.getAbsolutePath(), panierItems);
+=======
+                generatePdfInvoice(file.getAbsolutePath(), produitsDansPanier);
+>>>>>>> e629795d3374ae43688bf5eaeaceb0d3f9cde727
                 showAlert(Alert.AlertType.INFORMATION, "Succès", "La facture a été générée avec succès et enregistrée à:\n" + file.getAbsolutePath());
 
                 // CODE POUR OUVRIR LE PDF AUTOMATIQUEMENT
@@ -73,8 +87,12 @@ public class ConfirmationPaiementPopupController {
         }
     }
 
+<<<<<<< HEAD
     // Modified method signature to accept Map<ProduitDerive, Integer>
     private void generatePdfInvoice(String filePath, Map<ProduitDerive, Integer> panierItems) throws DocumentException, IOException {
+=======
+    private void generatePdfInvoice(String filePath, List<ProduitDerive> produits) throws DocumentException, IOException {
+>>>>>>> e629795d3374ae43688bf5eaeaceb0d3f9cde727
         Document document = new Document(PageSize.A4);
         PdfWriter.getInstance(document, new FileOutputStream(filePath));
         document.open();
@@ -114,17 +132,26 @@ public class ConfirmationPaiementPopupController {
         double totalGeneral = 0.0;
         Font fontCell = FontFactory.getFont(FontFactory.HELVETICA, 10, BaseColor.BLACK);
 
+<<<<<<< HEAD
         // Iterate through the Map.Entry to get both product and its quantity
         for (Map.Entry<ProduitDerive, Integer> entry : panierItems.entrySet()) {
             ProduitDerive produit = entry.getKey();
             int quantite = entry.getValue(); // Get the actual quantity from the map
 
+=======
+        for (ProduitDerive produit : produits) {
+>>>>>>> e629795d3374ae43688bf5eaeaceb0d3f9cde727
             addCellToTable(table, produit.getNom(), fontCell, null, false);
             addCellToTable(table, produit.getCategorie(), fontCell, null, false);
             addCellToTable(table, produit.getDescription(), fontCell, null, false);
             addCellToTable(table, String.format("%.2f TND", produit.getPrix()), fontCell, null, false);
 
+<<<<<<< HEAD
             addCellToTable(table, String.valueOf(quantite), fontCell, null, false); // Use actual quantity
+=======
+            int quantite = 1; // Supposons quantité = 1 si non géré dans ProduitDerive
+            addCellToTable(table, String.valueOf(quantite), fontCell, null, false);
+>>>>>>> e629795d3374ae43688bf5eaeaceb0d3f9cde727
 
             double totalLigne = produit.getPrix() * quantite;
             addCellToTable(table, String.format("%.2f TND", totalLigne), fontCell, null, false);
@@ -168,8 +195,13 @@ public class ConfirmationPaiementPopupController {
     @FXML
     private void handleClosePopup(ActionEvent event) {
         dialogStage.close();
+<<<<<<< HEAD
         // The cart is cleared and redirection happens in PaymentFormController after showAndWait()
         // so no need to do it here.
+=======
+        // Le panier est vidé et la redirection se fait DANS PaymentFormController après showAndWait()
+        // donc pas besoin de le faire ici.
+>>>>>>> e629795d3374ae43688bf5eaeaceb0d3f9cde727
     }
 
     private void showAlert(Alert.AlertType type, String title, String message) {
