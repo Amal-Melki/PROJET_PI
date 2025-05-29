@@ -27,53 +27,48 @@
             </font>
         </Text>
 
-        <Label layoutX="90.0" layoutY="130.0" text="ID :"
+        <Label layoutX="90.0" layoutY="130.0" text="Nom :"
                style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
-        <Label layoutX="90.0" layoutY="170.0" text="Nom :"
+        <Label layoutX="90.0" layoutY="170.0" text="Type :"
                style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
-        <Label layoutX="90.0" layoutY="210.0" text="Type :"
+        <Label layoutX="90.0" layoutY="210.0" text="Prix :"
                style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
-        <Label layoutX="90.0" layoutY="250.0" text="Prix :"
+        <Label layoutX="90.0" layoutY="250.0" text="Quantité :"
                style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
-        <Label layoutX="90.0" layoutY="290.0" text="Quantité :"
-               style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
-        <Label layoutX="90.0" layoutY="330.0" text="Description :"
+        <Label layoutX="90.0" layoutY="290.0" text="Description :"
                style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
 
-        <TextField fx:id="tfId"
+        <TextField fx:id="tfNom"
                    layoutX="220.0" layoutY="125.0" prefWidth="300.0"
                    style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
-        <TextField fx:id="tfNom"
-                   layoutX="220.0" layoutY="165.0" prefWidth="300.0"
-                   style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
         <ComboBox fx:id="cbType"
-                  layoutX="220.0" layoutY="205.0" prefWidth="300.0"
+                  layoutX="220.0" layoutY="165.0" prefWidth="300.0"
                   style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
         <TextField fx:id="tfPrix"
-                   layoutX="220.0" layoutY="245.0" prefWidth="300.0"
+                   layoutX="220.0" layoutY="205.0" prefWidth="300.0"
                    style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
         <TextField fx:id="tfQuantite"
-                   layoutX="220.0" layoutY="285.0" prefWidth="300.0"
+                   layoutX="220.0" layoutY="245.0" prefWidth="300.0"
                    style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
         <TextArea fx:id="taDescription"
-                  layoutX="220.0" layoutY="325.0" prefWidth="300.0" prefHeight="60.0"
+                  layoutX="220.0" layoutY="285.0" prefWidth="300.0" prefHeight="60.0"
                   style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
 
         <Button fx:id="btnImage"
-                layoutX="220.0" layoutY="400.0"
+                layoutX="220.0" layoutY="360.0"
                 text="📷 Ajouter une image du produit"
                 onAction="#choisirImage"
                 prefWidth="300.0"
                 style="-fx-background-color: #d46a92; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 20; -fx-cursor: hand;" />
 
         <Label fx:id="lblImagePath"
-               layoutX="220.0" layoutY="440.0"
+               layoutX="220.0" layoutY="400.0"
                prefWidth="300.0"
                text="Aucune image sélectionnée"
                style="-fx-text-fill: white; -fx-font-size: 12;" />
 
         <Button fx:id="btnAjouter"
-                layoutX="290.0" layoutY="500.0"
+                layoutX="290.0" layoutY="460.0"
                 text="Ajouter"
                 onAction="#addProduit"
                 prefWidth="130.0" prefHeight="45.0"

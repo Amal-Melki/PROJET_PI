@@ -33,6 +33,10 @@ public class DetailsProduitUserController {
     @FXML
     private Label productPriceLabel;
 
+    // NEW: Label for Product ID
+    @FXML
+    private Label productIdLabel;
+
     private ProduitDerive currentProduit;
     private ServiceProduitDetails serviceProduitDetails;
 
@@ -63,6 +67,8 @@ public class DetailsProduitUserController {
         if (currentProduit != null) {
             System.out.println("DEBUG (Details): Affichage des détails pour le produit: " + currentProduit.getNom() + " (ID: " + currentProduit.getId() + ")");
             productNameLabel.setText(currentProduit.getNom());
+            // NEW: Set the Product ID Label
+            productIdLabel.setText("ID: " + currentProduit.getId());
             productCategoryLabel.setText("Catégorie: " + currentProduit.getCategorie());
             productDescriptionLabel.setText("Description: " + (currentProduit.getDescription() != null ? currentProduit.getDescription() : "N/A"));
             productPriceLabel.setText(String.format("Prix: %.2f TND", currentProduit.getPrix()));
@@ -144,6 +150,7 @@ public class DetailsProduitUserController {
             // Gérer le cas où le produit n'est pas trouvé ou est null (aucun ID correspondant en DB)
             System.out.println("DEBUG (Details): Le produit est null, affichage des informations de 'Produit non trouvé'.");
             productNameLabel.setText("Produit non trouvé");
+            productIdLabel.setText(""); // Clear ID label if product is null
             productCategoryLabel.setText("");
             productDescriptionLabel.setText("Désolé, ce produit n'est pas disponible ou une erreur est survenue lors de sa récupération.");
             productPriceLabel.setText("");
