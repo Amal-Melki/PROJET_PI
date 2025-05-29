@@ -12,13 +12,13 @@ public class ReservationMateriel {
     private Date dateFin;
     private int quantiteReservee;
     private String statut;
-    private double montantTotal;  // ✅ Nouveau champ
+    private double montantTotal;
+    private int idClient;
 
     // Constructeurs
     public ReservationMateriel() {}
 
-    // ✅ Constructeur principal avec montant total
-    public ReservationMateriel(int id, int materielId, LocalDate dateDebut, LocalDate dateFin, int quantiteReservee, String statut, double montantTotal) {
+    public ReservationMateriel(int id, int materielId, LocalDate dateDebut, LocalDate dateFin, int quantiteReservee, String statut, double montantTotal, int idClient) {
         this.id = id;
         this.materielId = materielId;
         this.dateDebut = Date.valueOf(dateDebut);
@@ -26,11 +26,11 @@ public class ReservationMateriel {
         this.quantiteReservee = quantiteReservee;
         this.statut = statut;
         this.montantTotal = montantTotal;
+        this.idClient = idClient;
     }
 
-    // ✅ Constructeur sans montant (optionnel pour compatibilité)
     public ReservationMateriel(int id, int materielId, LocalDate dateDebut, LocalDate dateFin, int quantiteReservee, String statut) {
-        this(id, materielId, dateDebut, dateFin, quantiteReservee, statut, 0.0);
+        this(id, materielId, dateDebut, dateFin, quantiteReservee, statut, 0.0, 0);
     }
 
     // Getters et Setters
@@ -98,6 +98,14 @@ public class ReservationMateriel {
         this.montantTotal = montantTotal;
     }
 
+    public int getIdClient() {
+        return idClient;
+    }
+
+    public void setIdClient(int idClient) {
+        this.idClient = idClient;
+    }
+
     @Override
     public String toString() {
         return "ReservationMateriel{" +
@@ -108,9 +116,7 @@ public class ReservationMateriel {
                 ", quantiteReservee=" + quantiteReservee +
                 ", statut='" + statut + '\'' +
                 ", montantTotal=" + montantTotal +
+                ", idClient=" + idClient +
                 '}';
-    }
-
-    public void setIdClient(int clientId) {
     }
 }

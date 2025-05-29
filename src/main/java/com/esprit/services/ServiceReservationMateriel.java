@@ -14,6 +14,41 @@ public class ServiceReservationMateriel implements IService<ReservationMateriel>
         connection = DataSource.getInstance().getConnection();
     }
 
+
+    public void ajouteradmin(ReservationMateriel r) {
+        try {
+            ServiceMateriel serviceMateriel = new ServiceMateriel();
+            int quantiteStock = serviceMateriel.getQuantiteById(r.getMaterielId());
+            double prixUnitaire = serviceMateriel.getPrixById(r.getMaterielId());
+            double montantTotal = prixUnitaire * r.getQuantiteReservee();
+
+            if (quantiteStock >= r.getQuantiteReservee()) {
+                int nouvelleQuantite = quantiteStock - r.getQuantiteReservee();
+                serviceMateriel.mettreAJourQuantite(r.getMaterielId(), nouvelleQuantite);
+
+                // ✅ Ajout de la colonne id_client dans la requête
+                String req = "INSERT INTO reservation_materiel (materiel_id, dateDebut, dateFin, quantiteReservee, statut, montant_total) VALUES (?, ?, ?, ?, ?, ?)";
+                try (PreparedStatement ps = connection.prepareStatement(req)) {
+                    ps.setInt(1, r.getMaterielId());
+                    ps.setDate(2, r.getDateDebut());
+                    ps.setDate(3, r.getDateFin());
+                    ps.setInt(4, r.getQuantiteReservee());
+                    ps.setString(5, r.getStatut());
+                    ps.setDouble(6, montantTotal);
+                     // ✅ insertion du client
+                    ps.executeUpdate();
+                }
+                System.out.println("✅ Réservation ajoutée avec id_client.");
+            } else {
+                System.err.println("❌ Stock insuffisant pour ajouter la réservation.");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("❌ Erreur lors de l'ajout de la réservation : " + e.getMessage());
+        }
+    }
+
+
     @Override
     public void ajouter(ReservationMateriel r) {
         try {
@@ -26,7 +61,8 @@ public class ServiceReservationMateriel implements IService<ReservationMateriel>
                 int nouvelleQuantite = quantiteStock - r.getQuantiteReservee();
                 serviceMateriel.mettreAJourQuantite(r.getMaterielId(), nouvelleQuantite);
 
-                String req = "INSERT INTO reservation_materiel (materiel_id, dateDebut, dateFin, quantiteReservee, statut, montant_total) VALUES (?, ?, ?, ?, ?, ?)";
+                // ✅ Ajout de la colonne id_client dans la requête
+                String req = "INSERT INTO reservation_materiel (materiel_id, dateDebut, dateFin, quantiteReservee, statut, montant_total, id_client) VALUES (?, ?, ?, ?, ?, ?, 6)";
                 try (PreparedStatement ps = connection.prepareStatement(req)) {
                     ps.setInt(1, r.getMaterielId());
                     ps.setDate(2, r.getDateDebut());
@@ -34,9 +70,10 @@ public class ServiceReservationMateriel implements IService<ReservationMateriel>
                     ps.setInt(4, r.getQuantiteReservee());
                     ps.setString(5, r.getStatut());
                     ps.setDouble(6, montantTotal);
+                    // ✅ insertion du client
                     ps.executeUpdate();
                 }
-                System.out.println("✅ Réservation ajoutée avec montant total.");
+                System.out.println("✅ Réservation ajoutée avec id_client.");
             } else {
                 System.err.println("❌ Stock insuffisant pour ajouter la réservation.");
             }
@@ -45,6 +82,7 @@ public class ServiceReservationMateriel implements IService<ReservationMateriel>
             System.err.println("❌ Erreur lors de l'ajout de la réservation : " + e.getMessage());
         }
     }
+
 
     @Override
     public void modifier(ReservationMateriel r) {
@@ -145,6 +183,7 @@ public class ServiceReservationMateriel implements IService<ReservationMateriel>
                         rs.getString("statut")
                 );
                 r.setMontantTotal(rs.getDouble("montant_total"));
+                r.setIdClient(rs.getInt("id_client"));
                 list.add(r);
             }
         } catch (SQLException e) {
@@ -169,6 +208,8 @@ public class ServiceReservationMateriel implements IService<ReservationMateriel>
                         rs.getString("statut")
                 );
                 r.setMontantTotal(rs.getDouble("montant_total"));
+                r.setIdClient(rs.getInt("id_client"));
+
                 return r;
             }
         } catch (SQLException e) {

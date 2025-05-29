@@ -10,70 +10,122 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class AjoutReservationClient implements Initializable {
 
     @FXML
-    private Label lblNomMateriel;
-
+    private ComboBox<Materiels> cbMateriel;
     @FXML
     private DatePicker dpDebut;
-
     @FXML
     private DatePicker dpFin;
-
     @FXML
     private TextField tfQuantite;
-
     @FXML
     private TextField tfMontantTotal;
-
     @FXML
     private Button btnReserver;
-
     @FXML
     private Button btnRetour;
+    @FXML
+    private ImageView logoImage;
 
     private final int clientId = 1; // ID fictif du client connecté
-
     private Materiels materielSelectionne;
+
+
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         tfMontantTotal.setEditable(false);
 
         tfQuantite.textProperty().addListener((obs, oldVal, newVal) -> calculerMontantTotal());
+
+        cbMateriel.setCellFactory(param -> new ListCell<>() {
+            @Override
+            protected void updateItem(Materiels item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? "" : item.getNom());
+            }
+        });
+
+        cbMateriel.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(Materiels item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? "" : item.getNom());
+            }
+        });
+
+        // ✅ Remplissage automatique si vide
+        if (cbMateriel.getItems().isEmpty()) {
+            List<Materiels> materiels = new ServiceMateriel().recuperer().stream()
+                    .filter(m -> m.getQuantite() > 0 && "DISPONIBLE".equalsIgnoreCase(m.getEtat()))
+                    .toList();
+            cbMateriel.getItems().setAll(materiels);
+        }
+        try {
+            Image img = new Image(getClass().getResource("/images/logo.png").toExternalForm());
+            logoImage.setImage(img);
+        } catch (Exception e) {
+            System.err.println("Erreur lors du chargement de l'image : " + e.getMessage());
+        }
+    }
+
+
+    @FXML
+    private void materielChange() {
+        materielSelectionne = cbMateriel.getSelectionModel().getSelectedItem();
+        calculerMontantTotal();
+    }
+
+
+    public void setMaterielsDisponibles(List<Materiels> liste) {
+        cbMateriel.getItems().setAll(liste);
+    }
+
+    public void setMaterielSelectionne(Materiels m) {
+        this.materielSelectionne = m;
+        if (cbMateriel != null && m != null) {
+            cbMateriel.getSelectionModel().select(m);
+            calculerMontantTotal();
+        }
     }
 
     private void calculerMontantTotal() {
-        if (materielSelectionne == null || tfQuantite.getText().trim().isEmpty()) {
-            tfMontantTotal.clear();
-            return;
-        }
+        Materiels materiel = cbMateriel.getValue();
+        String quantiteText = tfQuantite.getText().trim();
 
-        try {
-            int quantite = Integer.parseInt(tfQuantite.getText().trim());
-            double total = quantite * materielSelectionne.getPrix();
-            tfMontantTotal.setText(String.format("%.2f", total));
-        } catch (NumberFormatException e) {
+        if (materiel != null && !quantiteText.isEmpty() && quantiteText.matches("\\d+")) {
+            int quantite = Integer.parseInt(quantiteText);
+            double montant = quantite * materiel.getPrix();
+            tfMontantTotal.setText(String.format("%.2f", montant));
+        } else {
             tfMontantTotal.clear();
         }
     }
+
     @FXML
     void reserverMateriel() {
-        if (materielSelectionne == null || dpDebut.getValue() == null || dpFin.getValue() == null || tfQuantite.getText().trim().isEmpty()) {
+        // 🔄 On récupère directement la sélection actuelle
+        Materiels materiel = cbMateriel.getValue();
+
+        if (materiel == null || dpDebut.getValue() == null || dpFin.getValue() == null || tfQuantite.getText().trim().isEmpty()) {
             showAlert(Alert.AlertType.ERROR, "Champs requis", "Veuillez remplir tous les champs.");
             return;
         }
 
-        // ✅ Vérification que la date de début n'est pas dans le passé
         LocalDate today = LocalDate.now();
         if (dpDebut.getValue().isBefore(today)) {
             showAlert(Alert.AlertType.ERROR, "Date invalide", "La date de début ne peut pas être antérieure à aujourd’hui.");
@@ -98,27 +150,24 @@ public class AjoutReservationClient implements Initializable {
             return;
         }
 
-        if (!"DISPONIBLE".equalsIgnoreCase(materielSelectionne.getEtat())) {
+        if (!"DISPONIBLE".equalsIgnoreCase(materiel.getEtat())) {
             showAlert(Alert.AlertType.WARNING, "Indisponible", "Ce matériel n'est pas disponible.");
             return;
         }
 
         ServiceMateriel sm = new ServiceMateriel();
-        int quantiteStock = sm.getQuantiteById(materielSelectionne.getId());
+        int quantiteStock = sm.getQuantiteById(materiel.getId());
         if (quantite > quantiteStock) {
             showAlert(Alert.AlertType.WARNING, "Stock insuffisant", "Il ne reste que " + quantiteStock + " unités disponibles.");
             return;
         }
 
-        double montant = quantite * materielSelectionne.getPrix();
-
         ReservationMateriel reservation = new ReservationMateriel();
-        reservation.setMaterielId(materielSelectionne.getId());
+        reservation.setMaterielId(materiel.getId());
         reservation.setDateDebut(Date.valueOf(dpDebut.getValue()));
         reservation.setDateFin(Date.valueOf(dpFin.getValue()));
         reservation.setQuantiteReservee(quantite);
         reservation.setStatut("EN_ATTENTE");
-        reservation.setMontantTotal(montant);
         reservation.setIdClient(clientId);
 
         new ServiceReservationMateriel().ajouter(reservation);
@@ -127,12 +176,12 @@ public class AjoutReservationClient implements Initializable {
         resetForm();
     }
 
-
     private void resetForm() {
         tfQuantite.clear();
         tfMontantTotal.clear();
         dpDebut.setValue(null);
         dpFin.setValue(null);
+        cbMateriel.getSelectionModel().clearSelection();
     }
 
     @FXML
@@ -152,14 +201,5 @@ public class AjoutReservationClient implements Initializable {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
-    }
-
-    // Appelée par ListeMaterielsClient pour injecter l'objet
-    public void setMaterielSelectionne(Materiels m) {
-        this.materielSelectionne = m;
-        if (lblNomMateriel != null) {
-            lblNomMateriel.setText(m.getNom());
-            calculerMontantTotal(); // mettre à jour le montant
-        }
     }
 }

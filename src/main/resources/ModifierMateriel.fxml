@@ -14,7 +14,13 @@
            fx:controller="com.esprit.controllers.ModifierMateriel"
            prefHeight="750.0" prefWidth="900.0"
            style="-fx-background-color: #ffc0cb;">
-
+    <AnchorPane>
+        <ImageView fx:id="logoImage"
+                   fitWidth="100" fitHeight="100"
+                   layoutX="10" layoutY="10"
+                   pickOnBounds="true" preserveRatio="true"
+        />
+    </AnchorPane>
     <children>
 
 
@@ -25,11 +31,7 @@
             <padding>
                 <Insets top="20" right="20" bottom="20" left="20"/>
             </padding>
-            <Button fx:id="btnExporterCSV"
-                    text="Exporter en CSV"
-                    layoutX="20" layoutY="20"
-                    onAction="#exporterCSV"
-                    style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;"/>
+
 
             <HBox alignment="CENTER">
                 <Text text="Liste des Matériels" style="-fx-fill: white;">
@@ -49,6 +51,17 @@
                                -fx-padding: 6 12 6 12;" />
                 <padding>
                     <Insets top="0" right="20" bottom="0" left="0"/>
+                </padding>
+            </HBox>
+            <HBox alignment="TOP_LEFT">
+                <Button fx:id="btnExporterCSV"
+                        text="Exporter en CSV"
+                        onAction="#exporterCSV"
+                        style="-fx-background-color: #4CAF50; -fx-text-fill: white;
+                   -fx-font-weight: bold; -fx-background-radius: 20;
+                   -fx-cursor: hand; -fx-padding: 6 12 6 12;" />
+                <padding>
+                    <Insets top="0" left="20" bottom="0" right="0"/>
                 </padding>
             </HBox>
 

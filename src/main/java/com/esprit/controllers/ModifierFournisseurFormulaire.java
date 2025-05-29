@@ -10,6 +10,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -37,6 +39,8 @@ public class ModifierFournisseurFormulaire implements Initializable {
 
     @FXML
     private Button btnRetour;
+    @FXML
+    private ImageView logoImage;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -49,6 +53,12 @@ public class ModifierFournisseurFormulaire implements Initializable {
                         "-fx-cursor: hand;" +
                         "-fx-padding: 4 10 4 10;"
         );
+        try {
+            Image img = new Image(getClass().getResource("/images/logo.png").toExternalForm());
+            logoImage.setImage(img);
+        } catch (Exception e) {
+            System.err.println("Erreur lors du chargement de l'image : " + e.getMessage());
+        }
     }
 
     // Méthode appelée par le contrôleur principal

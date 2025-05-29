@@ -11,6 +11,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -33,7 +35,8 @@ public class AjoutReservation implements Initializable {
     @FXML private Button btnReserver;
     @FXML private Button btnRetour;
     @FXML private TextField tfMontantTotal;
-
+    @FXML
+    private ImageView logoImage;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -44,7 +47,12 @@ public class AjoutReservation implements Initializable {
         cbStatut.setValue("EN_ATTENTE");
         tfQuantite.textProperty().addListener((observable, oldValue, newValue) -> calculerMontantTotal());
         cbMateriel.valueProperty().addListener((obs, oldMat, newMat) -> calculerMontantTotal());
-
+        try {
+            Image img = new Image(getClass().getResource("/images/logo.png").toExternalForm());
+            logoImage.setImage(img);
+        } catch (Exception e) {
+            System.err.println("Erreur lors du chargement de l'image : " + e.getMessage());
+        }
     }
 
     @FXML
@@ -119,7 +127,7 @@ public class AjoutReservation implements Initializable {
         );
         reservation.setMontantTotal(montantTotal);
 
-        serviceReservation.ajouter(reservation);
+        serviceReservation.ajouteradmin(reservation);
         showAlert(Alert.AlertType.INFORMATION, "Succès", "Réservation enregistrée avec succès !");
         resetForm();
     }

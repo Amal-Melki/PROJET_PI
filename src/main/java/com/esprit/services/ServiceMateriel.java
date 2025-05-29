@@ -70,6 +70,21 @@ public class ServiceMateriel implements IService<Materiels> {
         }
     }
 
+    public String getNomById(int idMateriel) {
+        String req = "SELECT nom FROM materiel WHERE id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(req)) {
+            ps.setInt(1, idMateriel);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getString("nom");
+            }
+        } catch (SQLException e) {
+            System.err.println("❌ Erreur lors de la récupération du nom du matériel : " + e.getMessage());
+        }
+        return "Inconnu";
+    }
+
+
     @Override
     public List<Materiels> recuperer() {
         List<Materiels> materiels = new ArrayList<>();

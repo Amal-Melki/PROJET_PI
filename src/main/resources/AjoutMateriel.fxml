@@ -5,98 +5,102 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<ScrollPane xmlns="http://javafx.com/javafx/17"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.esprit.controllers.AjoutMateriel"
-            fitToWidth="true"
-            prefHeight="650.0" prefWidth="700.0"
-            style="-fx-background: pink;">
-   <content>
-      <VBox alignment="TOP_CENTER" spacing="30" style="-fx-padding: 40;" maxWidth="Infinity">
+<StackPane xmlns="http://javafx.com/javafx/17"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.esprit.controllers.AjoutMateriel"
+           prefHeight="600.0" prefWidth="700.0"
+           style="-fx-background-color: pink;">
 
-         <!-- Bouton Retour -->
-         <HBox alignment="TOP_RIGHT" >
-            <Button fx:id="btnRetour"
-                    text="↩ Retour"
-                    onAction="#retourAccueil"
-                    style="-fx-background-color: #ff7fa8; -fx-text-fill: white; -fx-font-weight: bold;
-                           -fx-font-size: 13px; -fx-background-radius: 20; -fx-cursor: hand;" />
-         </HBox>
+   <!-- ✅ Logo en haut à gauche -->
+   <AnchorPane StackPane.alignment="TOP_LEFT">
+      <ImageView fx:id="logoImage"
+                 fitWidth="100" fitHeight="100"
+                 layoutX="10" layoutY="10"
+                 pickOnBounds="true" preserveRatio="true"
+                  />
+   </AnchorPane>
 
-         <!-- Titre -->
-         <Text text="Ajout Matériel" style="-fx-fill: white;" >
-            <font>
-               <Font name="Segoe UI Bold" size="32.0"/>
-            </font>
-         </Text>
+   <!-- ✅ Formulaire principal centré -->
+   <VBox alignment="TOP_CENTER" spacing="30" style="-fx-padding: 60 40 40 40;" maxWidth="Infinity">
 
-         <!-- Formulaire -->
-         <GridPane hgap="20" vgap="15">
-            <columnConstraints>
-               <ColumnConstraints halignment="RIGHT" minWidth="120"/>
-               <ColumnConstraints halignment="LEFT" minWidth="300"/>
-            </columnConstraints>
-
-            <Label text="Nom :" GridPane.rowIndex="0" GridPane.columnIndex="0"
-                   style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px;" />
-            <TextField fx:id="tfNom" prefWidth="300" GridPane.rowIndex="0" GridPane.columnIndex="1"
-                       style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
-
-            <Label text="Type :" GridPane.rowIndex="1" GridPane.columnIndex="0"
-                   style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px;" />
-            <ComboBox fx:id="cbType" prefWidth="300" GridPane.rowIndex="1" GridPane.columnIndex="1"
-                      style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
-
-            <Label text="Quantité :" GridPane.rowIndex="2" GridPane.columnIndex="0"
-                   style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px;" />
-            <TextField fx:id="tfQuantite" prefWidth="300" GridPane.rowIndex="2" GridPane.columnIndex="1"
-                       style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
-
-            <Label text="État :" GridPane.rowIndex="3" GridPane.columnIndex="0"
-                   style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px;" />
-            <ComboBox fx:id="cbEtat" prefWidth="300" GridPane.rowIndex="3" GridPane.columnIndex="1"
-                      style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
-
-            <Label text="Prix :" GridPane.rowIndex="4" GridPane.columnIndex="0"
-                   style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px;" />
-            <TextField fx:id="tfPrix" prefWidth="300" GridPane.rowIndex="4" GridPane.columnIndex="1"
-                       style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
-
-            <Label text="Description :" GridPane.rowIndex="5" GridPane.columnIndex="0"
-                   style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px;" />
-            <TextArea fx:id="taDescription" prefWidth="300" prefRowCount="3"
-                      GridPane.rowIndex="5" GridPane.columnIndex="1"
-                      style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
-         </GridPane>
-
-         <!-- Bouton image -->
-         <Button fx:id="btnImage"
-                 text="📷 Ajouter une image"
-                 onAction="#choisirImage"
-                 prefWidth="300"
-                 style="-fx-background-color: #d46a92; -fx-text-fill: white; -fx-font-weight: bold;
-                        -fx-background-radius: 20; -fx-cursor: hand;" />
-
-         <!-- Nom image -->
-         <Label fx:id="lblImagePath"
-                text="Aucune image sélectionnée"
-                style="-fx-text-fill: white; -fx-font-size: 12;" />
-
-         <!-- Image affichée -->
-         <VBox fx:id="imageBox" visible="false" managed="false" alignment="CENTER">
-            <ImageView fx:id="imageMateriel"
-                       fitWidth="180.0" fitHeight="180.0"
-                       preserveRatio="true"
-                       style="-fx-border-color: white; -fx-border-width: 2;" />
-         </VBox>
-
-         <!-- Bouton ajouter -->
-         <Button fx:id="btnAjouter"
-                 text="Ajouter"
-                 onAction="#addMateriel"
-                 prefWidth="160.0" prefHeight="45.0"
+      <!-- Bouton Retour -->
+      <HBox alignment="TOP_RIGHT">
+         <Button fx:id="btnRetour"
+                 text="↩ Retour"
+                 onAction="#retourAccueil"
                  style="-fx-background-color: #ff7fa8; -fx-text-fill: white; -fx-font-weight: bold;
-                        -fx-font-size: 16px; -fx-background-radius: 20; -fx-cursor: hand;" />
+                           -fx-font-size: 13px; -fx-background-radius: 20; -fx-cursor: hand;" />
+      </HBox>
+
+      <!-- Titre -->
+      <Text text="Ajout Matériel" style="-fx-fill: white;">
+         <font>
+            <Font name="Segoe UI Bold" size="32.0"/>
+         </font>
+      </Text>
+
+      <!-- Formulaire -->
+      <GridPane hgap="20" vgap="15">
+         <columnConstraints>
+            <ColumnConstraints halignment="RIGHT" minWidth="120"/>
+            <ColumnConstraints halignment="LEFT" minWidth="300"/>
+         </columnConstraints>
+
+         <Label text="Nom :" GridPane.rowIndex="0" GridPane.columnIndex="0"
+                style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px;" />
+         <TextField fx:id="tfNom" prefWidth="300" GridPane.rowIndex="0" GridPane.columnIndex="1"
+                    style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
+
+         <Label text="Type :" GridPane.rowIndex="1" GridPane.columnIndex="0"
+                style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px;" />
+         <ComboBox fx:id="cbType" prefWidth="300" GridPane.rowIndex="1" GridPane.columnIndex="1"
+                   style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
+
+         <Label text="Quantité :" GridPane.rowIndex="2" GridPane.columnIndex="0"
+                style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px;" />
+         <TextField fx:id="tfQuantite" prefWidth="300" GridPane.rowIndex="2" GridPane.columnIndex="1"
+                    style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
+
+         <Label text="État :" GridPane.rowIndex="3" GridPane.columnIndex="0"
+                style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px;" />
+         <ComboBox fx:id="cbEtat" prefWidth="300" GridPane.rowIndex="3" GridPane.columnIndex="1"
+                   style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
+
+         <Label text="Prix :" GridPane.rowIndex="4" GridPane.columnIndex="0"
+                style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px;" />
+         <TextField fx:id="tfPrix" prefWidth="300" GridPane.rowIndex="4" GridPane.columnIndex="1"
+                    style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
+
+         <Label text="Description :" GridPane.rowIndex="5" GridPane.columnIndex="0"
+                style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px;" />
+         <TextArea fx:id="taDescription" prefWidth="300" prefRowCount="3"
+                   GridPane.rowIndex="5" GridPane.columnIndex="1"
+                   style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
+      </GridPane>
+
+      <Button fx:id="btnImage"
+              text="📷 Ajouter une image"
+              onAction="#choisirImage"
+              prefWidth="300"
+              style="-fx-background-color: #d46a92; -fx-text-fill: white; -fx-font-weight: bold;
+                       -fx-background-radius: 20; -fx-cursor: hand;" />
+
+      <Label fx:id="lblImagePath"
+             text="Aucune image sélectionnée"
+             style="-fx-text-fill: white; -fx-font-size: 12;" />
+
+      <VBox fx:id="imageBox" visible="false" managed="false" alignment="CENTER">
+         <ImageView fx:id="imageMateriel"
+                    fitWidth="180.0" fitHeight="180.0"
+                    preserveRatio="true"
+                    style="-fx-border-color: white; -fx-border-width: 2;" />
       </VBox>
-   </content>
-</ScrollPane>
+
+      <Button fx:id="btnAjouter"
+              text="Ajouter"
+              onAction="#addMateriel"
+              prefWidth="160.0" prefHeight="45.0"
+              style="-fx-background-color: #ff7fa8; -fx-text-fill: white; -fx-font-weight: bold;
+                       -fx-font-size: 16px; -fx-background-radius: 20; -fx-cursor: hand;" />
+   </VBox>
+</StackPane>
