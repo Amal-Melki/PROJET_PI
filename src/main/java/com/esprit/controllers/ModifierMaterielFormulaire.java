@@ -53,7 +53,8 @@ public class ModifierMaterielFormulaire {
     private ImageView imageViewMateriel;
 
     private String cheminImageActuelle;
-
+    @FXML
+    private ImageView logoImage;
 
     @FXML
     public void initialize() {
@@ -80,7 +81,12 @@ public class ModifierMaterielFormulaire {
         ancienneImage = m.getImage(); // conserve l'image d'origine
 
 
-
+        try {
+            Image img = new Image(getClass().getResource("/images/logo.png").toExternalForm());
+            logoImage.setImage(img);
+        } catch (Exception e) {
+            System.err.println("Erreur lors du chargement de l'image : " + e.getMessage());
+        }
 
         tfNom.setText(m.getNom());
         cbType.setValue(m.getType());

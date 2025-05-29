@@ -16,6 +16,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
@@ -51,19 +53,24 @@ public class ModifierReservation implements Initializable {
 
     @FXML
     private TextField tfRechercheReservation;
-
+    @FXML
+    private ImageView logoImage;
     @FXML private ComboBox<String> cbFiltreStatut;
     @FXML private DatePicker dpFiltreDebut;
     @FXML private DatePicker dpFiltreFin;
+    @FXML
+    private TableColumn<ReservationMateriel, Integer> colClientId;
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         colNomMateriel.setCellValueFactory(new PropertyValueFactory<>("nomMateriel"));
         colDateDebut.setCellValueFactory(new PropertyValueFactory<>("dateDebut"));
         colDateFin.setCellValueFactory(new PropertyValueFactory<>("dateFin"));
         colQuantite.setCellValueFactory(new PropertyValueFactory<>("quantiteReservee"));
         colStatut.setCellValueFactory(new PropertyValueFactory<>("statut"));
+        colClientId.setCellValueFactory(new PropertyValueFactory<>("idClient"));
 
         chargerDonnees();
         ajouterColonneAction();
@@ -78,7 +85,44 @@ public class ModifierReservation implements Initializable {
         cbFiltreStatut.valueProperty().addListener((obs, oldVal, newVal) -> filtrerReservationsAvance());
         dpFiltreDebut.valueProperty().addListener((obs, oldVal, newVal) -> filtrerReservationsAvance());
         dpFiltreFin.valueProperty().addListener((obs, oldVal, newVal) -> filtrerReservationsAvance());
+        try {
+            Image img = new Image(getClass().getResource("/images/logo.png").toExternalForm());
+            logoImage.setImage(img);
+        } catch (Exception e) {
+            System.err.println("Erreur lors du chargement de l'image : " + e.getMessage());
+        }
+        colStatut.setCellFactory(column -> new TableCell<>() {
+            @Override
+            protected void updateItem(String statut, boolean empty) {
+                super.updateItem(statut, empty);
 
+                if (empty || statut == null) {
+                    setText(null);
+                    setGraphic(null);
+                    return;
+                }
+
+                Label label = new Label(statut);
+                label.setStyle("-fx-padding: 4 10 4 10; -fx-background-radius: 10; -fx-text-fill: white;");
+
+                switch (statut) {
+                    case "VALIDEE":
+                        label.setStyle(label.getStyle() + "-fx-background-color: #4CAF50;"); // Vert
+                        break;
+                    case "ANNULEE":
+                        label.setStyle(label.getStyle() + "-fx-background-color: #F44336;"); // Rouge
+                        break;
+                    case "EN_ATTENTE":
+                        label.setStyle(label.getStyle() + "-fx-background-color: #2196F3;"); // Bleu
+                        break;
+                    default:
+                        label.setStyle(label.getStyle() + "-fx-background-color: gray;");
+                }
+
+                setGraphic(label);
+                setText(null);
+            }
+        });
 
     }
 

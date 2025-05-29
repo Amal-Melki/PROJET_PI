@@ -35,12 +35,19 @@ public class AjoutMateriel implements Initializable {
     @FXML private Button btnImage;
     @FXML private ImageView imageMateriel;
     @FXML private VBox imageBox;
-
+    @FXML
+    private ImageView logoImage;
 
     private String cheminImage = null;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        try {
+            Image img = new Image(getClass().getResource("/images/logo.png").toExternalForm());
+            logoImage.setImage(img);
+        } catch (Exception e) {
+            System.err.println("Erreur lors du chargement de l'image : " + e.getMessage());
+        }
         cbType.getItems().addAll(
                 "Mobilier (chaises, tables, estrades)",
                 "Éclairage (spots, projecteurs, LED)",
@@ -57,6 +64,7 @@ public class AjoutMateriel implements Initializable {
         cbEtat.setValue("DISPONIBLE");
 
         btnAjouter.setStyle("-fx-background-color: #ff8cb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 15; -fx-cursor: hand; -fx-padding: 4 10 4 10;");
+
     }
 
     @FXML

@@ -21,35 +21,34 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class ModifierReservationFormulaire implements Initializable {
+public class ModifierReservationClient implements Initializable {
 
     @FXML private Label lblNomMateriel;
     @FXML private DatePicker dpDebut;
     @FXML private DatePicker dpFin;
     @FXML private TextField tfQuantite;
-    @FXML private ComboBox<String> cbStatut;
+
     @FXML private Button btnEnregistrer;
     @FXML private Button btnRetour;
     @FXML private TextField tfMontantTotal;
-    @FXML
-    private ImageView logoImage;
+
     private ReservationMateriel reservationToModify;
     private Materiels materielAssocie;
     private int ancienneQuantiteReservee;
-
+    @FXML
+    private ImageView logoImage;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        cbStatut.setItems(FXCollections.observableArrayList("EN_ATTENTE", "VALIDEE", "ANNULEE"));
 
-        tfQuantite.textProperty().addListener((obs, oldVal, newVal) -> {
-            calculerMontantTotal();
-        });
         try {
             Image img = new Image(getClass().getResource("/images/logo.png").toExternalForm());
             logoImage.setImage(img);
         } catch (Exception e) {
             System.err.println("Erreur lors du chargement de l'image : " + e.getMessage());
         }
+        tfQuantite.textProperty().addListener((obs, oldVal, newVal) -> {
+            calculerMontantTotal();
+        });
     }
 
     public void setReservation(ReservationMateriel r) {
@@ -68,7 +67,7 @@ public class ModifierReservationFormulaire implements Initializable {
         dpDebut.setValue(r.getDateDebut().toLocalDate());
         dpFin.setValue(r.getDateFin().toLocalDate());
         tfQuantite.setText(String.valueOf(r.getQuantiteReservee()));
-        cbStatut.setValue(r.getStatut());
+
 
         calculerMontantTotal();
     }
@@ -90,9 +89,9 @@ public class ModifierReservationFormulaire implements Initializable {
         LocalDate dateDebut = dpDebut.getValue();
         LocalDate dateFin = dpFin.getValue();
         String quantiteText = tfQuantite.getText().trim();
-        String statut = cbStatut.getValue();
 
-        if (materielAssocie == null || dateDebut == null || dateFin == null || quantiteText.isEmpty() || statut == null) {
+
+        if (materielAssocie == null || dateDebut == null || dateFin == null || quantiteText.isEmpty() ) {
             showAlert(Alert.AlertType.ERROR, "Champs manquants", "Veuillez remplir tous les champs.");
             return;
         }
@@ -135,7 +134,7 @@ public class ModifierReservationFormulaire implements Initializable {
         reservationToModify.setDateDebut(java.sql.Date.valueOf(dateDebut));
         reservationToModify.setDateFin(java.sql.Date.valueOf(dateFin));
         reservationToModify.setQuantiteReservee(nouvelleQuantite);
-        reservationToModify.setStatut(statut);
+
         reservationToModify.setMontantTotal(nouvelleQuantite * materielAssocie.getPrix());
 
         new ServiceReservationMateriel().modifier(reservationToModify);
@@ -156,7 +155,7 @@ public class ModifierReservationFormulaire implements Initializable {
     @FXML
     private void retourAccueil() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierReservation.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ListeReservationsClient.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) btnRetour.getScene().getWindow();
             stage.setScene(new Scene(root));

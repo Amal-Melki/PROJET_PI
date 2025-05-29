@@ -7,6 +7,8 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -20,7 +22,10 @@ public class Accueil {
     @FXML private Button btnAjoutReservation;
     @FXML private Button btnListeReservations;
     @FXML private Button btnAjoutReservationClient;
-    @FXML private Button btnListeMaterielsClient; // ✅ nouveau bouton
+    @FXML private Button btnListeMaterielsClient;
+    @FXML private Button btnListeReservationsClient;//
+    @FXML
+    private ImageView logoImage;// ✅ nouveau bouton
 
     @FXML
     public void initialize() {
@@ -32,6 +37,13 @@ public class Accueil {
         btnListeReservations.setOnAction(this::ouvrirListeReservations);
         btnAjoutReservationClient.setOnAction(this::ouvrirAjoutReservationsClient);
         btnListeMaterielsClient.setOnAction(this::ouvrirListeMaterielsClient);
+        btnListeReservationsClient.setOnAction(this::ouvrirListeReservationsClient);
+        try {
+            Image img = new Image(getClass().getResource("/images/logo.png").toExternalForm());
+            logoImage.setImage(img);
+        } catch (Exception e) {
+            System.err.println("Erreur lors du chargement de l'image : " + e.getMessage());
+        }
     }
 
     private void ouvrirAjoutMateriel(ActionEvent e) {
@@ -64,6 +76,9 @@ public class Accueil {
 
     private void ouvrirListeMaterielsClient(ActionEvent e) {
         changerScene("/ListeMaterielsClient.fxml", e); // ✅ nouvelle vue
+    }
+    private void ouvrirListeReservationsClient(ActionEvent e) {
+        changerScene("/ListeReservationsClient.fxml", e); // ✅ nouvelle vue
     }
 
     private void changerScene(String cheminFXML, ActionEvent event) {

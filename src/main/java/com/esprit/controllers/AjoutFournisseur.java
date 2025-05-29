@@ -11,6 +11,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -27,13 +29,20 @@ public class AjoutFournisseur implements Initializable {
     @FXML private TextField tfEmail;
     @FXML private Button btnAjouter;
     @FXML private Button btnRetour;
-
+    @FXML
+    private ImageView logoImage;
     private int codeVerification; // ✅ ajout du champ
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         btnAjouter.setStyle("-fx-background-color: #ff8cb3; -fx-text-fill: white; -fx-font-weight: bold;" +
                 "-fx-background-radius: 15; -fx-cursor: hand; -fx-padding: 4 10 4 10;");
+        try {
+            Image img = new Image(getClass().getResource("/images/logo.png").toExternalForm());
+            logoImage.setImage(img);
+        } catch (Exception e) {
+            System.err.println("Erreur lors du chargement de l'image : " + e.getMessage());
+        }
     }
 
     @FXML

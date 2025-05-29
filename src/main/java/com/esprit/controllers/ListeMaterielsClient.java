@@ -40,7 +40,8 @@ public class ListeMaterielsClient implements Initializable {
     private ComboBox<String> cbFiltreType;
     @FXML
     private TextField tfFiltreQuantite;
-
+    @FXML
+    private ImageView logoImage;
     private final ObservableList<Materiels> tousMateriels = FXCollections.observableArrayList();
 
     @Override
@@ -61,6 +62,12 @@ public class ListeMaterielsClient implements Initializable {
         tfFiltreQuantite.textProperty().addListener((obs, oldVal, newVal) -> appliquerFiltres());
 
         afficherMateriels(tousMateriels);
+        try {
+            Image img = new Image(getClass().getResource("/images/logo.png").toExternalForm());
+            logoImage.setImage(img);
+        } catch (Exception e) {
+            System.err.println("Erreur lors du chargement de l'image : " + e.getMessage());
+        }
     }
 
     private void afficherMateriels(List<Materiels> liste) {
@@ -70,6 +77,7 @@ public class ListeMaterielsClient implements Initializable {
             tilePane.getChildren().add(vbox);
         }
     }
+
 
     private VBox creerCarteMateriel(Materiels materiel) {
         VBox box = new VBox(5);
@@ -132,19 +140,19 @@ public class ListeMaterielsClient implements Initializable {
 
         afficherMateriels(filtres);
     }
-
     private void ouvrirFormulaireReservation(Materiels materiel) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjoutReservationClient.fxml"));
             Parent root = loader.load();
 
             AjoutReservationClient controller = loader.getController();
-            controller.setMaterielSelectionne(materiel);
+            controller.setMaterielSelectionne(materiel); // injecter le matériel
+                   // afficher en Label uniquement
 
-            Stage stage = new Stage();
-            stage.setTitle("Réserver Matériel");
-            stage.setScene(new Scene(root));
-            stage.show();
+            // Remplacer la scène actuelle (même fenêtre)
+            Stage currentStage = (Stage) tilePane.getScene().getWindow();
+            currentStage.setScene(new Scene(root));
+            currentStage.sizeToScene(); // adapter à la nouvelle taille
         } catch (IOException e) {
             e.printStackTrace();
         }

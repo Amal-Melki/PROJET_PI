@@ -10,7 +10,13 @@
             fx:controller="com.esprit.controllers.ListeMaterielsClient"
             prefHeight="750.0" prefWidth="900.0"
             style="-fx-background-color: #ffc0cb;">
-
+    <AnchorPane>
+        <ImageView fx:id="logoImage"
+                   fitWidth="100" fitHeight="100"
+                   layoutX="10" layoutY="10"
+                   pickOnBounds="true" preserveRatio="true"
+        />
+    </AnchorPane>
     <children>
 
         <!-- Titre -->

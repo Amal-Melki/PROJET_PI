@@ -14,6 +14,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
@@ -43,7 +45,8 @@ public class ModifierFournisseur implements Initializable {
 
     @FXML
     private TextField tfRechercheFournisseur;
-
+    @FXML
+    private ImageView logoImage;
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         colNom.setCellValueFactory(new PropertyValueFactory<>("nom"));
@@ -52,6 +55,12 @@ public class ModifierFournisseur implements Initializable {
         chargerDonnees();
         ajouterColonneAction();
         configurerRechercheFournisseur();
+        try {
+            Image img = new Image(getClass().getResource("/images/logo.png").toExternalForm());
+            logoImage.setImage(img);
+        } catch (Exception e) {
+            System.err.println("Erreur lors du chargement de l'image : " + e.getMessage());
+        }
 
     }
 

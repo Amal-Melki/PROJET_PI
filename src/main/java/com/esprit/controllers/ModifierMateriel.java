@@ -50,7 +50,8 @@ public class ModifierMateriel implements Initializable {
     @FXML private ComboBox<String> cbFiltreStatut;
     @FXML private ComboBox<String> cbFiltreType;
     @FXML private TextField tfFiltreQuantite;
-
+    @FXML
+    private ImageView logoImage;
 
 
 
@@ -123,6 +124,12 @@ public class ModifierMateriel implements Initializable {
                 e.printStackTrace();
             }
         }).start();
+        try {
+            Image img = new Image(getClass().getResource("/images/logo.png").toExternalForm());
+            logoImage.setImage(img);
+        } catch (Exception e) {
+            System.err.println("Erreur lors du chargement de l'image : " + e.getMessage());
+        }
     }
 
     private void afficherMateriels() {
@@ -287,21 +294,41 @@ public class ModifierMateriel implements Initializable {
 
     public void exporterCSV() {
         try {
-            URL url = new URL("http://localhost:8080/api/materiels/export-csv");
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
+            // 1. Ouvrir le FileChooser pour que l'utilisateur choisisse le chemin de sauvegarde
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Enregistrer le fichier CSV");
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Fichiers CSV", "*.csv"));
+            fileChooser.setInitialFileName("materiels.csv");
 
-            // Chemin local pour enregistrer le fichier
-            String cheminFichier = "C:\\Users\\RKheriji\\OneDrive - Linedata Services, Inc\\Desktop\\materiels.csv";
-            try (InputStream in = conn.getInputStream();
-                 OutputStream out = new FileOutputStream(cheminFichier)) {
-                in.transferTo(out);
+            // Affiche la fenêtre de choix
+            File selectedFile = fileChooser.showSaveDialog(null);
+
+            if (selectedFile != null) {
+                // 2. Appel HTTP à l'API pour télécharger le fichier CSV
+                URL url = new URL("http://localhost:8080/api/materiels/export-csv");
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+
+                try (InputStream inputStream = connection.getInputStream();
+                     FileOutputStream outputStream = new FileOutputStream(selectedFile)) {
+
+                    byte[] buffer = new byte[4096];
+                    int bytesRead;
+
+                    while ((bytesRead = inputStream.read(buffer)) != -1) {
+                        outputStream.write(buffer, 0, bytesRead);
+                    }
+
+                    System.out.println("✅ Fichier CSV exporté avec succès !");
+                }
+            } else {
+                System.out.println("❌ Export annulé par l'utilisateur.");
             }
 
-            System.out.println("✅ Export CSV terminé avec succès !");
-        } catch (Exception e) {
-            System.err.println("Erreur lors de l'export CSV : " + e.getMessage());
+        } catch (IOException e) {
+            System.err.println("❌ Erreur lors de l'export CSV : " + e.getMessage());
         }
     }
+
 
 }
