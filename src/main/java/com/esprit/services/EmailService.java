@@ -17,9 +17,23 @@ public class EmailService {
         sendGrid = new SendGrid(apiKey);
     }
 
+    /**
+     * Simulated email sending for prototype purposes
+     * In production, this would use the SendGrid API to actually send emails
+     */
     public void sendEmail(String toEmail, String subject, String body) throws IOException {
+        // For prototype, just log the email details to console
+        System.out.println("========= SIMULATED EMAIL ==========");
+        System.out.println("FROM: Evencia Event Planner <melki.amal@esprit.tn>");
+        System.out.println("TO: " + toEmail);
+        System.out.println("SUBJECT: " + subject);
+        System.out.println("BODY:\n" + body);
+        System.out.println("====================================");
+
+        // Uncomment and adapt the below code when ready to use actual SendGrid
+        /*
         Email from = new Email("melki.amal@esprit.tn");
-            Email to = new Email(toEmail);
+        Email to = new Email(toEmail);
         Content content = new Content("text/plain", body);
         Mail mail = new Mail(from, subject, to, content);
 
@@ -38,5 +52,6 @@ public class EmailService {
         } catch (IOException ex) {
             throw ex;
         }
+        */
     }
 }

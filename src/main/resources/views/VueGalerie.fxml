@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import java.net.URL?>
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.esprit.controllers.VueGalerieController">
+   <top>
+      <VBox spacing="10">
+         <Label text="Galerie des Espaces d'Événements" styleClass="page-title">
+            <font>
+               <Font name="System Bold" size="24.0" />
+            </font>
+         </Label>
+         <Label text="Parcourez les espaces disponibles et faites des réservations pour vos événements." styleClass="page-subtitle" />
+         
+         <!-- Filter bar -->
+         <HBox spacing="15" alignment="CENTER_LEFT" styleClass="filter-box">
+            <Label text="Filtrer:" />
+            <ComboBox fx:id="comboTypeFilter" promptText="Type d'Espace" prefWidth="150" />
+            <Label text="Capacité:" />
+            <TextField fx:id="txtMinCapacity" promptText="Min" prefWidth="80" />
+            <Label text="-" />
+            <TextField fx:id="txtMaxCapacity" promptText="Max" prefWidth="80" />
+            <CheckBox fx:id="checkAvailableOnly" text="Disponibles Uniquement" selected="true" />
+            <Region HBox.hgrow="ALWAYS" />
+            <TextField fx:id="txtSearch" promptText="Rechercher par nom ou lieu" prefWidth="200" />
+            <Button fx:id="btnApplyFilters" text="Appliquer" onAction="#applyFilters" styleClass="secondary-button" />
+            <Button fx:id="btnResetFilters" text="Réinitialiser" onAction="#resetFilters" styleClass="cancel-button" />
+         </HBox>
+         
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </padding>
+      </VBox>
+   </top>
+   
+   <center>
+      <VBox spacing="20">
+         <padding>
+            <Insets left="20.0" right="20.0" bottom="20.0" />
+         </padding>
+         
+         <!-- Spaces Grid -->
+         <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="transparent-scroll-pane">
+            <TilePane fx:id="spacesGrid" hgap="20" vgap="20" prefColumns="3" styleClass="spaces-grid">
+               <padding>
+                  <Insets bottom="20.0" left="10.0" right="10.0" top="10.0"/>
+               </padding>
+            </TilePane>
+         </ScrollPane>
+      </VBox>
+   </center>
+   
+   <bottom>
+      <HBox alignment="CENTER" spacing="10" styleClass="footer-box">
+         <padding>
+            <Insets top="10" right="10" bottom="10" left="10" />
+         </padding>
+         <Label fx:id="lblResultCount" text="Affichage de 0 espaces" />
+      </HBox>
+   </bottom>
+   
+   <stylesheets>
+      <URL value="@/styles/dashboard.css" />
+   </stylesheets>
+</BorderPane>

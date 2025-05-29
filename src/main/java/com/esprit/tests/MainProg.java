@@ -1,7 +1,7 @@
 package com.esprit.tests;
 
-import com.esprit.modules.Espace;
-import com.esprit.modules.ReservationEspace;
+import com.esprit.models.Espace;
+import com.esprit.models.ReservationEspace;
 import com.esprit.services.EspaceService;
 import com.esprit.services.ReservationEspaceService;
 
@@ -31,11 +31,11 @@ public class MainProg {
         // Service pour les réservations d'espaces
         ReservationEspaceService ReservationEspaceService  = new ReservationEspaceService();
 
-        ReservationEspace re1 = new ReservationEspace(1, es1.getId(), "Ali Ben Ali", LocalDate.of(2025, 5, 10), LocalDate.of(2025, 5, 12));  // Mariage à la Salle des Fêtes Evencia Tunis
-        ReservationEspace re2 = new ReservationEspace(2, es2.getId(), "Amira Zghal", LocalDate.of(2025, 6, 5), LocalDate.of(2025, 6, 6));  // Conférence professionnelle au Centre de Conférences Evencia Sfax
-        ReservationEspace re3 = new ReservationEspace(3, es3.getId(), "Hassan Tounsi", LocalDate.of(2025, 7, 15), LocalDate.of(2025, 7, 17));  // Événement culturel à l'Espace Evencia Hammamet
-        ReservationEspace re4 = new ReservationEspace(4, es4.getId(), "Sana Belhaj", LocalDate.of(2025, 8, 20), LocalDate.of(2025, 8, 21));  // Anniversaire à la Salle Evencia Sousse
-        ReservationEspace re5 = new ReservationEspace(5, es5.getId(), "Mounir Ziani", LocalDate.of(2025, 9, 10), LocalDate.of(2025, 9, 12));  // Événement familial à la Salle des Fêtes Evencia Nabeul
+        //ReservationEspace re1 = new ReservationEspace(1, es1.getId(), "Ali Ben Ali", LocalDate.of(2025, 5, 10), LocalDate.of(2025, 5, 12));  // Mariage à la Salle des Fêtes Evencia Tunis
+        //ReservationEspace re2 = new ReservationEspace(2, es2.getId(), "Amira Zghal", LocalDate.of(2025, 6, 5), LocalDate.of(2025, 6, 6));  // Conférence professionnelle au Centre de Conférences Evencia Sfax
+        //ReservationEspace re3 = new ReservationEspace(3, es3.getId(), "Hassan Tounsi", LocalDate.of(2025, 7, 15), LocalDate.of(2025, 7, 17));  // Événement culturel à l'Espace Evencia Hammamet
+        //ReservationEspace re4 = new ReservationEspace(4, es4.getId(), "Sana Belhaj", LocalDate.of(2025, 8, 20), LocalDate.of(2025, 8, 21));  // Anniversaire à la Salle Evencia Sousse
+        //ReservationEspace re5 = new ReservationEspace(5, es5.getId(), "Mounir Ziani", LocalDate.of(2025, 9, 10), LocalDate.of(2025, 9, 12));  // Événement familial à la Salle des Fêtes Evencia Nabeul
 
         // Test des méthodes sur la réservation
        //ReservationEspaceService.add(re1);

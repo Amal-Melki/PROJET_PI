@@ -8,7 +8,7 @@ public class EmailServiceTest {
     public static void main(String[] args) {
         EmailService emailService = new EmailService();
 
-        String testEmail = "wael2chenoufi@gmail.com"; // Replace with your test email address
+        String testEmail = "amalmelki346@gmail.com"; // Replace with your test email address
         String subject = "Test Email from PROJET_PI";
         String body = "This is a test email sent from the EmailService test.";
 

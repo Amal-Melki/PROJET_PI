@@ -1,0 +1,647 @@
+/* Main Dashboard Styles */
+.root {
+    -fx-font-family: 'Segoe UI', sans-serif;
+    font-family: 'Segoe UI', sans-serif;
+    -fx-font-size: 14px;
+    font-size: 14px;
+}
+
+/* Sidebar styles */
+.sidebar {
+    -fx-background-color: #ff8fb3;
+    background-color: #ff8fb3;
+    -fx-padding: 0;
+    padding: 0;
+}
+
+.sidebar-admin {
+    -fx-background-color: #ff8fb3;
+    background-color: #ff8fb3;
+}
+
+.sidebar-user {
+    -fx-background-color: #ff8fb3;
+    background-color: #ff8fb3;
+}
+
+/* Header styles */
+.header {
+    -fx-background-color: pink;
+    background-color: pink;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);
+    -fx-padding: 10 20 10 20;
+    padding: 10px 20px 10px 20px;
+}
+
+/* Section headers */
+.section-header {
+    -fx-fill: white;
+    fill: white;
+    -fx-font-size: 14px;
+    font-size: 14px;
+    -fx-font-weight: bold;
+    font-weight: bold;
+    -fx-padding: 0 0 5 15;
+    padding: 0 0 5px 15px;
+}
+
+/* Navigation buttons */
+.nav-button {
+    -fx-background-color: #ff8fb3;
+    background-color: #ff8fb3;
+    -fx-text-fill: white;
+    color: white;
+    -fx-alignment: CENTER_LEFT;
+    text-align: left;
+    -fx-padding: 0 0 0 15;
+    padding: 0 0 0 15px;
+    -fx-font-size: 14px;
+    font-size: 14px;
+    -fx-cursor: hand;
+    cursor: pointer;
+    -fx-background-radius: 25;
+    border-radius: 25px;
+    -fx-min-height: 45px;
+    min-height: 45px;
+    -fx-pref-width: 240px;
+    width: 240px;
+    -fx-font-weight: bold;
+    font-weight: bold;
+}
+
+.nav-button:hover {
+    -fx-background-color: #ff7fa8;
+    background-color: #ff7fa8;
+}
+
+.nav-button:pressed {
+    -fx-background-color: #ff6b99;
+    background-color: #ff6b99;
+}
+
+/* Primary action button */
+.primary-button {
+    -fx-background-color: #ff8fb3;
+    background-color: #ff8fb3;
+    -fx-text-fill: white;
+    color: white;
+    -fx-font-weight: bold;
+    font-weight: bold;
+    -fx-background-radius: 25;
+    border-radius: 25px;
+    -fx-cursor: hand;
+    cursor: pointer;
+    -fx-font-size: 14px;
+    font-size: 14px;
+    -fx-min-height: 45px;
+    min-height: 45px;
+    -fx-pref-width: 220px;
+    width: 220px;
+}
+
+.primary-button:hover {
+    -fx-background-color: #ff7fa8;
+    background-color: #ff7fa8;
+}
+
+/* Danger button (logout etc) */
+.danger-button {
+    -fx-background-color: #ff6b99;
+    background-color: #ff6b99;
+    -fx-text-fill: white;
+    color: white;
+    -fx-font-weight: bold;
+    font-weight: bold;
+    -fx-background-radius: 25;
+    border-radius: 25px;
+    -fx-cursor: hand;
+    cursor: pointer;
+    -fx-font-size: 14px;
+    font-size: 14px;
+    -fx-min-height: 45px;
+    min-height: 45px;
+    -fx-pref-width: 220px;
+    width: 220px;
+}
+
+.danger-button:hover {
+    -fx-background-color: #ff5c8a;
+    background-color: #ff5c8a;
+}
+
+/* Secondary button */
+.secondary-button {
+    -fx-background-color: #ff8fb3;
+    background-color: #ff8fb3;
+    -fx-text-fill: white;
+    color: white;
+    -fx-font-weight: bold;
+    font-weight: bold;
+    -fx-background-radius: 25;
+    border-radius: 25px;
+    -fx-cursor: hand;
+    cursor: pointer;
+    -fx-font-size: 14px;
+    font-size: 14px;
+}
+
+.secondary-button:hover {
+    -fx-background-color: #ff7fa8;
+    background-color: #ff7fa8;
+}
+
+/* Cancel button */
+.cancel-button {
+    -fx-background-color: #ffacbf;
+    background-color: #ffacbf;
+    -fx-text-fill: white;
+    color: white;
+    -fx-font-weight: bold;
+    font-weight: bold;
+    -fx-background-radius: 25;
+    border-radius: 25px;
+    -fx-cursor: hand;
+    cursor: pointer;
+    -fx-font-size: 14px;
+    font-size: 14px;
+}
+
+.cancel-button:hover {
+    -fx-background-color: #ff9cb3;
+    background-color: #ff9cb3;
+}
+
+/* Delete button */
+.delete-button {
+    -fx-background-color: #ff6b99;
+    background-color: #ff6b99;
+    -fx-text-fill: white;
+    color: white;
+    -fx-font-weight: bold;
+    font-weight: bold;
+    -fx-background-radius: 25;
+    border-radius: 25px;
+    -fx-cursor: hand;
+    cursor: pointer;
+    -fx-font-size: 14px;
+    font-size: 14px;
+}
+
+.delete-button:hover {
+    -fx-background-color: #ff5c8a;
+    background-color: #ff5c8a;
+}
+
+/* Content area */
+.content-area {
+    -fx-background-color: pink;
+    background-color: pink;
+    -fx-padding: 20;
+    padding: 20px;
+}
+
+/* Button container */
+.button-container {
+    -fx-spacing: 10;
+    margin-bottom: 10px;
+    -fx-padding: 5 0 20 20;
+    padding: 5px 0 20px 20px;
+}
+
+/* Profile section */
+.profile-section {
+    -fx-padding: 20 0 20 0;
+    padding: 20px 0 20px 0;
+    -fx-alignment: center;
+    text-align: center;
+}
+
+/* Separators */
+.separator {
+    -fx-background-color: #ff8fb3;
+    background-color: #ff8fb3;
+    -fx-padding: 0 20 0 20;
+    padding: 0 20px 0 20px;
+    -fx-opacity: 0.5;
+    opacity: 0.5;
+}
+
+/* App title */
+.app-title {
+    -fx-fill: white;
+    fill: white;
+    -fx-font-weight: bold;
+    font-weight: bold;
+    -fx-font-size: 18;
+    font-size: 18px;
+}
+
+/* User name */
+.user-name {
+    -fx-fill: white;
+    fill: white;
+    -fx-font-weight: bold;
+    font-weight: bold;
+    -fx-font-size: 14;
+    font-size: 14px;
+    -fx-padding: 10 0 0 0;
+    padding: 10px 0 0 0;
+}
+
+/* User role */
+.user-role {
+    -fx-fill: white;
+    fill: white;
+    -fx-font-size: 12;
+    font-size: 12px;
+}
+
+/* Dashboard Container */
+.dashboard-container {
+    -fx-background-color: pink;
+    background-color: pink;
+    -fx-padding: 0;
+    padding: 0;
+}
+
+/* Cards */
+.card {
+    -fx-background-color: white;
+    background-color: white;
+    -fx-background-radius: 10;
+    border-radius: 10px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 10);
+}
+
+/* Stats card */
+.stats-card {
+    -fx-background-color: white;
+    background-color: white;
+    -fx-background-radius: 10;
+    border-radius: 10px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 5);
+    -fx-padding: 15;
+    padding: 15px;
+}
+
+.stats-card-value {
+    -fx-fill: #ff8fb3;
+    color: #ff8fb3;
+    -fx-font-size: 24px;
+    font-size: 24px;
+    -fx-font-weight: bold;
+    font-weight: bold;
+}
+
+.stats-card-label {
+    -fx-fill: #7f8c8d;
+    color: #7f8c8d;
+    -fx-font-size: 14px;
+    font-size: 14px;
+}
+
+.stats-card-trend {
+    -fx-text-fill: #ff8fb3;
+    color: #ff8fb3;
+    -fx-font-size: 12px;
+    font-size: 12px;
+}
+
+/* Chart styles */
+.chart {
+    -fx-padding: 10;
+    padding: 10px;
+}
+
+.chart-title {
+    -fx-text-fill: #ff8fb3;
+    color: #ff8fb3;
+    -fx-font-size: 16px;
+    font-size: 16px;
+    -fx-font-weight: bold;
+    font-weight: bold;
+}
+
+.axis-label {
+    -fx-text-fill: #7f8c8d;
+    color: #7f8c8d;
+}
+
+.chart-legend {
+    -fx-background-color: transparent;
+    background-color: transparent;
+}
+
+.chart-legend-item {
+    -fx-text-fill: #7f8c8d;
+    color: #7f8c8d;
+}
+
+.chart-series-line {
+    -fx-stroke: #ff8fb3;
+    stroke: #ff8fb3;
+    -fx-stroke-width: 2px;
+    stroke-width: 2px;
+}
+
+.default-color0.chart-series-line { -fx-stroke: #ff8fb3; }
+.default-color1.chart-series-line { -fx-stroke: #ffacbf; }
+.default-color2.chart-series-line { -fx-stroke: #ff6b99; }
+
+.default-color0.chart-line-symbol { -fx-background-color: #ff8fb3, white; }
+.default-color1.chart-line-symbol { -fx-background-color: #ffacbf, white; }
+.default-color2.chart-line-symbol { -fx-background-color: #ff6b99, white; }
+
+/* Table styles */
+.table-view {
+    -fx-background-color: white;
+    background-color: white;
+    -fx-background-radius: 10;
+    border-radius: 10px;
+    -fx-padding: 0;
+    padding: 0;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #ff8fb3;
+    background-color: #ff8fb3;
+    -fx-background-radius: 10 10 0 0;
+    border-radius: 10px 10px 0 0;
+}
+
+.table-view .column-header, .table-view .filler {
+    -fx-background-color: transparent;
+    background-color: transparent;
+    -fx-size: 40;
+    size: 40px;
+    -fx-border-width: 0 0 0 0;
+    border-width: 0 0 0 0;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: white;
+    color: white;
+    -fx-font-weight: bold;
+    font-weight: bold;
+    -fx-alignment: CENTER;
+    text-align: center;
+}
+
+.table-row-cell {
+    -fx-background-color: white;
+    background-color: white;
+    -fx-border-color: transparent;
+    border-color: transparent;
+    -fx-table-cell-border-color: transparent;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #fff5f8;
+    background-color: #fff5f8;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #ffacbf;
+    background-color: #ffacbf;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: #ffdeea;
+    background-color: #ffdeea;
+}
+
+/* Text fields */
+.text-field, .text-area, .combo-box {
+    -fx-background-color: white;
+    background-color: white;
+    -fx-border-color: #ff8fb3;
+    border-color: #ff8fb3;
+    -fx-border-radius: 10;
+    border-radius: 10px;
+    -fx-background-radius: 10;
+    border-radius: 10px;
+    -fx-padding: 8;
+    padding: 8px;
+}
+
+.text-field:focused, .text-area:focused, .combo-box:focused {
+    -fx-border-color: #ff7fa8;
+    border-color: #ff7fa8;
+    -fx-border-width: 2;
+    border-width: 2px;
+}
+
+.combo-box .list-cell {
+    -fx-padding: 8 8 8 12;
+    padding: 8px 8px 8px 12px;
+}
+
+.date-picker {
+    -fx-background-color: white;
+    background-color: white;
+    -fx-border-color: #ff8fb3;
+    border-color: #ff8fb3;
+    -fx-border-radius: 10;
+    border-radius: 10px;
+    -fx-background-radius: 10;
+    border-radius: 10px;
+}
+
+.date-picker .arrow-button {
+    -fx-background-color: #ff8fb3;
+    background-color: #ff8fb3;
+    -fx-background-radius: 0 10 10 0;
+    border-radius: 0 10px 10px 0;
+}
+
+.date-picker .arrow-button .arrow {
+    -fx-background-color: white;
+    background-color: white;
+}
+
+/* Sidebar button styles */
+.sidebar-button {
+    -fx-background-color: transparent;
+    background-color: transparent;
+    -fx-text-fill: white;
+    color: white;
+    -fx-font-size: 14px;
+    font-size: 14px;
+    -fx-padding: 15 20 15 20;
+    padding: 15px 20px 15px 20px;
+    -fx-alignment: CENTER_LEFT;
+    text-align: left;
+    -fx-cursor: hand;
+    cursor: pointer;
+}
+
+.sidebar-button:hover {
+    -fx-background-color: #ff7fa8;
+    background-color: #ff7fa8;
+}
+
+.active-nav-button {
+    -fx-background-color: #ff7fa8;
+    background-color: #ff7fa8;
+    -fx-font-weight: bold;
+    font-weight: bold;
+}
+
+/* Sidebar section label */
+.sidebar-section-label {
+    -fx-text-fill: white;
+    color: white;
+    -fx-font-size: 12px;
+    font-size: 12px;
+    -fx-font-weight: bold;
+    font-weight: bold;
+    -fx-padding: 15 20 5 20;
+    padding: 15px 20px 5px 20px;
+    -fx-opacity: 0.8;
+    opacity: 0.8;
+}
+
+/* Sidebar header */
+.sidebar-header {
+    -fx-padding: 20 15 20 15;
+    padding: 20px 15px 20px 15px;
+    -fx-background-color: #ff7fa8;
+    background-color: #ff7fa8;
+}
+
+.sidebar-title {
+    -fx-text-fill: white;
+    color: white;
+    -fx-font-size: 18;
+    font-size: 18px;
+    -fx-font-weight: bold;
+    font-weight: bold;
+}
+
+/* Sidebar footer */
+.sidebar-footer {
+    -fx-padding: 15;
+    padding: 15px;
+    -fx-background-color: #ff7fa8;
+    background-color: #ff7fa8;
+}
+
+.user-avatar {
+    -fx-fill: white;
+    fill: white;
+}
+
+.username-label {
+    -fx-text-fill: white;
+    color: white;
+    -fx-font-weight: bold;
+    font-weight: bold;
+}
+
+.role-label {
+    -fx-text-fill: white;
+    color: white;
+    -fx-opacity: 0.7;
+    opacity: 0.7;
+}
+
+/* Page title */
+.page-title {
+    -fx-text-fill: white;
+    color: white;
+    -fx-font-size: 24px;
+    font-size: 24px;
+    -fx-font-weight: bold;
+    font-weight: bold;
+}
+
+.page-subtitle {
+    -fx-text-fill: white;
+    color: white;
+    -fx-font-size: 14px;
+    font-size: 14px;
+    -fx-opacity: 0.8;
+    opacity: 0.8;
+}
+
+/* Empty state styles */
+.empty-state-title {
+    -fx-text-fill: #ff8fb3;
+    color: #ff8fb3;
+    -fx-font-size: 18px;
+    font-size: 18px;
+    -fx-font-weight: bold;
+    font-weight: bold;
+}
+
+.empty-state-subtitle {
+    -fx-text-fill: #7f8c8d;
+    color: #7f8c8d;
+    -fx-font-size: 14px;
+    font-size: 14px;
+}
+
+/* Dialog styles */
+.dialog-title {
+    -fx-fill: #ff8fb3;
+    fill: #ff8fb3;
+    -fx-font-size: 20px;
+    font-size: 20px;
+    -fx-font-weight: bold;
+    font-weight: bold;
+}
+
+.section-title {
+    -fx-text-fill: #ff8fb3;
+    color: #ff8fb3;
+    -fx-font-weight: bold;
+    font-weight: bold;
+}
+
+.summary-box {
+    -fx-background-color: #fff5f8;
+    background-color: #fff5f8;
+    -fx-padding: 15;
+    padding: 15px;
+    -fx-background-radius: 10;
+    border-radius: 10px;
+}
+
+.price-label {
+    -fx-font-weight: bold;
+    font-weight: bold;
+    -fx-text-fill: #ff8fb3;
+    color: #ff8fb3;
+}
+
+.total-price {
+    -fx-font-weight: bold;
+    font-weight: bold;
+    -fx-font-size: 16px;
+    font-size: 16px;
+    -fx-text-fill: #ff8fb3;
+    color: #ff8fb3;
+}
+
+/* Footer styles */
+.footer-box {
+    -fx-background-color: #ffdeea;
+    background-color: #ffdeea;
+    -fx-border-width: 1px 0 0 0;
+    border-width: 1px 0 0 0;
+    -fx-border-color: #ffacbf;
+    border-color: #ffacbf;
+}
+
+/* Input validation */
+.error-field {
+    -fx-border-color: #ff6b99;
+    border-color: #ff6b99;
+}
+
+.error-text {
+    -fx-text-fill: #ff6b99;
+    color: #ff6b99;
+    -fx-font-size: 12px;
+    font-size: 12px;
+}

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.chart.*?>
+
+<ScrollPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.esprit.controllers.AnalysesController" fitToWidth="true" styleClass="content-container">
+    <content>
+        <VBox spacing="20">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20" />
+            </padding>
+            
+            <!-- Dashboard Header -->
+            <HBox alignment="CENTER_LEFT" spacing="15">
+                <Label text="Analyses et Statistiques" styleClass="section-header">
+                    <font>
+                        <Font name="System Bold" size="20.0" />
+                    </font>
+                </Label>
+                <Region HBox.hgrow="ALWAYS" />
+                <ComboBox fx:id="comboPeriod" promptText="Période" />
+                <Button fx:id="btnExport" text="Exporter" styleClass="action-button" onAction="#exportData">
+                    <graphic>
+                        <Label text="📊" style="-fx-font-size: 14px;"/>
+                    </graphic>
+                </Button>
+                <Button fx:id="btnRefresh" text="Rafraîchir" styleClass="action-button" onAction="#refreshData">
+                    <graphic>
+                        <Label text="🔄" style="-fx-font-size: 14px;"/>
+                    </graphic>
+                </Button>
+            </HBox>
+            
+            <!-- Key Performance Indicators -->
+            <TitledPane text="Indicateurs Clés de Performance" expanded="true">
+                <HBox spacing="15" alignment="CENTER">
+                    <VBox styleClass="kpi-box" alignment="CENTER" spacing="5">
+                        <Label text="Taux d'Occupation" styleClass="kpi-label" />
+                        <Label fx:id="lblOccupancyRate" text="0%" styleClass="kpi-value" />
+                        <Label fx:id="lblOccupancyTrend" text="↑ 5%" styleClass="kpi-trend-up" />
+                    </VBox>
+                    <VBox styleClass="kpi-box" alignment="CENTER" spacing="5">
+                        <Label text="Revenus Totaux" styleClass="kpi-label" />
+                        <Label fx:id="lblTotalRevenue" text="0 DT" styleClass="kpi-value" />
+                        <Label fx:id="lblRevenueTrend" text="↑ 12%" styleClass="kpi-trend-up" />
+                    </VBox>
+                    <VBox styleClass="kpi-box" alignment="CENTER" spacing="5">
+                        <Label text="Réservations" styleClass="kpi-label" />
+                        <Label fx:id="lblTotalBookings" text="0" styleClass="kpi-value" />
+                        <Label fx:id="lblBookingsTrend" text="↑ 8%" styleClass="kpi-trend-up" />
+                    </VBox>
+                    <VBox styleClass="kpi-box" alignment="CENTER" spacing="5">
+                        <Label text="Durée Moyenne" styleClass="kpi-label" />
+                        <Label fx:id="lblAverageDuration" text="0 jours" styleClass="kpi-value" />
+                        <Label fx:id="lblDurationTrend" text="→ 0%" styleClass="kpi-trend-neutral" />
+                    </VBox>
+                </HBox>
+            </TitledPane>
+            
+            <!-- Revenue Chart -->
+            <TitledPane text="Évolution des Revenus" expanded="true">
+                <VBox>
+                    <LineChart fx:id="chartRevenue" legendVisible="true" title="">
+                        <xAxis>
+                            <CategoryAxis label="Période" />
+                        </xAxis>
+                        <yAxis>
+                            <NumberAxis label="Revenus (DT)" />
+                        </yAxis>
+                    </LineChart>
+                </VBox>
+            </TitledPane>
+            
+            <!-- Occupancy Rate Chart -->
+            <TitledPane text="Taux d'Occupation par Espace" expanded="true">
+                <VBox>
+                    <BarChart fx:id="chartOccupancy" legendVisible="true" title="">
+                        <xAxis>
+                            <CategoryAxis label="Espace" />
+                        </xAxis>
+                        <yAxis>
+                            <NumberAxis label="Taux d'Occupation (%)" />
+                        </yAxis>
+                    </BarChart>
+                </VBox>
+            </TitledPane>
+            
+            <!-- Top Performing Spaces -->
+            <TitledPane text="Espaces les Plus Performants" expanded="true">
+                <TableView fx:id="tableTopSpaces">
+                    <columns>
+                        <TableColumn fx:id="colRank" text="#" prefWidth="50" />
+                        <TableColumn fx:id="colSpaceName" text="Nom de l'Espace" prefWidth="150" />
+                        <TableColumn fx:id="colOccupancyRate" text="Taux d'Occupation" prefWidth="120" />
+                        <TableColumn fx:id="colRevenue" text="Revenus" prefWidth="100" />
+                        <TableColumn fx:id="colBookings" text="Réservations" prefWidth="100" />
+                        <TableColumn fx:id="colRating" text="Évaluation" prefWidth="100" />
+                    </columns>
+                </TableView>
+            </TitledPane>
+            
+            <!-- Reservations by Status -->
+            <TitledPane text="Réservations par Statut" expanded="true">
+                <HBox alignment="CENTER" spacing="20">
+                    <PieChart fx:id="chartReservationStatus" title="" labelLineLength="20" legendVisible="true" />
+                </HBox>
+            </TitledPane>
+            
+            <!-- Advanced Analytics -->
+            <TitledPane text="Analyses Avancées" expanded="false">
+                <VBox spacing="15">
+                    <HBox spacing="15">
+                        <VBox spacing="5" HBox.hgrow="ALWAYS">
+                            <Label text="Prévisions de Réservations" styleClass="subsection-header" />
+                            <LineChart fx:id="chartForecast" legendVisible="true" title="">
+                                <xAxis>
+                                    <CategoryAxis label="Mois" />
+                                </xAxis>
+                                <yAxis>
+                                    <NumberAxis label="Réservations Prévues" />
+                                </yAxis>
+                            </LineChart>
+                        </VBox>
+                        <VBox spacing="5" HBox.hgrow="ALWAYS">
+                            <Label text="Répartition par Durée" styleClass="subsection-header" />
+                            <PieChart fx:id="chartDurationDistribution" title="" labelLineLength="20" legendVisible="true" />
+                        </VBox>
+                    </HBox>
+                </VBox>
+            </TitledPane>
+        </VBox>
+    </content>
+</ScrollPane>

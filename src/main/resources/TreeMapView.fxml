@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.web.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.esprit.controllers.TreeMapController" prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: #f4f6f8;">
+
+    <!-- Header with title and filters -->
+    <top>
+        <VBox spacing="10" style="-fx-background-color: #2c3e50; -fx-padding: 15;">
+            <HBox alignment="CENTER" spacing="20">
+                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@images/evencia.jpg" />
+                    </image>
+                </ImageView>
+                <Text text="Carte des Espaces Disponibles" style="-fx-fill: white; -fx-font-size: 24; -fx-font-weight: bold;"/>
+                <Region HBox.hgrow="ALWAYS" />
+                <Button fx:id="btnRetour" text="↩ Retour" onAction="#retourMenu"
+                        style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold;
+                           -fx-background-radius: 5; -fx-padding: 8 15; -fx-cursor: hand;"/>
+            </HBox>
+
+            <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-padding: 10 5;">
+                <VBox spacing="5">
+                    <Label text="Rechercher par localisation:" style="-fx-text-fill: white; -fx-font-weight: bold;"/>
+                    <HBox spacing="5">
+                        <TextField fx:id="txtRechercheLocalisation" prefWidth="200"
+                                   style="-fx-background-radius: 5;" promptText="Ex: Tunis, Sousse..."/>
+                        <Button fx:id="btnRechercherLocalisation" text="🔍" onAction="#rechercherLocalisation"
+                                style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold;
+                                       -fx-background-radius: 5; -fx-cursor: hand;"/>
+                    </HBox>
+                </VBox>
+                
+                <Separator orientation="VERTICAL" />
+                
+                <VBox spacing="5">
+                    <Label text="Filtrer par type:" style="-fx-text-fill: white; -fx-font-weight: bold;"/>
+                    <ComboBox fx:id="comboType" promptText="Tous les types" prefWidth="150"
+                              style="-fx-background-radius: 5;"/>
+                </VBox>
+                
+                <VBox spacing="5">
+                    <Label text="Capacité:" style="-fx-text-fill: white; -fx-font-weight: bold;"/>
+                    <HBox spacing="5">
+                        <TextField fx:id="txtMinCapacite" prefWidth="80"
+                                   style="-fx-background-radius: 5;" promptText="Min"/>
+                        <Text text="-" style="-fx-fill: white;"/>
+                        <TextField fx:id="txtMaxCapacite" prefWidth="80"
+                                   style="-fx-background-radius: 5;" promptText="Max"/>
+                    </HBox>
+                </VBox>
+                
+                <Region HBox.hgrow="ALWAYS" />
+                
+                <VBox alignment="BOTTOM_CENTER" spacing="5">
+                    <Button text="Appliquer les filtres" onAction="#appliquerFiltres"
+                            style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold;
+                                   -fx-background-radius: 5; -fx-padding: 5 15; -fx-cursor: hand;"/>
+                    <Button text="Réinitialiser" onAction="#reinitialiserFiltres"
+                            style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold;
+                                   -fx-background-radius: 5; -fx-padding: 5 15; -fx-cursor: hand;"/>
+                </VBox>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- Map visualization area -->
+    <center>
+        <StackPane>
+            <WebView fx:id="webView" VBox.vgrow="ALWAYS" />
+            
+            <!-- Map legend overlay -->
+            <VBox alignment="TOP_RIGHT" style="-fx-padding: 10;" StackPane.alignment="TOP_RIGHT">
+                <VBox style="-fx-background-color: white; -fx-padding: 10; -fx-background-radius: 5; -fx-opacity: 0.9; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 3);">
+                    <Text style="-fx-font-weight: bold; -fx-font-size: 14;" text="Légende"/>
+                    <Separator/>
+                    <HBox spacing="5" alignment="CENTER_LEFT">
+                        <Region style="-fx-background-color: #3498db; -fx-min-width: 15; -fx-min-height: 15; -fx-max-width: 15; -fx-max-height: 15; -fx-background-radius: 7.5;"/>
+                        <Text text="Espace disponible"/>
+                    </HBox>
+                    <HBox spacing="5" alignment="CENTER_LEFT">
+                        <Region style="-fx-background-color: #e74c3c; -fx-min-width: 15; -fx-min-height: 15; -fx-max-width: 15; -fx-max-height: 15; -fx-background-radius: 7.5;"/>
+                        <Text text="Espace réservé"/>
+                    </HBox>
+                </VBox>
+            </VBox>
+        </StackPane>
+    </center>
+
+    <!-- Status bar with help information -->
+    <bottom>
+        <HBox style="-fx-background-color: #2c3e50; -fx-padding: 10;" alignment="CENTER_LEFT" spacing="10">
+            <Label text="📌 Cliquez sur un marqueur pour voir les détails de l'espace" style="-fx-text-fill: white;"/>
+            <Region HBox.hgrow="ALWAYS" />
+            <Label text="© 2025 Evencia" style="-fx-text-fill: #7f8c8d;"/>
+        </HBox>
+    </bottom>
+</BorderPane>
