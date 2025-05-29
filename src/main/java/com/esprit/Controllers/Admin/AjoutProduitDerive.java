@@ -1,4 +1,3 @@
-// AjouterProduitDerive.java
 package com.esprit.Controllers.Admin;
 
 import com.esprit.modules.produits.ProduitDerive;
@@ -16,6 +15,9 @@ import java.io.File;
 public class AjoutProduitDerive {
 
     @FXML
+    private TextField tfId;
+
+    @FXML
     private TextField tfNom;
 
     @FXML
@@ -27,8 +29,7 @@ public class AjoutProduitDerive {
     @FXML
     private TextField tfQuantite;
 
-    @FXML
-    private TextField tfSeuilAlerte;
+    // Removed @FXML private TextField tfSeuilAlerte;
 
     @FXML
     private TextArea taDescription;
@@ -57,23 +58,22 @@ public class AjoutProduitDerive {
     @FXML
     private void addProduit() {
         try {
+            int id = Integer.parseInt(tfId.getText());
             String nom = tfNom.getText();
             String categorie = cbType.getValue();
             double prix = Double.parseDouble(tfPrix.getText());
             int quantite = Integer.parseInt(tfQuantite.getText());
-            int seuilAlerte = Integer.parseInt(tfSeuilAlerte.getText());
+            // Removed: int seuilAlerte = Integer.parseInt(tfSeuilAlerte.getText());
             String description = taDescription.getText();
 
             ProduitDerive nouveauProduit = new ProduitDerive();
+            nouveauProduit.setId(id);
             nouveauProduit.setNom(nom);
             nouveauProduit.setCategorie(categorie);
             nouveauProduit.setPrix(prix);
             nouveauProduit.setStock(quantite);
-            // Assuming ProduitDerive has setSeuilAlerte and setDescription methods
-            // Remove setSeuilAlerte call because it does not exist
-            // nouveauProduit.setSeuilAlerte(seuilAlerte);
+            // Removed: nouveauProduit.setSeuilAlerte(seuilAlerte);
             nouveauProduit.setDescription(description);
-            // Change setImagePath to setImageUrl
             nouveauProduit.setImageUrl(imagePath);
 
             boolean success = false;
@@ -90,10 +90,11 @@ public class AjoutProduitDerive {
                 alert.setContentText("Produit ajouté avec succès.");
                 alert.showAndWait();
                 //reintialiser les champs
+                tfId.clear();
                 tfNom.clear();
                 tfPrix.clear();
                 tfQuantite.clear();
-                tfSeuilAlerte.clear();
+                // Removed: tfSeuilAlerte.clear();
                 taDescription.clear();
                 lblImagePath.setText("Aucune image sélectionnée");
                 imagePath = null;
@@ -101,7 +102,7 @@ public class AjoutProduitDerive {
                 afficherErreur("Erreur lors de l'ajout du produit.");
             }
         } catch (NumberFormatException e) {
-            afficherErreur("Veuillez entrer des valeurs numériques valides pour le prix et la quantité.");
+            afficherErreur("Veuillez entrer des valeurs numériques valides pour l'ID, le prix et la quantité.");
         }
     }
 

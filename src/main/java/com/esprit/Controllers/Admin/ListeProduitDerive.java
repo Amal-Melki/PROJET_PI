@@ -23,6 +23,7 @@ import java.io.IOException;
 
 public class ListeProduitDerive {
     @FXML private TableView<ProduitDerive> tableProduits;
+    @FXML private TableColumn<ProduitDerive, Integer> colId; // NOUVEAU: Colonne pour l'ID
     @FXML private TableColumn<ProduitDerive, String> colNom;
     @FXML private TableColumn<ProduitDerive, String> colCategorie;
     @FXML private TableColumn<ProduitDerive, Double> colPrix;
@@ -48,16 +49,20 @@ public class ListeProduitDerive {
         initialiserFiltres();
         ajouterColonneAction();
 
-        // Add listeners for search and filter controls
         tfRecherche.textProperty().addListener((observable, oldValue, newValue) -> handleFiltrer());
         cbType.setOnAction(event -> handleFiltrer());
         cbStatut.setOnAction(event -> handleFiltrer());
 
-        // Make the TableView editable
         tableProduits.setEditable(true);
     }
 
     private void configurerColonnes() {
+        // NOUVEAU: Configuration de la colonne ID
+        colId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        // L'ID ne devrait pas être modifiable directement
+        // colId.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+        // colId.setOnEditCommit(event -> { /* Ne rien faire ou gérer une erreur */ });
+
         colNom.setCellValueFactory(new PropertyValueFactory<>("nom"));
         colNom.setCellFactory(TextFieldTableCell.forTableColumn());
         colNom.setOnEditCommit(event -> {
@@ -193,8 +198,8 @@ public class ListeProduitDerive {
                     (statut.equals("Rupture") && produit.getStock() == 0) ||
                     (statut.equals("Alerte") && produit.getStock() > 0 && produit.getStock() <= 10);
             boolean matchRecherche = produit.getNom().toLowerCase().contains(recherche) ||
-                    produit.getCategorie().toLowerCase().contains(recherche);
-
+                    produit.getCategorie().toLowerCase().contains(recherche) || // Ajoutez la recherche par ID
+                    String.valueOf(produit.getId()).contains(recherche); // Recherche par ID
             if (matchType && matchStatut && matchRecherche) {
                 produitsFiltres.add(produit);
             }

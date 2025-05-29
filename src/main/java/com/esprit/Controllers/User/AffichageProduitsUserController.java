@@ -1,3 +1,4 @@
+// AffichageProduitsUserController.java
 package com.esprit.Controllers.User;
 
 import com.esprit.modules.produits.ProduitDerive;
@@ -27,7 +28,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Objects;
-import java.sql.SQLException; // Import pour SQLException
+import java.sql.SQLException;
 
 public class AffichageProduitsUserController {
 
@@ -36,14 +37,14 @@ public class AffichageProduitsUserController {
     @FXML
     private ImageView logoImageView;
     @FXML
-    private TextField searchField; // Champ pour la recherche par nom
+    private TextField searchField;
     @FXML
-    private TextField categoryFilterField; // Nouveau champ pour le filtrage par catégorie
+    private TextField categoryFilterField;
 
     private final ServiceProduitDeriveUser produitService = new ServiceProduitDeriveUser();
     private final ServicePanier servicePanier = new ServicePanier();
 
-    private List<ProduitDerive> tousLesProduits; // Pour stocker tous les produits non filtrés
+    private List<ProduitDerive> tousLesProduits;
     private static final String DEFAULT_PRODUCT_IMAGE_PATH = "/images/Mug4.jpg";
 
     @FXML
@@ -57,22 +58,18 @@ public class AffichageProduitsUserController {
             showAlert(Alert.AlertType.ERROR, "Erreur de chargement", "Impossible de charger les produits. Veuillez réessayer.");
         }
 
-        // Listener pour la recherche par nom "en direct" ou la réinitialisation
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.isEmpty() && categoryFilterField.getText().isEmpty()) {
                 afficherProduits(tousLesProduits);
             }
         });
-        // Action sur appui sur Entrée dans le champ de recherche par nom
         searchField.setOnAction(event -> handleSearch(new ActionEvent()));
 
-        // Listener pour le filtre par catégorie "en direct" ou la réinitialisation
         categoryFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.isEmpty() && searchField.getText().isEmpty()) {
                 afficherProduits(tousLesProduits);
             }
         });
-        // Action sur appui sur Entrée dans le champ de filtre par catégorie
         categoryFilterField.setOnAction(event -> handleFilterByCategory(new ActionEvent()));
     }
 
@@ -119,11 +116,11 @@ public class AffichageProduitsUserController {
                 }
 
                 if (finalImageUrl == null) {
-                    if (imageUrlFromDb.matches("^[a-zA-Z]:\\\\.*")) { // Chemin Windows absolu
+                    if (imageUrlFromDb.matches("^[a-zA-Z]:\\\\.*")) {
                         finalImageUrl = "file:/" + imageUrlFromDb.replace("\\", "/");
-                    } else if (imageUrlFromDb.startsWith("http")) { // URL distante
+                    } else if (imageUrlFromDb.startsWith("http")) {
                         finalImageUrl = imageUrlFromDb;
-                    } else { // Chemin relatif au système de fichiers (pas resource)
+                    } else {
                         finalImageUrl = "file://" + imageUrlFromDb;
                     }
                 }
@@ -132,17 +129,16 @@ public class AffichageProduitsUserController {
                     productImage = new Image(finalImageUrl, true);
                     if (productImage.isError()) {
                         System.err.println("ERREUR (Affichage): Erreur de chargement d'image pour " + produit.getNom() + " (URL finale tentée: " + finalImageUrl + "): " + productImage.getException().getMessage());
-                        productImage = null; // Mark as error, fallback to default
+                        productImage = null;
                     }
                 }
             } catch (Exception e) {
                 System.err.println("ERREUR (Affichage): Exception lors du traitement de l'URL d'image pour " + produit.getNom() + " (URL de la DB: " + imageUrlFromDb + "): " + e.getMessage());
                 e.printStackTrace();
-                productImage = null; // Mark as error, fallback to default
+                productImage = null;
             }
         }
 
-        // Si l'image n'a pas pu être chargée ou est null, utiliser l'image par défaut
         if (productImage == null || productImage.isError()) {
             try {
                 URL defaultImageUrl = getClass().getResource(DEFAULT_PRODUCT_IMAGE_PATH);
@@ -164,6 +160,12 @@ public class AffichageProduitsUserController {
         imageView.setImage(productImage);
         produitBox.getChildren().add(imageView);
 
+        // NOUVEAU: Ajout du label pour l'ID du produit
+        Label idLabel = new Label("ID: " + produit.getId());
+        idLabel.setFont(Font.font("Segoe UI", 10));
+        idLabel.setStyle("-fx-text-fill: #888888;");
+
+
         Label nomLabel = new Label(produit.getNom());
         nomLabel.setFont(Font.font("Segoe UI", javafx.scene.text.FontWeight.BOLD, 14));
         nomLabel.setWrapText(true);
@@ -179,7 +181,7 @@ public class AffichageProduitsUserController {
 
         VBox detailsBox = new VBox(5);
         detailsBox.setAlignment(Pos.CENTER_LEFT);
-        detailsBox.getChildren().addAll(nomLabel, categorieLabel, prixLabel);
+        detailsBox.getChildren().addAll(idLabel, nomLabel, categorieLabel, prixLabel); // AJOUTÉ idLabel
         produitBox.getChildren().add(detailsBox);
 
         Button ajouterAuPanierButton = new Button("🛒 Ajouter au Panier");
@@ -204,7 +206,10 @@ public class AffichageProduitsUserController {
                 FXMLLoader detailLoader = new FXMLLoader(getClass().getResource("/views/User/DetailsProduitUser.fxml"));
                 Parent detailRoot = detailLoader.load();
                 DetailsProduitUserController detailController = detailLoader.getController();
-                detailController.setProduitById(produit.getId());
+                detailController.setProduitById(produit.getId()); // S'assure que l'ID est passé
+                // Si vous avez un ProduitServiceUser pour obtenir un produit par ID, assurez-vous qu'il fonctionne.
+                // Ou, vous pouvez passer l'objet produit complet si vous le souhaitez et que DetailController l'accepte
+                // detailController.setProduit(produit);
 
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 stage.setScene(new Scene(detailRoot));
@@ -224,17 +229,13 @@ public class AffichageProduitsUserController {
         return produitBox;
     }
 
-    // Méthode déclenchée par le bouton de recherche par nom
     @FXML
     private void handleSearch(ActionEvent event) {
         String searchTerm = searchField.getText().trim();
         if (searchTerm.isEmpty()) {
-            // Si le champ est vide, afficher tous les produits non filtrés (ou appliquer l'autre filtre si présent)
-            // Pour l'instant, on affiche tous les produits si le champ de nom est vide.
             afficherProduits(tousLesProduits);
         } else {
             try {
-                // Utiliser la méthode de recherche par nom (existante)
                 List<ProduitDerive> produitsRecherches = produitService.rechercherProduitsParNom(searchTerm);
                 afficherProduits(produitsRecherches);
             } catch (SQLException e) {
@@ -245,12 +246,10 @@ public class AffichageProduitsUserController {
         }
     }
 
-    // Nouvelle méthode pour filtrer par catégorie
     @FXML
     private void handleFilterByCategory(ActionEvent event) {
         String categoryTerm = categoryFilterField.getText().trim();
         if (categoryTerm.isEmpty()) {
-            // Si le champ est vide, afficher tous les produits non filtrés (ou appliquer l'autre filtre si présent)
             afficherProduits(tousLesProduits);
         } else {
             try {
@@ -264,14 +263,12 @@ public class AffichageProduitsUserController {
         }
     }
 
-    // Nouvelle méthode pour réinitialiser le filtre de catégorie
     @FXML
     private void handleResetCategoryFilter(ActionEvent event) {
         categoryFilterField.clear();
-        searchField.clear(); // Optionnel : réinitialiser aussi le champ de recherche par nom
-        afficherProduits(tousLesProduits); // Affiche tous les produits non filtrés
+        searchField.clear();
+        afficherProduits(tousLesProduits);
     }
-
 
     @FXML
     public void retourToSelection(ActionEvent event) {

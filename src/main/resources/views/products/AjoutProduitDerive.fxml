@@ -13,14 +13,12 @@
 
     <children>
 
-        <!-- Bouton Retour -->
         <Button fx:id="btnRetour"
                 layoutX="600.0" layoutY="20.0"
                 text="↩ Retour"
                 onAction="#retourAccueil"
                 style="-fx-background-color: #ff7fa8; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 20; -fx-cursor: hand; -fx-padding: 6 12 6 12;" />
 
-        <!-- Titre -->
         <Text text="Ajout Produit Dérivé"
               layoutX="210.0" layoutY="70.0"
               style="-fx-fill: white;">
@@ -29,58 +27,53 @@
             </font>
         </Text>
 
-        <!-- Labels stylisés -->
-        <Label layoutX="90.0" layoutY="130.0" text="Nom :"
+        <Label layoutX="90.0" layoutY="130.0" text="ID :"
                style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
-        <Label layoutX="90.0" layoutY="190.0" text="Type :"
+        <Label layoutX="90.0" layoutY="170.0" text="Nom :"
+               style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
+        <Label layoutX="90.0" layoutY="210.0" text="Type :"
                style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
         <Label layoutX="90.0" layoutY="250.0" text="Prix :"
                style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
-        <Label layoutX="90.0" layoutY="310.0" text="Quantité :"
+        <Label layoutX="90.0" layoutY="290.0" text="Quantité :"
                style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
-        <Label layoutX="90.0" layoutY="370.0" text="Seuil Alerte :"
-               style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
-        <Label layoutX="90.0" layoutY="430.0" text="Description :"
+        <Label layoutX="90.0" layoutY="330.0" text="Description :"
                style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
 
-        <!-- Champs stylisés -->
-        <TextField fx:id="tfNom"
+        <TextField fx:id="tfId"
                    layoutX="220.0" layoutY="125.0" prefWidth="300.0"
                    style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
+        <TextField fx:id="tfNom"
+                   layoutX="220.0" layoutY="165.0" prefWidth="300.0"
+                   style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
         <ComboBox fx:id="cbType"
-                  layoutX="220.0" layoutY="185.0" prefWidth="300.0"
+                  layoutX="220.0" layoutY="205.0" prefWidth="300.0"
                   style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
         <TextField fx:id="tfPrix"
                    layoutX="220.0" layoutY="245.0" prefWidth="300.0"
                    style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
         <TextField fx:id="tfQuantite"
-                   layoutX="220.0" layoutY="305.0" prefWidth="300.0"
-                   style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
-        <TextField fx:id="tfSeuilAlerte"
-                   layoutX="220.0" layoutY="365.0" prefWidth="300.0"
+                   layoutX="220.0" layoutY="285.0" prefWidth="300.0"
                    style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
         <TextArea fx:id="taDescription"
-                  layoutX="220.0" layoutY="425.0" prefWidth="300.0" prefHeight="60.0"
+                  layoutX="220.0" layoutY="325.0" prefWidth="300.0" prefHeight="60.0"
                   style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
 
-        <!-- Bouton Ajouter une image -->
         <Button fx:id="btnImage"
-                layoutX="220.0" layoutY="500.0"
+                layoutX="220.0" layoutY="400.0"
                 text="📷 Ajouter une image du produit"
                 onAction="#choisirImage"
                 prefWidth="300.0"
                 style="-fx-background-color: #d46a92; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 20; -fx-cursor: hand;" />
 
-        <!-- Chemin de l'image -->
         <Label fx:id="lblImagePath"
-               layoutX="220.0" layoutY="540.0"
+               layoutX="220.0" layoutY="440.0"
                prefWidth="300.0"
                text="Aucune image sélectionnée"
                style="-fx-text-fill: white; -fx-font-size: 12;" />
 
-        <!-- Bouton Ajouter -->
         <Button fx:id="btnAjouter"
-                layoutX="290.0" layoutY="580.0"
+                layoutX="290.0" layoutY="500.0"
                 text="Ajouter"
                 onAction="#addProduit"
                 prefWidth="130.0" prefHeight="45.0"
