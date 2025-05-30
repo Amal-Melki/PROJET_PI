@@ -9,7 +9,15 @@ public class DataSource {
     private Connection connection;
     private static DataSource instance;
 
+<<<<<<< HEAD
     private final String URL = "jdbc:mysql://localhost:3307/projetpi";
+=======
+
+    private final String URL = "jdbc:mysql://localhost:3307/projetpi";
+
+
+
+>>>>>>> gestion_du_blog
     private final String USERNAME = "root";
     private final String PASSWORD = "";
 

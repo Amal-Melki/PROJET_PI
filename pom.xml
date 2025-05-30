@@ -11,8 +11,12 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+<<<<<<< HEAD
         <spring-boot.version>3.2.5</spring-boot.version>
         <javafx.version>17.0.2</javafx.version>
+=======
+<<<<<<< HEAD
+>>>>>>> gestion_du_blog
     </properties>
 
     <dependencies>
@@ -76,14 +80,65 @@
 
     </dependencies>
 
+<<<<<<< HEAD
     <build>
         <plugins>
             <!-- JavaFX plugin -->
+=======
+</project>
+=======
+        <javafx.version>17.0.2</javafx.version>
+        <mysql.version>8.0.33</mysql.version>
+        <mainClass>com.esprit.tests.mainProg</mainClass>
+    </properties>
+
+    <dependencies>
+        <!-- MySQL Connector -->
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>${mysql.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- JavaFX Modules -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+
+        <!-- PDFBox -->
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+            <version>2.0.27</version>
+        </dependency>
+
+        <!-- Lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.24</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- JavaFX Plugin -->
+>>>>>>> gestion_du_blog
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
+<<<<<<< HEAD
                     <mainClass>com.esprit.tests.MainGUI</mainClass>
                 </configuration>
             </plugin>
@@ -93,8 +148,48 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring-boot.version}</version>
+=======
+                    <mainClass>${mainClass}</mainClass>
+                </configuration>
+            </plugin>
+
+            <!-- Compiler Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <release>17</release>
+                </configuration>
+>>>>>>> gestion_du_blog
             </plugin>
         </plugins>
     </build>
 
+<<<<<<< HEAD
 </project>
+=======
+    <profiles>
+        <profile>
+            <id>run-blog</id>
+            <properties>
+                <mainClass>com.esprit.tests.mainProg</mainClass>
+            </properties>
+        </profile>
+        <profile>
+            <id>run-detail</id>
+            <properties>
+                <mainClass>com.esprit.tests.TestDetailArticle</mainClass>
+            </properties>
+        </profile>
+    </profiles>
+
+    <repositories>
+        <repository>
+            <id>openjfx</id>
+            <url>https://maven.pkg.jetbrains.space/openjfx/p/openjfx/maven</url>
+        </repository>
+    </repositories>
+</project>
+>>>>>>> gestion_du_blog
+>>>>>>> gestion_du_blog
