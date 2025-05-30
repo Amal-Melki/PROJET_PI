@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.chart.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.esprit.controllers.GestionReservationsController" spacing="15" styleClass="content-container">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20" />
+    </padding>
+    
+    <!-- Header with title and actions -->
+    <HBox alignment="CENTER_LEFT" spacing="15">
+        <Label text="Gestion des Réservations" styleClass="section-header">
+            <font>
+                <Font name="System Bold" size="18.0" />
+            </font>
+        </Label>
+        <Region HBox.hgrow="ALWAYS" />
+        <Button fx:id="btnAddReservation" text="Nouvelle Réservation" styleClass="action-button" onAction="#showAddReservation">
+            <graphic>
+                <Label text="+" style="-fx-font-size: 14px;"/>
+            </graphic>
+        </Button>
+        <Button fx:id="btnRefresh" text="Rafraîchir" styleClass="action-button" onAction="#refreshReservations">
+            <graphic>
+                <Label text="🔄" style="-fx-font-size: 14px;"/>
+            </graphic>
+        </Button>
+    </HBox>
+    
+    <!-- Filter options -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Filtrer par:" />
+        <ComboBox fx:id="comboFilterStatus" promptText="Statut" />
+        <ComboBox fx:id="comboFilterEspace" promptText="Espace" />
+        <DatePicker fx:id="dateFilterStart" promptText="Date début" />
+        <DatePicker fx:id="dateFilterEnd" promptText="Date fin" />
+        <Button fx:id="btnFilter" text="Appliquer" onAction="#applyFilters" />
+        <Button fx:id="btnClearFilters" text="Effacer" onAction="#clearFilters" />
+    </HBox>
+    
+    <!-- Reservations Table -->
+    <TableView fx:id="tableReservations" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colId" text="ID" prefWidth="60" />
+            <TableColumn fx:id="colEspace" text="Espace" prefWidth="120" />
+            <TableColumn fx:id="colClient" text="Client" prefWidth="120" />
+            <TableColumn fx:id="colDateDebut" text="Date Début" prefWidth="110" />
+            <TableColumn fx:id="colDateFin" text="Date Fin" prefWidth="110" />
+            <TableColumn fx:id="colStatut" text="Statut" prefWidth="90" />
+            <TableColumn fx:id="colPrix" text="Prix" prefWidth="80" />
+            <TableColumn fx:id="colActions" text="Actions" prefWidth="100" />
+        </columns>
+    </TableView>
+    
+    <!-- Statistics Section -->
+    <TitledPane text="Statistiques des Réservations" expanded="false">
+        <VBox spacing="10">
+            <HBox spacing="20">
+                <VBox styleClass="stat-box" spacing="5">
+                    <Label text="Total Réservations" styleClass="stat-label" />
+                    <Label fx:id="lblTotalReservations" text="0" styleClass="stat-value" />
+                </VBox>
+                <VBox styleClass="stat-box" spacing="5">
+                    <Label text="Réservations en cours" styleClass="stat-label" />
+                    <Label fx:id="lblActiveReservations" text="0" styleClass="stat-value" />
+                </VBox>
+                <VBox styleClass="stat-box" spacing="5">
+                    <Label text="Réservations à venir" styleClass="stat-label" />
+                    <Label fx:id="lblUpcomingReservations" text="0" styleClass="stat-value" />
+                </VBox>
+                <VBox styleClass="stat-box" spacing="5">
+                    <Label text="Revenus totaux" styleClass="stat-label" />
+                    <Label fx:id="lblTotalRevenue" text="0 DT" styleClass="stat-value" />
+                </VBox>
+            </HBox>
+            
+            <!-- Charts Section -->
+            <HBox spacing="20">
+                <BarChart fx:id="reservationsByMonthChart" title="Réservations par mois" legendVisible="false" prefWidth="350" prefHeight="250">
+                    <xAxis>
+                        <CategoryAxis label="Mois" />
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis label="Nombre" />
+                    </yAxis>
+                </BarChart>
+                
+                <PieChart fx:id="reservationsByStatusChart" title="Répartition par statut" prefWidth="350" prefHeight="250" />
+                
+                <!-- Nouveau graphique -->
+                <BarChart fx:id="reservationsBySpaceChart" title="Espaces les plus populaires" legendVisible="false" prefWidth="350" prefHeight="250">
+                    <xAxis>
+                        <CategoryAxis label="Espace" />
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis label="Réservations" />
+                    </yAxis>
+                </BarChart>
+            </HBox>
+        </VBox>
+    </TitledPane>
+    
+    <!-- Pagination -->
+    <HBox alignment="CENTER">
+        <Pagination fx:id="paginationReservations" pageCount="10" />
+    </HBox>
+</VBox>

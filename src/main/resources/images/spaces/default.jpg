@@ -1,0 +1,5 @@
+This is a placeholder file. Replace this with an actual default.jpg image file.
+
+In a real application, this would be a proper image file, but for demonstration purposes, we're using this placeholder.
+
+When an admin adds a new space without selecting a photo, or when a photo fails to load, the system will attempt to use this file as a fallback.
