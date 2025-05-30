@@ -6,15 +6,23 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+<<<<<<< HEAD
 public class MainGUI extends Application {
 
     public static void main(String[] args) {
         launch(args); // Lance JavaFX
     }
+=======
+import java.net.URL;
+import java.util.Objects;
+
+public class MainGUI extends Application {
+>>>>>>> gestion_produits_derives
 
     @Override
     public void start(Stage primaryStage) {
         try {
+<<<<<<< HEAD
             // ⚠ Ancienne interface : Ajout Matériel
             // FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjoutMateriel.fxml"));
 
@@ -48,3 +56,22 @@ public class MainGUI extends Application {
         }
     }
 }
+=======
+            // Load the FXML file for the User interface
+            URL location = getClass().getResource("/views/SelectionInterface.fxml");
+            Parent root = FXMLLoader.load(Objects.requireNonNull(location, "FXML file not found at /views/User/AffichageProduitsUser.fxml"));
+
+            primaryStage.setTitle("Découvrez nos Produits");
+            primaryStage.setScene(new Scene(root));
+            primaryStage.show();
+        } catch (Exception e) {
+            System.out.println("Erreur lors du chargement du FXML de l'interface utilisateur:");
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+}
+>>>>>>> gestion_produits_derives

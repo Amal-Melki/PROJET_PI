@@ -10,6 +10,7 @@ public class DataSource {
     private static DataSource instance;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     private final String URL = "jdbc:mysql://localhost:3307/projetpi";
 =======
 
@@ -18,6 +19,9 @@ public class DataSource {
 
 
 >>>>>>> gestion_du_blog
+=======
+    private final String URL = "jdbc:mysql://localhost:3307/projetpi";
+>>>>>>> gestion_produits_derives
     private final String USERNAME = "root";
     private final String PASSWORD = "";
 

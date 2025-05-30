@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" prefHeight="250.0" prefWidth="400.0" spacing="20.0" style="-fx-background-color: #FFE6EE; -fx-border-color: #ff8fb3; -fx-border-width: 2px; -fx-border-radius: 10;" xmlns="http://javafx.com/javafx/17.0.10" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.esprit.Controllers.User.ConfirmationPaiementPopupController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+    <children>
+        <Label alignment="CENTER" text="Paiement Réussi !" textFill="#ff8fb3">
+            <font>
+                <Font name="Segoe UI Bold" size="24.0" />
+            </font>
+        </Label>
+        <Label alignment="CENTER" text="Votre commande a été traitée avec succès." textFill="#555555" textAlignment="CENTER" wrapText="true">
+            <font>
+                <Font name="Segoe UI Regular" size="14.0" />
+            </font>
+        </Label>
+        <Button fx:id="downloadPdfButton" mnemonicParsing="false" onAction="#handleDownloadPdf" prefWidth="180.0" style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" text="Télécharger la Facture (PDF)">
+            <font>
+                <Font name="Segoe UI Semibold" size="12.0" />
+            </font>
+        </Button>
+        <Button mnemonicParsing="false" onAction="#handleClosePopup" prefWidth="120.0" style="-fx-background-color: #f06292; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" text="Fermer">
+            <font>
+                <Font name="Segoe UI Semibold" size="12.0" />
+            </font>
+        </Button>
+    </children>
+</VBox>
