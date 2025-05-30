@@ -16,7 +16,7 @@
 
 <!-- elAnchorpane lihoa l'interface lbarani -->
 
-<AnchorPane prefHeight="689.0" prefWidth="598.0" style="-fx-background-color: #FFB6C1;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.esprit.Controllers.BlogController">
+<AnchorPane prefHeight="689.0" prefWidth="598.0" style="-fx-background-color: #FFB6C1;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.esprit.controllers.BlogController">
     <children>
       <GridPane layoutX="56.0" layoutY="219.0" prefHeight="335.0" prefWidth="448.0">
         <columnConstraints>
@@ -100,7 +100,7 @@
       </Label>
       <ImageView fx:id="logo" fitHeight="116.0" fitWidth="100.0" layoutX="212.0" layoutY="23.0">
          <image>
-            <Image url="@../../../../logo.jpg" />
+            <Image url="@images/logo.png" />
          </image>
       </ImageView>
       <ImageView fx:id="Slogo" fitHeight="133.0" fitWidth="137.0" layoutX="194.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true" />

@@ -1,4 +1,4 @@
-package com.esprit.modules;
+package com.esprit.models;
 
 public class MultiModules {
 }

@@ -1,4 +1,4 @@
-package com.esprit.Controllers;
+package com.esprit.controllers;
 
 import com.esprit.modules.Blog;
 import com.esprit.modules.CategorieEnum;
@@ -82,6 +82,8 @@ public class RecupererBlog {
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.setTitle("Ajouter un nouveau blog");
+
+
             stage.show();
 
             // Rafraîchir la liste après ajout (optionnel)

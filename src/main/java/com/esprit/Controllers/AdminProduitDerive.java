@@ -1,4 +1,4 @@
-package com.esprit.Controllers;
+package com.esprit.controllers;
 
 import com.esprit.modules.produits.ProduitDerive;
 import com.esprit.services.produits.Admin.ServiceProduitDerive;

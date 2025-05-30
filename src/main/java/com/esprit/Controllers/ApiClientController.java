@@ -1,4 +1,4 @@
-package com.esprit.Controllers;
+package com.esprit.controllers;
 
 import com.sun.net.httpserver.HttpServer;
 

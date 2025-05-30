@@ -3,15 +3,5 @@
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
-<<<<<<< HEAD
-<<<<<<< HEAD
-    <file url="file://$PROJECT_DIR$/src_old/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/src_old/main/resources" charset="UTF-8" />
-=======
->>>>>>> gestion_du_blog
-=======
-    <file url="file://$PROJECT_DIR$/src_old/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/src_old/main/resources" charset="UTF-8" />
->>>>>>> gestion_produits_derives
   </component>
 </project>

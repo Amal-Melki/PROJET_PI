@@ -49,7 +49,7 @@
         <Button fx:id="btnListeReservations" prefWidth="260" prefHeight="45" text="📋 Liste Réservations"
                 style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold;
                        -fx-font-size: 14px; -fx-background-radius: 25; -fx-font-family: 'Segoe UI Semibold';"/>
-        <Button fx:id="btnAjoutReservationClient" prefWidth="260" prefHeight="45" text="📋 Ajout client Réservations"
+        <Button fx:id="btnAjoutReservationClient" prefWidth="260" prefHeight="45" text="➕ Ajout client Réservations"
                 style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold;
                        -fx-font-size: 14px; -fx-background-radius: 25; -fx-font-family: 'Segoe UI Semibold';"/>
         <Button fx:id="btnListeMaterielsClient" prefWidth="260" prefHeight="45" text="📋 Liste materiels client"

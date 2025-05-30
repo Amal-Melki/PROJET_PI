@@ -1,4 +1,4 @@
-package com.esprit.Controllers.Admin;
+package com.esprit.controllers.Admin;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

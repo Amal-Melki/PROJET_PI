@@ -86,7 +86,7 @@ public class AjoutFournisseur implements Initializable {
         codeVerification = new Random().nextInt(900000) + 100000;
 
         // ✅ Envoi de l'e-mail
-        EmailService.sendVerificationEmail(email, String.valueOf(codeVerification));
+       // EmailService.sendVerificationEmail(email, String.valueOf(codeVerification));
 
         // ✅ Message + nettoyage des champs
         showAlert(Alert.AlertType.INFORMATION, "Succès", "Fournisseur ajouté avec succès !");

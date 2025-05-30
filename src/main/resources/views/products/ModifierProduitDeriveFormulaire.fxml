@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 
 <VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.esprit.Controllers.ModifierProduitDeriveFormulaire"
+      fx:controller="com.esprit.controllers.ModifierProduitDeriveFormulaire"
       spacing="10" style="-fx-background-color: pink;" padding="20">
 
     <GridPane hgap="10" vgap="10" style="-fx-padding: 20px;">

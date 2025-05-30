@@ -2,6 +2,7 @@ package com.esprit.tests;
 
 import com.esprit.utils.DataSource;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -43,5 +44,26 @@ public class MainProgGUI extends Application {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    // 🔹 Nouvelle méthode pour être appelée depuis une autre fenêtre sans relancer Application.launch()
+    public static void showWindow() {
+        Platform.runLater(() -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(MainProgGUI.class.getResource("/BlogRecuperer.fxml"));
+                Parent root = loader.load();
+
+                Stage stage = new Stage();
+                stage.setTitle("Gestion des Blogs");
+                stage.setScene(new Scene(root, 800, 600));
+                stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Erreur");
+                alert.setContentText("Impossible de charger la fenêtre BlogRecuperer.fxml");
+                alert.showAndWait();
+            }
+        });
     }
 }

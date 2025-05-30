@@ -1,5 +1,5 @@
 // ListeProduitDerive.java
-package com.esprit.Controllers.Admin;
+package com.esprit.controllers.Admin;
 
 import com.esprit.modules.produits.ProduitDerive;
 import com.esprit.services.produits.Admin.ServiceProduitDerive;

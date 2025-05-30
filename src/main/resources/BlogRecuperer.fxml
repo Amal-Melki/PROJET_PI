@@ -2,40 +2,43 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.image.*?>
-
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx/17"  xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.esprit.Controllers.RecupererBlog">
-    <Button fx:id="addBlogButton" text="Ajouter un blog" onAction="#openAddBlogWindow"
-            layoutX="20" layoutY="20" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;"/>
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.esprit.controllers.RecupererBlog"
+            style="-fx-background-color: linear-gradient(to bottom right, #ffe0ec, #ffc1da);">
+
     <top>
-
-        <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 10;">
-            <ComboBox fx:id="categorieFilterCombo" promptText="Filtrer par catégorie"/>
-            <Button text="Filtrer" onAction="#filterByCategory"/>
-            <Button text="Réinitialiser" onAction="#resetFilter"/>
-        </HBox>
-        <Button text="Ajouter Blog" onAction="#ouvrirBlogView" />
-
-
-
+        <VBox spacing="10" style="-fx-padding: 15;">
+            <Label text="🎀 Gestion des Blogs" alignment="CENTER"
+                   style="-fx-font-size: 28px; -fx-text-fill: #ffffff; -fx-font-weight: bold; -fx-alignment: center;" />
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <ComboBox fx:id="categorieFilterCombo" promptText="Filtrer par catégorie"
+                          style="-fx-background-radius: 10; -fx-padding: 5;"/>
+                <Button text="Filtrer" onAction="#filterByCategory"
+                        style="-fx-background-color: #ffffff; -fx-text-fill: #FF1493; -fx-background-radius: 10; -fx-font-weight: bold;" />
+                <Button text="Réinitialiser" onAction="#resetFilter"
+                        style="-fx-background-color: #ffffff; -fx-text-fill: #FF1493; -fx-background-radius: 10; -fx-font-weight: bold;" />
+                <Region fx:id="spacer" HBox.hgrow="ALWAYS" />
+                <Button fx:id="addBlogButton" text="+ Ajouter un Blog" onAction="#openAddBlogWindow"
+                        style="-fx-background-color: #FF1493; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10;" />
+            </HBox>
+        </VBox>
     </top>
+
     <center>
-        <ScrollPane fitToWidth="true">
-            <TilePane fx:id="BlogsTilePane" hgap="20" vgap="20" style="-fx-padding: 20;"/>
+        <ScrollPane fitToWidth="true" style="-fx-background: transparent;">
+            <TilePane fx:id="BlogsTilePane" hgap="20" vgap="20" style="-fx-padding: 20;" />
         </ScrollPane>
     </center>
 
-    <VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" spacing="10">
-        <!-- Vos autres éléments existants -->
-
-        <Label text="Données API:" style="-fx-font-weight: bold;"/>
-        <TextArea fx:id="apiResponseArea" editable="false" wrapText="true"/>
-
-        <Button text="Rafraîchir les données" onAction="#handleApiCall"/>
-    </VBox>
+    <bottom>
+        <VBox spacing="10" style="-fx-padding: 15; -fx-background-color: #ffb6c1;">
+            <Label text="📈 Résultat API:" style="-fx-font-weight: bold; -fx-text-fill: white; -fx-font-size: 16px;" />
+            <TextArea fx:id="apiResponseArea" editable="false" wrapText="true"
+                      style="-fx-background-color: #fff0f5; -fx-text-fill: #333; -fx-font-size: 13px; -fx-border-radius: 8; -fx-background-radius: 8;" />
+            <Button text="🔄 Rafraîchir les données" onAction="#handleApiCall"
+                    style="-fx-background-color: #FF1493; -fx-text-fill: white; -fx-background-radius: 10; -fx-font-weight: bold;" />
+        </VBox>
+    </bottom>
 </BorderPane>

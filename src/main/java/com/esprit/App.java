@@ -1,6 +1,6 @@
 package com.esprit;
 
-import com.esprit.api.ApiServer;
+import com.esprit.API.ApiServer;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -23,7 +23,7 @@ public class App extends Application {
         }).start();
 
         // Charger l'interface JavaFX
-        Parent root = FXMLLoader.load(getClass().getResource("//main.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/main.fxml"));
         stage.setTitle("Blog Manager");
         stage.setScene(new Scene(root, 800, 600)); // Dimensions par défaut
         stage.show();

@@ -6,7 +6,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.esprit.Controllers.AdminProduitDerive">
+            fx:controller="com.esprit.controllers.AdminProduitDerive">
 
     <center>
         <VBox spacing="15" alignment="TOP_CENTER" padding="20,20,20,20">
