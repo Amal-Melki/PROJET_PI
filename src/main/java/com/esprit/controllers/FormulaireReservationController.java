@@ -419,17 +419,15 @@ public class FormulaireReservationController implements Initializable {
 
             // Show success message
             String emailText = (txtEmail != null) ? txtEmail.getText().trim() : "votre adresse email";
-            showAlert(Alert.AlertType.INFORMATION, "Réservation Confirmée", "Votre réservation a été confirmée",
-                    "Un email de confirmation a été envoyé à " + emailText +
-                            " avec les détails de votre réservation.");
+            showSuccessAlert("Réservation Confirmée\nUn email de confirmation a été envoyé à " + emailText +
+                    " avec les détails de votre réservation.");
 
             // Close the dialog
             closeDialog();
 
         } catch (Exception e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible de compléter la réservation",
-                    "Une erreur s'est produite : " + e.getMessage());
+            showErrorAlert("Erreur lors de la réservation: " + e.getMessage());
         }
     }
 
@@ -715,6 +713,33 @@ public class FormulaireReservationController implements Initializable {
             Stage stage = (Stage) btnCancel.getScene().getWindow();
             stage.close();
         }
+    }
+
+    private void showSuccessAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Succès");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private void showErrorAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Erreur");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private void highlightError(Control control, String message) {
+        control.setStyle("-fx-border-color: #ff0000; -fx-border-width: 1px;");
+        Tooltip tooltip = new Tooltip(message);
+        control.setTooltip(tooltip);
+    }
+
+    private void clearError(Control control) {
+        control.setStyle("");
+        control.setTooltip(null);
     }
 
     private void showAlert(Alert.AlertType alertType, String title, String header, String content) {

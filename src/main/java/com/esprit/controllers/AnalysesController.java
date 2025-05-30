@@ -304,7 +304,7 @@ public class AnalysesController implements Initializable {
         statusCounts.put("En cours", 0);
         
         for (ReservationEspace reservation : reservations) {
-            String status = reservation.getStatut();
+            String status = reservation.getStatus();
             statusCounts.put(status, statusCounts.getOrDefault(status, 0) + 1);
         }
         

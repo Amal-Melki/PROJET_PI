@@ -14,6 +14,8 @@ import java.util.UUID;
 public class EspaceService {
 
     private final Connection connection;
+    private static final String PHOTOS_DIR = System.getProperty("user.dir") + "\\src\\main\\resources\\images\\spaces";
+    private static final String WEB_PHOTOS_PATH = "/images/spaces/"; // Chemin accessible via web
 
     public EspaceService() {
         connection = DataSource.getInstance().getConnection();
@@ -23,37 +25,30 @@ public class EspaceService {
      * Ajoute un nouvel espace dans la base de données
      *
      * @param espace L'espace à ajouter
-     * @return int 1 si l'ajout a réussi, 0 sinon
+     * @return L'ID généré de l'espace ajouté
+     * @throws SQLException si l'ajout échoue
+     * @throws IllegalArgumentException si les données sont invalides
      */
-    public int add(Espace espace) {
+    public int add(Espace espace) throws SQLException, IllegalArgumentException {
+        validateEspace(espace);
+        
         String req = "INSERT INTO espace(nom, type, capacite, localisation, prix, disponibilite, photoUrl, description, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try {
-            PreparedStatement pst = connection.prepareStatement(req, Statement.RETURN_GENERATED_KEYS);
-            pst.setString(1, espace.getNom());
-            pst.setString(2, espace.getType());
-            pst.setInt(3, espace.getCapacite());
-            pst.setString(4, espace.getLocalisation());
-            pst.setDouble(5, espace.getPrix());
-            pst.setBoolean(6, espace.isDisponibilite());
-            pst.setString(7, espace.getPhotoUrl() != null ? espace.getPhotoUrl() : "");
-            pst.setString(8, espace.getDescription() != null ? espace.getDescription() : "");
-            pst.setString(9, espace.getImage() != null ? espace.getImage() : "");
-
+        try (PreparedStatement pst = connection.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
+            setEspaceParameters(pst, espace);
+            
             int result = pst.executeUpdate();
-
-            if (result > 0) {
-                try (ResultSet generatedKeys = pst.getGeneratedKeys()) {
-                    if (generatedKeys.next()) {
-                        espace.setEspaceId(generatedKeys.getInt(1));
-                    }
-                }
-                return result;
+            if (result == 0) {
+                throw new SQLException("Échec de l'ajout, aucune ligne affectée");
             }
-        } catch (SQLException e) {
-            System.err.println("Erreur SQL lors de l'ajout : " + e.getMessage());
-            e.printStackTrace();
+            
+            try (ResultSet generatedKeys = pst.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    return generatedKeys.getInt(1);
+                } else {
+                    throw new SQLException("Échec de la récupération de l'ID généré");
+                }
+            }
         }
-        return 0;
     }
 
     /**
@@ -61,33 +56,70 @@ public class EspaceService {
      * 
      * @param espace L'espace à ajouter
      * @param photoFile Le fichier photo à associer
-     * @return true si l'ajout a réussi, false sinon
+     * @return L'ID généré de l'espace ajouté
+     * @throws SQLException si l'ajout échoue
+     * @throws IOException si la copie de la photo échoue
+     * @throws IllegalArgumentException si les données sont invalides
      */
-    public boolean add(Espace espace, File photoFile) {
-        try {
-            // Créer le dossier images/spaces s'il n'existe pas
-            File imagesDir = new File("src/main/resources/images/spaces");
-            if (!imagesDir.exists()) {
-                imagesDir.mkdirs();
-            }
-            
-            // Générer un nom de fichier unique
-            String fileName = UUID.randomUUID().toString() + "_" + photoFile.getName();
-            String relativePhotoPath = "/images/spaces/" + fileName;
-            
-            // Copier le fichier dans le dossier resources
-            File destFile = new File("src/main/resources" + relativePhotoPath);
-            Files.copy(photoFile.toPath(), destFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            
-            // Mettre à jour le chemin de la photo
-            espace.setPhotoUrl(relativePhotoPath);
-            
-            // Ajouter l'espace à la base de données
-            return add(espace) == 1;
-        } catch (IOException e) {
-            System.out.println("Erreur lors de la copie de la photo : " + e.getMessage());
-            return false;
+    public int add(Espace espace, File photoFile) throws SQLException, IOException, IllegalArgumentException {
+        validateEspace(espace);
+        
+        if (photoFile == null || !photoFile.exists()) {
+            throw new IllegalArgumentException("Le fichier photo est invalide ou manquant");
         }
+        
+        File imagesDir = new File(PHOTOS_DIR);
+        if (!imagesDir.exists() && !imagesDir.mkdirs()) {
+            throw new IOException("Impossible de créer le dossier: " + PHOTOS_DIR);
+        }
+        
+        String fileName = UUID.randomUUID() + "_" + photoFile.getName();
+        File destFile = new File(PHOTOS_DIR + "\\" + fileName);
+        
+        Files.copy(photoFile.toPath(), destFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        
+        // Stocke le chemin web accessible (pas le chemin physique)
+        espace.setPhotoUrl(WEB_PHOTOS_PATH + fileName);
+        
+        return add(espace);
+    }
+
+    /**
+     * Valide les données d'un espace avant traitement
+     * @param espace L'espace à valider
+     * @throws IllegalArgumentException si les données sont invalides
+     */
+    private void validateEspace(Espace espace) throws IllegalArgumentException {
+        if (espace == null) {
+            throw new IllegalArgumentException("L'espace ne peut pas être null");
+        }
+        if (espace.getNom() == null || espace.getNom().trim().isEmpty()) {
+            throw new IllegalArgumentException("Le nom de l'espace est obligatoire");
+        }
+        if (espace.getCapacite() <= 0) {
+            throw new IllegalArgumentException("La capacité doit être positive");
+        }
+        if (espace.getPrix() < 0) {
+            throw new IllegalArgumentException("Le prix ne peut pas être négatif");
+        }
+    }
+
+    /**
+     * Définit les paramètres d'un espace dans un PreparedStatement
+     * @param pst Le PreparedStatement
+     * @param espace L'espace contenant les données
+     * @throws SQLException en cas d'erreur SQL
+     */
+    private void setEspaceParameters(PreparedStatement pst, Espace espace) throws SQLException {
+        pst.setString(1, espace.getNom());
+        pst.setString(2, espace.getType());
+        pst.setInt(3, espace.getCapacite());
+        pst.setString(4, espace.getLocalisation());
+        pst.setDouble(5, espace.getPrix());
+        pst.setBoolean(6, espace.isDisponibilite());
+        pst.setString(7, espace.getPhotoUrl() != null ? espace.getPhotoUrl() : "");
+        pst.setString(8, espace.getDescription() != null ? espace.getDescription() : "");
+        pst.setString(9, espace.getImage() != null ? espace.getImage() : "");
     }
 
     /**
@@ -97,7 +129,12 @@ public class EspaceService {
      * @return true si l'ajout a réussi, false sinon
      */
     public boolean ajouter(Espace espace) {
-        return add(espace) == 1;
+        try {
+            return add(espace) > 0;
+        } catch (SQLException | IllegalArgumentException e) {
+            System.out.println("Erreur lors de l'ajout : " + e.getMessage());
+            return false;
+        }
     }
 
     /**
@@ -110,15 +147,7 @@ public class EspaceService {
         String req = "UPDATE espace SET nom=?, type=?, capacite=?, localisation=?, prix=?, disponibilite=?, photoUrl=?, description=?, image=? WHERE espaceId=?";
         try {
             PreparedStatement pst = connection.prepareStatement(req);
-            pst.setString(1, espace.getNom());
-            pst.setString(2, espace.getType());
-            pst.setInt(3, espace.getCapacite());
-            pst.setString(4, espace.getLocalisation());
-            pst.setDouble(5, espace.getPrix());
-            pst.setBoolean(6, espace.isDisponibilite());
-            pst.setString(7, espace.getPhotoUrl());
-            pst.setString(8, espace.getDescription());
-            pst.setString(9, espace.getImage());
+            setEspaceParameters(pst, espace);
             pst.setInt(10, espace.getEspaceId());
             
             int result = pst.executeUpdate();
@@ -143,17 +172,22 @@ public class EspaceService {
             // Si un fichier photo est fourni, le traiter
             if (photoFile != null) {
                 // Créer le dossier images/spaces s'il n'existe pas
-                File imagesDir = new File("src/main/resources/images/spaces");
+                File imagesDir = new File(PHOTOS_DIR);
                 if (!imagesDir.exists()) {
                     imagesDir.mkdirs();
                 }
                 
+                // Valider le fichier photo
+                if (!photoFile.exists()) {
+                    throw new IllegalArgumentException("Le fichier photo est invalide ou manquant");
+                }
+                
                 // Générer un nom de fichier unique
-                String fileName = UUID.randomUUID().toString() + "_" + photoFile.getName();
-                String relativePhotoPath = "/images/spaces/" + fileName;
+                String fileName = UUID.randomUUID() + "_" + photoFile.getName();
+                String relativePhotoPath = WEB_PHOTOS_PATH + fileName;
                 
                 // Copier le fichier dans le dossier resources
-                File destFile = new File("src/main/resources" + relativePhotoPath);
+                File destFile = new File(PHOTOS_DIR + "\\" + fileName);
                 Files.copy(photoFile.toPath(), destFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
                 
                 // Mettre à jour le chemin de la photo
@@ -164,6 +198,9 @@ public class EspaceService {
             return update(espace) == 1;
         } catch (IOException e) {
             System.out.println("Erreur lors de la copie de la photo : " + e.getMessage());
+            return false;
+        } catch (IllegalArgumentException e) {
+            System.out.println("Erreur lors de la mise à jour : " + e.getMessage());
             return false;
         }
     }

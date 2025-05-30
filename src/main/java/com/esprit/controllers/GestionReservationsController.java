@@ -13,6 +13,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.PieChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
@@ -24,6 +27,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 public class GestionReservationsController implements Initializable {
@@ -94,6 +98,15 @@ public class GestionReservationsController implements Initializable {
     @FXML
     private Pagination paginationReservations;
 
+    @FXML
+    private BarChart<String, Number> reservationsByMonthChart;
+
+    @FXML
+    private PieChart reservationsByStatusChart;
+
+    @FXML
+    private BarChart<String, Number> reservationsBySpaceChart;
+
     private ReservationEspaceService reservationService;
     private EspaceService espaceService;
     private ObservableList<ReservationEspace> reservations;
@@ -161,7 +174,7 @@ public class GestionReservationsController implements Initializable {
         });
         
         colStatut.setCellValueFactory(cellData -> 
-            new SimpleStringProperty(cellData.getValue().getStatut()));
+            new SimpleStringProperty(cellData.getValue().getStatus()));
         
         colPrix.setCellValueFactory(cellData -> 
             new SimpleObjectProperty<>(cellData.getValue().getMontant()));
@@ -219,6 +232,7 @@ public class GestionReservationsController implements Initializable {
             
             // Update statistics
             updateStatistics();
+            updateCharts();
             
         } catch (Exception e) {
             showAlert("Erreur", "Impossible de charger les réservations", e.getMessage());
@@ -259,7 +273,7 @@ public class GestionReservationsController implements Initializable {
             boolean matches = true;
             
             // Apply status filter
-            if (!"Tous".equals(status) && !status.equals(reservation.getStatut())) {
+            if (!"Tous".equals(status) && !status.equals(reservation.getStatus())) {
                 matches = false;
             }
             
@@ -349,13 +363,13 @@ public class GestionReservationsController implements Initializable {
         
         // Count active reservations
         long active = reservations.stream()
-                .filter(r -> "Confirmée".equals(r.getStatut()))
+                .filter(r -> "Confirmée".equals(r.getStatus()))
                 .count();
         lblActiveReservations.setText(String.valueOf(active));
         
         // Count upcoming reservations
         long upcoming = reservations.stream()
-                .filter(r -> "En attente".equals(r.getStatut()))
+                .filter(r -> "En attente".equals(r.getStatus()))
                 .count();
         lblUpcomingReservations.setText(String.valueOf(upcoming));
         
@@ -364,6 +378,46 @@ public class GestionReservationsController implements Initializable {
                 .mapToDouble(ReservationEspace::getMontant)
                 .sum();
         lblTotalRevenue.setText(String.format("%.2f DT", revenue));
+    }
+
+    private void updateCharts() {
+        // Statistiques existantes
+        updateMonthlyChart();
+        updateStatusChart();
+        
+        // Nouvelles statistiques
+        updatePopularSpacesChart();
+    }
+    
+    private void updateMonthlyChart() {
+        // Statistiques par mois
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        Map<String, Long> monthlyStats = reservationService.getMonthlyStats();
+        monthlyStats.forEach((month, count) -> 
+            series.getData().add(new XYChart.Data<>(month, count)));
+        reservationsByMonthChart.getData().clear();
+        reservationsByMonthChart.getData().add(series);
+    }
+
+    private void updateStatusChart() {
+        // Répartition par statut
+        ObservableList<PieChart.Data> pieData = FXCollections.observableArrayList();
+        Map<String, Long> statusStats = reservationService.getStatusStats();
+        statusStats.forEach((status, count) -> 
+            pieData.add(new PieChart.Data(status + " (" + count + ")", count)));
+        reservationsByStatusChart.setData(pieData);
+    }
+
+    private void updatePopularSpacesChart() {
+        // Nouveau graphique des espaces les plus réservés (sans modifier l'existant)
+        if (reservationsBySpaceChart != null) {
+            XYChart.Series<String, Number> series = new XYChart.Series<>();
+            Map<String, Long> spaceStats = reservationService.getPopularSpacesStats();
+            spaceStats.forEach((space, count) -> 
+                series.getData().add(new XYChart.Data<>(space, count)));
+            reservationsBySpaceChart.getData().clear();
+            reservationsBySpaceChart.getData().add(series);
+        }
     }
 
     private String formatDate(LocalDate date) {

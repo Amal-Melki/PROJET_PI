@@ -1,26 +1,32 @@
 package com.esprit.services;
 
+import com.esprit.models.Espace;
 import com.esprit.models.ReservationEspace;
 import com.esprit.utils.DataSource;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 public class ReservationEspaceService {
 
     private Connection connection;
     private EmailService emailService;
+    private EspaceService espaceService;
 
     public ReservationEspaceService() {
         connection = DataSource.getInstance().getConnection();
         emailService = new EmailService();
+        espaceService = new EspaceService();
     }
 
     public int add(ReservationEspace r) {
-        String req = "INSERT INTO reservationespace(espaceId, nomClient, emailClient, telephoneClient, dateDebut, dateFin, nombrePersonnes, description, dateReservation, statut) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?)";
+        String req = "INSERT INTO reservationespace(espaceId, nomClient, emailClient, telephoneClient, dateDebut, dateFin, nombrePersonnes, description, dateReservation, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?)";
         int generatedId = -1;
         try {
             PreparedStatement pst = connection.prepareStatement(req, Statement.RETURN_GENERATED_KEYS);
@@ -32,7 +38,7 @@ public class ReservationEspaceService {
             pst.setDate(6, Date.valueOf(r.getDateFin()));
             pst.setInt(7, r.getNombrePersonnes());
             pst.setString(8, r.getDescription());
-            pst.setString(9, r.getStatut() != null ? r.getStatut() : "En attente");
+            pst.setString(9, r.getStatus() != null ? r.getStatus() : "En attente");
             pst.executeUpdate();
             
             // Récupérer l'ID généré
@@ -51,7 +57,7 @@ public class ReservationEspaceService {
     }
 
     public int update(ReservationEspace r) {
-        String req = "UPDATE reservationespace SET espaceId=?, nomClient=?, emailClient=?, telephoneClient=?, dateDebut=?, dateFin=?, nombrePersonnes=?, description=?, statut=? WHERE reservationId=?";
+        String req = "UPDATE reservationespace SET espaceId=?, nomClient=?, emailClient=?, telephoneClient=?, dateDebut=?, dateFin=?, nombrePersonnes=?, description=?, status=? WHERE reservationId=?";
         try {
             PreparedStatement pst = connection.prepareStatement(req);
             pst.setInt(1, r.getEspaceId());
@@ -62,7 +68,7 @@ public class ReservationEspaceService {
             pst.setDate(6, Date.valueOf(r.getDateFin()));
             pst.setInt(7, r.getNombrePersonnes());
             pst.setString(8, r.getDescription());
-            pst.setString(9, r.getStatut() != null ? r.getStatut() : "En attente");
+            pst.setString(9, r.getStatus() != null ? r.getStatus() : "En attente");
             pst.setInt(10, r.getReservationId());
             int result = pst.executeUpdate();
             System.out.println("Reservation updated with ID: " + r.getReservationId());
@@ -164,7 +170,7 @@ public class ReservationEspaceService {
         r.setDateFin(dateFin);
         r.setNombrePersonnes(nombrePersonnes);
         r.setDescription(description);
-        r.setStatut("En attente");
+        r.setStatus("En attente");
         
         int reservationId = add(r);
         
@@ -184,7 +190,7 @@ public class ReservationEspaceService {
         r.setDateFin(dateFin);
         r.setNombrePersonnes(1); // Default value
         r.setDescription("Réservation en ligne"); // Default description
-        r.setStatut("En attente");
+        r.setStatus("En attente");
         
         // Add the reservation to the database
         return add(r);
@@ -286,10 +292,10 @@ public class ReservationEspaceService {
         
         // Get status if it exists
         try {
-            r.setStatut(rs.getString("statut"));
+            r.setStatus(rs.getString("status"));
         } catch (SQLException e) {
             // Column might not exist in older schema versions
-            r.setStatut("En attente");
+            r.setStatus("En attente");
         }
         
         return r;
@@ -364,7 +370,7 @@ public class ReservationEspaceService {
             
             // Status aléatoire (la plupart confirmées)
             String[] statuses = {"En attente", "En attente", "En attente", "En attente", "Annulée"};
-            reservation.setStatut(statuses[random.nextInt(statuses.length)]);
+            reservation.setStatus(statuses[random.nextInt(statuses.length)]);
             
             dummyReservations.add(reservation);
         }
@@ -423,8 +429,86 @@ public class ReservationEspaceService {
         return reservations;
     }
 
+    public Map<String, Long> getMonthlyStats() {
+        Map<String, Long> stats = new java.util.LinkedHashMap<>();
+        
+        // Récupérer les 12 derniers mois
+        LocalDate now = LocalDate.now();
+        for (int i = 11; i >= 0; i--) {
+            LocalDate month = now.minusMonths(i);
+            String monthKey = month.getMonth().toString() + " " + month.getYear();
+            
+            long count = getAll().stream()
+                .filter(r -> {
+                    LocalDate start = r.getDateDebut();
+                    LocalDate end = r.getDateFin();
+                    return (start != null && start.getMonth() == month.getMonth() && start.getYear() == month.getYear()) ||
+                           (end != null && end.getMonth() == month.getMonth() && end.getYear() == month.getYear());
+                })
+                .count();
+                
+            stats.put(monthKey, count);
+        }
+        
+        return stats;
+    }
+    
+    public Map<String, Long> getStatusStats() {
+        return getAll().stream()
+            .collect(Collectors.groupingBy(
+                ReservationEspace::getStatus,
+                Collectors.counting()
+            ));
+    }
 
     public int addReservation(ReservationEspace reservation) {
         return 0;
+    }
+    
+    public Map<String, Long> getPopularSpacesStats() {
+        return getAll().stream()
+            .collect(Collectors.groupingBy(
+                r -> {
+                    Espace espace = espaceService.getById(r.getEspaceId());
+                    return espace != null ? ((com.esprit.models.Espace) espace).getNom() : "Espace Inconnu";
+                },
+                Collectors.counting()
+            ))
+            .entrySet().stream()
+            .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
+            .limit(5)
+            .collect(Collectors.toMap(
+                Map.Entry::getKey,
+                Map.Entry::getValue,
+                (e1, e2) -> e1,
+                LinkedHashMap::new
+            ));
+    }
+
+    public List<ReservationEspace> getByUserAndStatus(String userId, String status) {
+        return getAll().stream()
+            .filter(r -> r.getUserId().equals(userId))
+            .filter(r -> status.equals("Tous") || r.getStatus().equalsIgnoreCase(status))
+            .collect(Collectors.toList());
+    }
+
+    public List<ReservationEspace> getByUser(String email) {
+        List<ReservationEspace> reservations = new ArrayList<>();
+        String req = "SELECT * FROM reservationespace WHERE emailClient = ?";
+        try {
+            PreparedStatement pst = connection.prepareStatement(req);
+            pst.setString(1, email);
+            ResultSet rs = pst.executeQuery();
+            
+            while (rs.next()) {
+                reservations.add(mapResultSetToReservation(rs));
+            }
+            
+            System.out.println("Found " + reservations.size() + " reservations for user " + email);
+        } catch (SQLException e) {
+            System.out.println("Error fetching user reservations: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return reservations;
     }
 }

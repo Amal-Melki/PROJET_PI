@@ -136,37 +136,19 @@ public class ReservationEspace {
     }
 
     /**
-     * Méthode alternative pour maintenir la compatibilité avec le code existant
-     * @return le statut
-     * @deprecated Utiliser getStatut() à la place
+     * Retourne le status de la réservation
+     * @return le status
      */
     public String getStatus() {
-        return getStatut();
-    }
-
-    /**
-     * Retourne le statut de la réservation
-     * @return le statut
-     */
-    public String getStatut() {
         return status;
     }
 
     /**
-     * Méthode alternative pour maintenir la compatibilité avec le code existant
-     * @param status le nouveau statut
-     * @deprecated Utiliser setStatut(String) à la place
+     * Définit le status de la réservation
+     * @param status le nouveau status
      */
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    /**
-     * Définit le statut de la réservation
-     * @param statut le nouveau statut
-     */
-    public void setStatut(String statut) {
-        this.status = statut;
     }
 
     public double getPrixTotal() {
@@ -251,5 +233,13 @@ public class ReservationEspace {
         }
         
         return 0.0;
+    }
+
+    public String getUserId() {
+        return this.emailClient; // Utilisation de l'email comme identifiant utilisateur
+    }
+
+    public Integer getNbrPersonnes() {
+        return 0;
     }
 }

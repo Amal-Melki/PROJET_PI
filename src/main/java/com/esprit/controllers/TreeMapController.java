@@ -2,6 +2,8 @@ package com.esprit.controllers;
 
 import com.esprit.models.Espace;
 import com.esprit.services.EspaceService;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -12,6 +14,9 @@ import netscape.javascript.JSObject;
 
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 public class TreeMapController implements Initializable {
 
@@ -26,6 +31,9 @@ public class TreeMapController implements Initializable {
     private WebEngine webEngine;
     private final EspaceService espaceService = new EspaceService();
     private List<Espace> allEspaces;
+
+    // Cache pour les géolocalisations
+    private static final Map<String, double[]> locationCache = new HashMap<>();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -106,58 +114,80 @@ public class TreeMapController implements Initializable {
 
     private void loadEspaces() {
         allEspaces = espaceService.getAll();
-        updateMapMarkers();
+        loadMarkersAsync(allEspaces);
     }
 
-    private void updateMapMarkers() {
-        // Nettoyage des marqueurs existants
-        webEngine.executeScript("clearMarkers();");
+    private void loadMarkersAsync(List<Espace> espaces) {
+        Task<Void> task = new Task<Void>() {
+            @Override
+            protected Void call() {
+                Platform.runLater(() -> {
+                    webEngine.executeScript("clearMarkers();");
+                });
 
-        // Ajout des nouveaux marqueurs
-        for (Espace espace : allEspaces) {
-            addMarkerToMap(espace);
-        }
+                int batchSize = 20; // Nombre de marqueurs à charger simultanément
+                for (int i = 0; i < espaces.size(); i += batchSize) {
+                    final int start = i;
+                    final int end = Math.min(i + batchSize, espaces.size());
+                    
+                    Platform.runLater(() -> {
+                        for (int j = start; j < end; j++) {
+                            Espace espace = espaces.get(j);
+                            addMarkerToMap(espace);
+                        }
+                    });
+
+                    try {
+                        Thread.sleep(100); // Délai entre les batches
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
+                }
+                return null;
+            }
+        };
+
+        new Thread(task).start();
+    }
+
+    private double[] getCachedLocation(String address) {
+        return locationCache.computeIfAbsent(address, this::geocodeAddress);
+    }
+
+    private double[] geocodeAddress(String address) {
+        // Implémentation simplifiée - en pratique utiliser un service de géocodage
+        if (address.contains("Tunis")) return new double[]{36.8065, 10.1815};
+        if (address.contains("Sousse")) return new double[]{35.8254, 10.6360};
+        if (address.contains("Hammamet")) return new double[]{36.4009, 10.6167};
+        if (address.contains("Nabeul")) return new double[]{36.4561, 10.7376};
+        return new double[]{36.8065, 10.1815}; // Tunis par défaut
     }
 
     private void addMarkerToMap(Espace espace) {
-        // Échapper les apostrophes dans les chaînes pour éviter les erreurs JavaScript
         String nomEscape = espace.getNom().replace("'", "\\'");
         String typeEscape = espace.getType().replace("'", "\\'");
         String localisationEscape = espace.getLocalisation().replace("'", "\\'");
         
-        // Ajouter l'ID de l'espace et la disponibilité pour avoir des marqueurs de couleurs différentes
+        double[] location = getCachedLocation(espace.getLocalisation());
+        
+        // Déterminer la couleur et le message en fonction de la disponibilité
+        String markerColor = espace.isDisponibilite() ? "green" : "red";
+        String statusText = espace.isDisponibilite() ? "Disponible" : "Réservé";
+        
         String script = String.format(
-                "addMarker(%f, %f, '%s', '%s', %d, '%s', %f, %d, %b);",
-                getLatitudeFromLocation(espace.getLocalisation()),
-                getLongitudeFromLocation(espace.getLocalisation()),
+                "addMarker(%f, %f, '%s', '%s', %d, '%s', %f, %d, '%s', '%s');",
+                location[0],
+                location[1],
                 nomEscape,
                 typeEscape,
                 espace.getCapacite(),
                 localisationEscape,
                 espace.getPrix(),
-                espace.getId(),
-                espace.isDisponibilite() // Passer la disponibilité pour changer la couleur du marqueur
+                espace.getEspaceId(),
+                markerColor,
+                statusText
         );
         webEngine.executeScript(script);
-    }
-
-    // Méthode pour géocoder une localisation (simplifiée)
-    private double getLatitudeFromLocation(String location) {
-        // Implémentation simplifiée - en pratique utiliser un service de géocodage
-        if (location.contains("Tunis")) return 36.8065;
-        if (location.contains("Sousse")) return 35.8254;
-        if (location.contains("Hammamet")) return 36.4009;
-        if (location.contains("Nabeul")) return 36.4561;
-        return 36.8065; // Tunis par défaut
-    }
-
-    private double getLongitudeFromLocation(String location) {
-        // Implémentation simplifiée - en pratique utiliser un service de géocodage
-        if (location.contains("Tunis")) return 10.1815;
-        if (location.contains("Sousse")) return 10.6360;
-        if (location.contains("Hammamet")) return 10.6167;
-        if (location.contains("Nabeul")) return 10.7376;
-        return 10.1815; // Tunis par défaut
     }
 
     @FXML
@@ -198,7 +228,7 @@ public class TreeMapController implements Initializable {
 
         // Mise à jour des marqueurs
         webEngine.executeScript("clearMarkers();");
-        filtered.forEach(this::addMarkerToMap);
+        loadMarkersAsync(filtered);
     }
 
     @FXML
@@ -207,7 +237,7 @@ public class TreeMapController implements Initializable {
         txtMinCapacite.clear();
         txtMaxCapacite.clear();
         txtRechercheLocalisation.clear();
-        updateMapMarkers();
+        loadMarkersAsync(allEspaces);
     }
 
     @FXML

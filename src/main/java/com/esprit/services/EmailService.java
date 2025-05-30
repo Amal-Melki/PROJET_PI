@@ -9,7 +9,7 @@ import java.io.IOException;
 
 public class EmailService {
 
-    private final String apiKey = "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"; //
+    private final String apiKey = "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\n"; //
 
     private SendGrid sendGrid;
 

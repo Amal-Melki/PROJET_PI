@@ -18,6 +18,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -155,35 +156,24 @@ public class GestionEspacesController implements Initializable {
             protected void updateItem(String imagePath, boolean empty) {
                 super.updateItem(imagePath, empty);
                 if (empty || imagePath == null || imagePath.isEmpty()) {
-                    setGraphic(null);
+                    setGraphic(new Label("Aucune image"));
                     setOnMouseClicked(null);
                 } else {
                     try {
-                        // Load image from URL or resource path
                         javafx.scene.image.Image img;
-                        if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
-                            img = new javafx.scene.image.Image(imagePath, true);
+                        if (imagePath.startsWith("http")) {
+                            img = new javafx.scene.image.Image(imagePath, 80, 50, true, true, true);
+                            img.errorProperty().addListener((obs, wasError, isNowError) -> {
+                                if (isNowError) setGraphic(new Label("URL invalide"));
+                            });
                         } else {
-                            img = new javafx.scene.image.Image(getClass().getResourceAsStream("/" + imagePath));
+                            img = new javafx.scene.image.Image(getClass().getResourceAsStream("/images/" + imagePath), 80, 50, true, true);
                         }
                         imageView.setImage(img);
                         setGraphic(imageView);
-                        setOnMouseClicked(event -> {
-                            // Open a new stage to show enlarged image
-                            javafx.scene.image.ImageView enlargedView = new javafx.scene.image.ImageView(img);
-                            enlargedView.setPreserveRatio(true);
-                            enlargedView.setFitWidth(600);
-                            enlargedView.setFitHeight(400);
-
-                            javafx.scene.layout.StackPane pane = new javafx.scene.layout.StackPane(enlargedView);
-                            javafx.scene.Scene scene = new javafx.scene.Scene(pane);
-                            javafx.stage.Stage stage = new javafx.stage.Stage();
-                            stage.setTitle("Image Agrandie");
-                            stage.setScene(scene);
-                            stage.show();
-                        });
+                        setOnMouseClicked(event -> showEnlargedImage(img));
                     } catch (Exception e) {
-                        setGraphic(null);
+                        setGraphic(new Label("Erreur"));
                         setOnMouseClicked(null);
                     }
                 }
@@ -496,5 +486,19 @@ public class GestionEspacesController implements Initializable {
             tblSpaces.getSelectionModel().selectFirst();
             tblSpaces.scrollTo(0);
         }
+    }
+    
+    private void showEnlargedImage(javafx.scene.image.Image img) {
+        javafx.scene.image.ImageView enlargedView = new javafx.scene.image.ImageView(img);
+        enlargedView.setPreserveRatio(true);
+        enlargedView.setFitWidth(600);
+        enlargedView.setFitHeight(400);
+
+        StackPane pane = new StackPane(enlargedView);
+        Scene scene = new Scene(pane);
+        Stage stage = new Stage();
+        stage.setTitle("Image Agrandie");
+        stage.setScene(scene);
+        stage.show();
     }
 }

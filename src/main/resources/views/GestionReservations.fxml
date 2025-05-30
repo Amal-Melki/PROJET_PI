@@ -77,6 +77,30 @@
                     <Label fx:id="lblTotalRevenue" text="0 DT" styleClass="stat-value" />
                 </VBox>
             </HBox>
+            
+            <!-- Charts Section -->
+            <HBox spacing="20">
+                <BarChart fx:id="reservationsByMonthChart" title="Réservations par mois" legendVisible="false" prefWidth="350" prefHeight="250">
+                    <xAxis>
+                        <CategoryAxis label="Mois" />
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis label="Nombre" />
+                    </yAxis>
+                </BarChart>
+                
+                <PieChart fx:id="reservationsByStatusChart" title="Répartition par statut" prefWidth="350" prefHeight="250" />
+                
+                <!-- Nouveau graphique -->
+                <BarChart fx:id="reservationsBySpaceChart" title="Espaces les plus populaires" legendVisible="false" prefWidth="350" prefHeight="250">
+                    <xAxis>
+                        <CategoryAxis label="Espace" />
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis label="Réservations" />
+                    </yAxis>
+                </BarChart>
+            </HBox>
         </VBox>
     </TitledPane>
     

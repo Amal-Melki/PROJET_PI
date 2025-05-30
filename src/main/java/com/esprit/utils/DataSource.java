@@ -6,7 +6,7 @@ public class DataSource {
 
     private Connection connection;
     private static DataSource instance;
-    private static final String URL = "jdbc:mysql://localhost:3306/GESTION-ESPACES";
+    private static final String URL = "jdbc:mysql://localhost:3306/gestion-espaces";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "";
 
@@ -37,9 +37,9 @@ public class DataSource {
             System.err.println("SQL State: " + e.getSQLState());
             
             if (e.getErrorCode() == 1049) {
-                System.err.println("DATABASE DOES NOT EXIST: Please create the 'GESTION-ESPACES' database first.");
+                System.err.println("DATABASE DOES NOT EXIST: Please create the 'gestion-espaces' database first.");
                 System.err.println("You can create it using phpMyAdmin or with this SQL command:\n" +
-                                  "CREATE DATABASE `GESTION-ESPACES`;\n");
+                                  "CREATE DATABASE `gestion-espaces`;\n");
             } else if (e.getErrorCode() == 1045) {
                 System.err.println("ACCESS DENIED: Check your MySQL username and password.");
             } else if (e.getErrorCode() == 0 && e.getSQLState().equals("08S01")) {

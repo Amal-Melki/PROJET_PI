@@ -24,7 +24,7 @@
                </graphic>
             </Button>
             <Region HBox.hgrow="ALWAYS" />
-            <ComboBox fx:id="comboFilterStatus" promptText="Filtrer par statut" />
+<ComboBox fx:id="comboStatusFilter" promptText="Filtrer par statut" />
          </HBox>
          
          <padding>

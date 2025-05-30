@@ -309,6 +309,26 @@
 
 /* Chart styles */
 .chart {
+    -fx-background-color: white;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 5px;
+    -fx-padding: 10px;
+}
+
+.chart-title {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.chart-legend {
+    -fx-background-color: transparent;
+}
+
+.chart-series-line {
+    -fx-stroke-width: 2px;
+}
+
+.chart {
     -fx-padding: 10;
     padding: 10px;
 }
