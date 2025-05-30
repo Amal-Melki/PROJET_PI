@@ -7,7 +7,7 @@ public class DataSource {
     private Connection connection;
     private static DataSource instance;
 
-    private final String URL = "jdbc:mysql://localhost:3306/gestion_produit_derive";
+    private final String URL = "jdbc:mysql://localhost:3307/projetpi";
     private final String USERNAME = "root";
     private final String PASSWORD = "";
 
@@ -27,7 +27,6 @@ public class DataSource {
     }
 
     public Connection getConnection() {
-
         return connection;
     }
 }

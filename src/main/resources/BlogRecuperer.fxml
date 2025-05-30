@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"  xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.esprit.Controllers.RecupererBlog">
+    <Button fx:id="addBlogButton" text="Ajouter un blog" onAction="#openAddBlogWindow"
+            layoutX="20" layoutY="20" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;"/>
+    <top>
+
+        <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 10;">
+            <ComboBox fx:id="categorieFilterCombo" promptText="Filtrer par catégorie"/>
+            <Button text="Filtrer" onAction="#filterByCategory"/>
+            <Button text="Réinitialiser" onAction="#resetFilter"/>
+        </HBox>
+        <Button text="Ajouter Blog" onAction="#ouvrirBlogView" />
+
+
+
+    </top>
+    <center>
+        <ScrollPane fitToWidth="true">
+            <TilePane fx:id="BlogsTilePane" hgap="20" vgap="20" style="-fx-padding: 20;"/>
+        </ScrollPane>
+    </center>
+
+    <VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" spacing="10">
+        <!-- Vos autres éléments existants -->
+
+        <Label text="Données API:" style="-fx-font-weight: bold;"/>
+        <TextArea fx:id="apiResponseArea" editable="false" wrapText="true"/>
+
+        <Button text="Rafraîchir les données" onAction="#handleApiCall"/>
+    </VBox>
+</BorderPane>
