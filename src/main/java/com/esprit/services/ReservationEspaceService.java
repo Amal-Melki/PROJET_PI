@@ -462,7 +462,49 @@ public class ReservationEspaceService {
     }
 
     public int addReservation(ReservationEspace reservation) {
-        return 0;
+        System.out.println("DEBUG: Attempting to save reservation for " + reservation.getNomClient());
+        
+        String query = "INSERT INTO reservationespace(espaceId, nomClient, emailClient, telephoneClient, "
+                + "dateDebut, dateFin, nombrePersonnes, description, status, prixTotal) "
+                + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                
+        try (Connection connection = DataSource.getInstance().getConnection()) {
+            // Verify table exists
+            DatabaseMetaData dbm = connection.getMetaData();
+            ResultSet tables = dbm.getTables(null, null, "reservationespace", null);
+            if (!tables.next()) {
+                System.err.println("ERROR: Table 'reservationespace' does not exist");
+                return -1;
+            }
+            
+            // Proceed with insertion
+            try (PreparedStatement pst = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+                pst.setInt(1, reservation.getEspaceId());
+                pst.setString(2, reservation.getNomClient());
+                pst.setString(3, reservation.getEmailClient());
+                pst.setString(4, reservation.getTelephoneClient());
+                pst.setDate(5, java.sql.Date.valueOf(reservation.getDateDebut()));
+                pst.setDate(6, java.sql.Date.valueOf(reservation.getDateFin()));
+                pst.setInt(7, reservation.getNombrePersonnes());
+                pst.setString(8, reservation.getDescription());
+                pst.setString(9, reservation.getStatus());
+                pst.setDouble(10, reservation.getPrixTotal());
+                
+                pst.executeUpdate();
+                
+                try (ResultSet generatedKeys = pst.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        int id = generatedKeys.getInt(1);
+                        System.out.println("DEBUG: Successfully saved reservation with ID: " + id);
+                        return id;
+                    }
+                }
+            }
+        } catch (SQLException ex) {
+            System.err.println("Error saving reservation: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+        return -1;
     }
     
     public Map<String, Long> getPopularSpacesStats() {

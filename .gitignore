@@ -36,3 +36,6 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+# Email configuration
+src/main/resources/email-config.properties
