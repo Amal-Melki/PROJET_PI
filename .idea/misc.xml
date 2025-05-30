@@ -14,6 +14,8 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/PROJET_PI-main/pom.xml" />
+        <option value="$PROJECT_DIR$/gestion_utilisateurs/pom.xml" />
       </list>
     </option>
   </component>
