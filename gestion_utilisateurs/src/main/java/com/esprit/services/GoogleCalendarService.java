@@ -17,13 +17,13 @@ import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
 import com.esprit.models.Evenement;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Collections;
@@ -47,6 +47,7 @@ public class GoogleCalendarService {
                     .setApplicationName(APPLICATION_NAME)
                     .build();
         } catch (GeneralSecurityException | IOException e) {
+            System.err.println("Failed to create Google Calendar service: " + e.getMessage());
             throw new RuntimeException("Failed to create Google Calendar service", e);
         }
     }
@@ -57,26 +58,42 @@ public class GoogleCalendarService {
             credential = getCredentials(HTTP_TRANSPORT);
             isAuthorized = true;
         } catch (GeneralSecurityException e) {
+            System.err.println("Failed to authorize Google Calendar service: " + e.getMessage());
             throw new IOException("Failed to authorize Google Calendar service", e);
         }
     }
 
     private static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT) throws IOException {
+        // Create tokens directory if it doesn't exist
+        File tokensDir = new File(TOKENS_DIRECTORY_PATH);
+        if (!tokensDir.exists()) {
+            if (!tokensDir.mkdirs()) {
+                throw new IOException("Failed to create tokens directory");
+            }
+        }
+
         // Load client secrets
         InputStream in = GoogleCalendarService.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
         if (in == null) {
-            throw new FileNotFoundException("Resource not found: " + CREDENTIALS_FILE_PATH);
+            throw new FileNotFoundException("Resource not found: " + CREDENTIALS_FILE_PATH + 
+                ". Please ensure the credentials.json file is in the resources directory.");
         }
-        GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
 
-        // Build flow and trigger user authorization request
-        GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-                HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)
-                .setDataStoreFactory(new FileDataStoreFactory(new java.io.File(TOKENS_DIRECTORY_PATH)))
-                .setAccessType("offline")
-                .build();
-        LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8888).build();
-        return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
+        try {
+            GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
+
+            // Build flow and trigger user authorization request
+            GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
+                    HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)
+                    .setDataStoreFactory(new FileDataStoreFactory(tokensDir))
+                    .setAccessType("offline")
+                    .build();
+
+            LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8888).build();
+            return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
+        } finally {
+            in.close();
+        }
     }
 
     public void createEvent(Evenement event) throws IOException {
@@ -116,7 +133,12 @@ public class GoogleCalendarService {
         }
 
         for (Evenement event : events) {
-            createEvent(event);
+            try {
+                createEvent(event);
+            } catch (Exception e) {
+                System.err.println("Failed to sync event: " + event.getTitle() + " - " + e.getMessage());
+                // Continue with next event instead of stopping the entire sync
+            }
         }
     }
 } 

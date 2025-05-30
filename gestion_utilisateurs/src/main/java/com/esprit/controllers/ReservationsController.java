@@ -45,7 +45,10 @@ public class ReservationsController implements AdminAware {
     private TableColumn<Reservation, String> colStatus;
 
     @FXML
-    private TableColumn<Reservation, Void> colActions;
+    private TableColumn<Reservation, Void> colModifier;
+
+    @FXML
+    private TableColumn<Reservation, Void> colSupprimer;
 
     @FXML
     private TextField searchField;
@@ -96,8 +99,9 @@ public class ReservationsController implements AdminAware {
         colStatus.setCellValueFactory(cellData -> 
             new SimpleStringProperty(cellData.getValue().getStatus()));
 
-        // Add action buttons to each row
-        colActions.setCellFactory(createActionButtonCellFactory());
+        // Add action buttons to Modifier and Supprimer columns
+        colModifier.setCellFactory(createModifierButtonCellFactory());
+        colSupprimer.setCellFactory(createSupprimerButtonCellFactory());
 
         // Set up status filter
         statusFilter.getItems().addAll("Tous", "Réservée", "Annulée");
@@ -160,44 +164,38 @@ public class ReservationsController implements AdminAware {
         this.currentAdmin = admin;
     }
 
-    private Callback<TableColumn<Reservation, Void>, TableCell<Reservation, Void>> createActionButtonCellFactory() {
-        return new Callback<>() {
+    private Callback<TableColumn<Reservation, Void>, TableCell<Reservation, Void>> createModifierButtonCellFactory() {
+        return param -> new TableCell<>() {
+            private final Button btnModifier = new Button("✏️");
+            {
+                btnModifier.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 15; -fx-min-width: 30; -fx-min-height: 30; -fx-cursor: hand;");
+                btnModifier.setOnAction(event -> {
+                    Reservation reservation = getTableView().getItems().get(getIndex());
+                    handleModifier(reservation);
+                });
+            }
             @Override
-            public TableCell<Reservation, Void> call(TableColumn<Reservation, Void> param) {
-                return new TableCell<>() {
-                    private final Button btnModifier = new Button("✏️");
-                    private final Button btnSupprimer = new Button("🗑️");
-                    private final HBox buttons = new HBox(5, btnModifier, btnSupprimer);
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                setGraphic(empty ? null : btnModifier);
+            }
+        };
+    }
 
-                    {
-                        // Style the buttons
-                        String buttonStyle = "-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold; " +
-                                "-fx-background-radius: 15; -fx-min-width: 30; -fx-min-height: 30; -fx-cursor: hand;";
-                        btnModifier.setStyle(buttonStyle);
-                        btnSupprimer.setStyle(buttonStyle);
-
-                        // Add button actions
-                        btnModifier.setOnAction(event -> {
-                            Reservation reservation = getTableView().getItems().get(getIndex());
-                            handleModifier(reservation);
-                        });
-
-                        btnSupprimer.setOnAction(event -> {
-                            Reservation reservation = getTableView().getItems().get(getIndex());
-                            handleSupprimer(reservation);
-                        });
-                    }
-
-                    @Override
-                    protected void updateItem(Void item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty) {
-                            setGraphic(null);
-                        } else {
-                            setGraphic(buttons);
-                        }
-                    }
-                };
+    private Callback<TableColumn<Reservation, Void>, TableCell<Reservation, Void>> createSupprimerButtonCellFactory() {
+        return param -> new TableCell<>() {
+            private final Button btnSupprimer = new Button("🗑️");
+            {
+                btnSupprimer.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 15; -fx-min-width: 30; -fx-min-height: 30; -fx-cursor: hand;");
+                btnSupprimer.setOnAction(event -> {
+                    Reservation reservation = getTableView().getItems().get(getIndex());
+                    handleSupprimer(reservation);
+                });
+            }
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                setGraphic(empty ? null : btnSupprimer);
             }
         };
     }
@@ -232,26 +230,26 @@ public class ReservationsController implements AdminAware {
         // Create the custom content
         VBox content = new VBox(10);
         content.setPadding(new Insets(20));
-        content.setStyle("-fx-background-color: white;");
+        content.setStyle("-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);");
 
         Label label = new Label("Statut:");
-        label.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
+        label.setStyle("-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
 
         ComboBox<String> statusComboBox = new ComboBox<>();
         statusComboBox.getItems().addAll("Réservée", "Annulée");
         statusComboBox.setValue(reservation.getStatus());
-        statusComboBox.setStyle("-fx-background-color: white; -fx-border-color: #ff8fb3; -fx-border-radius: 5; -fx-padding: 5;");
-        statusComboBox.setPrefWidth(200);
+        statusComboBox.setStyle("-fx-background-radius: 8; -fx-border-radius: 8; -fx-border-color: #e0e0e0; -fx-border-width: 1; -fx-padding: 8 12 8 12; -fx-font-size: 14px;");
+        statusComboBox.setPrefWidth(220);
 
         content.getChildren().addAll(label, statusComboBox);
         dialog.getDialogPane().setContent(content);
 
         // Style the dialog
-        dialog.getDialogPane().setStyle("-fx-background-color: white;");
+        dialog.getDialogPane().setStyle("-fx-background-color: transparent;");
         Button confirmButton = (Button) dialog.getDialogPane().lookupButton(confirmButtonType);
-        confirmButton.setStyle("-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 15; -fx-padding: 8 15;");
+        confirmButton.setStyle("-fx-background-color: linear-gradient(to right, #3498db, #2980b9); -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 8; -fx-font-family: 'Segoe UI Semibold'; -fx-cursor: hand; -fx-padding: 8 16 8 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0, 0, 1);");
         Button cancelButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
-        cancelButton.setStyle("-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 15; -fx-padding: 8 15;");
+        cancelButton.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: #2c3e50; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 8; -fx-font-family: 'Segoe UI Semibold'; -fx-cursor: hand; -fx-padding: 8 16 8 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 1);");
 
         // Convert the result to a string when the confirm button is clicked
         dialog.setResultConverter(dialogButton -> {

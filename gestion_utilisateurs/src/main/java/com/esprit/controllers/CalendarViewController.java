@@ -58,12 +58,8 @@ public class CalendarViewController implements Initializable {
         selectedDate = LocalDate.now();
         
         try {
-            // Authorize Google Calendar
-            googleCalendarService.authorize();
-            
-            // Load events and sync with calendar
+            // Load events first
             allEvents = evenementService.rechercher();
-            googleCalendarService.syncEventsToCalendar(allEvents);
             
             // Set up calendar view
             setupCalendarView();
@@ -71,7 +67,16 @@ public class CalendarViewController implements Initializable {
             // Load upcoming events
             loadUpcomingEvents();
             
-        } catch (IOException e) {
+            // Try to authorize and sync with Google Calendar
+            try {
+                googleCalendarService.authorize();
+                googleCalendarService.syncEventsToCalendar(allEvents);
+            } catch (IOException e) {
+                System.err.println("Failed to sync with Google Calendar: " + e.getMessage());
+                showError("Impossible de synchroniser avec Google Calendar. Les événements seront affichés localement uniquement.");
+            }
+            
+        } catch (Exception e) {
             e.printStackTrace();
             showError("Erreur lors de l'initialisation du calendrier: " + e.getMessage());
         }
@@ -225,9 +230,11 @@ public class CalendarViewController implements Initializable {
     }
     
     private void showError(String message) {
-        Label errorLabel = new Label(message);
-        errorLabel.setTextFill(Color.RED);
-        upcomingEventsContainer.getChildren().add(errorLabel);
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Erreur");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     @FXML

@@ -10,9 +10,7 @@
 
     <!-- Left side - Sidebar Container -->
     <left>
-        <ScrollPane fx:id="sidebarContainer" fitToWidth="true" hbarPolicy="NEVER">
-            <!-- Sidebar will be loaded here dynamically -->
-        </ScrollPane>
+        <VBox fx:id="sidebarContainer" prefWidth="220"/>
     </left>
 
     <!-- Center - Content Area -->
