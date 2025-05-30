@@ -11,6 +11,8 @@ build/
 
 # IntelliJ IDEA
 .idea/
+!.idea/misc.xml
+!.idea/encodings.xml
 *.iws
 *.iml
 *.ipr
@@ -27,9 +29,9 @@ build/
 # NetBeans
 /nbproject/private/
 /nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+ /dist/
+ /nbdist/
+ /.nb-gradle/
 
 # VS Code
 .vscode/
