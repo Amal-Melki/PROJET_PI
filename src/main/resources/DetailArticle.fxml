@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="651.0" prefWidth="614.0" style="-fx-background-color: #FFB6C1;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.esprit.Controllers.RecupererBlog">
+   <VBox fx:id="blogContainer" layoutX="47.0" layoutY="15.2" prefHeight="593.0" prefWidth="504.0" spacing="10"
+         AnchorPane.bottomAnchor="43.0" AnchorPane.leftAnchor="47.0" AnchorPane.rightAnchor="63.0" AnchorPane.topAnchor="15.0"/>
+</AnchorPane>

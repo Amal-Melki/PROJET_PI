@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.esprit.Controllers.RecupererBlog">
+
+    <!-- Top: Filtres et boutons -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 10;">
+            <ComboBox fx:id="categorieFilterCombo" promptText="Filtrer par catégorie"/>
+            <Button text="Filtrer" onAction="#filterByCategory"/>
+            <Button text="Réinitialiser" onAction="#resetFilter"/>
+            <Button fx:id="addBlogButton" text="Ajouter un blog" onAction="#openAddBlogWindow"
+                    style="-fx-background-color: #FFB6C1; -fx-text-fill: white; -fx-font-weight: bold;"/>
+        </HBox>
+    </top>
+
+    <!-- Centre: Liste des blogs -->
+    <center>
+        <ScrollPane fitToWidth="true">
+            <TilePane fx:id="BlogsTilePane" hgap="20" vgap="20" style="-fx-padding: 20;">
+                <!-- Template d'un blog (utilisé dynamiquement en Java) -->
+                <VBox fx:id="blogTemplate" style="-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-padding: 10;" spacing="5" visible="false">
+                    <Text fx:id="blogTitle" style="-fx-font-weight: bold;"/>
+                    <ImageView fx:id="blogImage" fitWidth="280" fitHeight="150" preserveRatio="false"/>
+                    <Text fx:id="blogCategory"/>
+                    <Text fx:id="blogDate"/>
+                    <Text fx:id="blogContent" wrappingWidth="280"/>
+                    <HBox spacing="10" alignment="CENTER_RIGHT">
+                        <!-- Boutons Like et Commentaire -->
+                        <Button text="♥" fx:id="likeButton" style="-fx-background-color: transparent; -fx-font-size: 14px;"/>
+                        <Label fx:id="likeCount" text="0"/>
+                        <Button text="💬" fx:id="commentButton" style="-fx-background-color: transparent; -fx-font-size: 14px;"/>
+                        <Button text="Modifier" fx:id="modifierButton"/>
+                        <Button text="Supprimer" fx:id="supprimerButton"/>
+                    </HBox>
+                </VBox>
+            </TilePane>
+        </ScrollPane>
+    </center>
+
+    <!-- Bas: Zone API -->
+    <bottom>
+        <VBox spacing="10" style="-fx-padding: 10;">
+            <Label text="Données API:" style="-fx-font-weight: bold;"/>
+            <TextArea fx:id="apiResponseArea" editable="false" wrapText="true"/>
+            <Button text="Rafraîchir les données" onAction="#handleApiCall"/>
+        </VBox>
+    </bottom>
+
+
+</BorderPane>

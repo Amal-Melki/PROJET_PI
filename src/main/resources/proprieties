@@ -1,0 +1,6 @@
+api.url=http://localhost:8000/api/location
+db.host=localhost
+db.port=3309
+db.name=pi_db
+db.user=root
+db.password=
