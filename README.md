@@ -1,76 +1,26 @@
 
 # 🎉 Evencia Event Planner – Projet PI
 
-**Evencia Event Planner** est une application de gestion d’événements complète, conçue pour permettre aux utilisateurs de planifier, organiser et analyser leurs événements de manière efficace. Elle repose sur une architecture modulaire intégrant **six modules interconnectés**, assurant une gestion fluide de toutes les dimensions liées à l’organisation d’événements.
+Evencia Event Planner est une application de gestion d’événements complète, conçue pour permettre aux utilisateurs de planifier, organiser et analyser leurs événements efficacement. Elle repose sur une architecture modulaire avec six modules interconnectés :
 
----
+- **Gestion des événements** : Création, modification, suppression d’événements
+- **Gestion des utilisateurs** : Comptes, rôles, profils
+- **Gestion des espaces** : Réservation de lieux
+- **Gestion de blog** : Articles, actualités
+- **Gestion des matériels** : Suivi des équipements et des stocks
+- **Gestion des produits dérivés** : Vente de produits liés à l’événement
 
-## 📁 Table des matières
+## 📦 Prérequis
 
-* [📝 Description du projet](#-description-du-projet)
-* [📦 Modules du projet](#-modules-du-projet)
-* [🛠️ Prérequis](#️-prérequis)
-* [⚙️ Installation](#️-installation)
-* [📁 Structure du projet](#-structure-du-projet)
-* [💻 Technologies utilisées](#-technologies-utilisées)
-* [🌟 Logiques métiers](#-logique-métier)
-* [🔌 API avancées](#-api-avancées)
-
----
-
-## 📝 Description du projet
-
-Evencia Event Planner centralise la gestion de tous les aspects d’un événement, de sa **planification** à son **analyse**. Grâce à son architecture modulaire, chaque fonctionnalité peut fonctionner de manière indépendante tout en collaborant avec les autres modules, garantissant ainsi une **expérience utilisateur fluide** et **efficace**.
-
----
-
-## 📦 Modules du projet
-
-L’application est composée des 6 modules suivants :
-
-* **Gestion des événements**
-  ➔ Création, modification, affichage et suppression d’événements
-  ➔ Détails : date, heure, lieu, participants, description...
-
-* **Gestion des utilisateurs**
-  ➔ Création de comptes
-  ➔ Attribution de rôles (administrateur, organisateur, participant)
-  ➔ Gestion des profils
-
-* **Gestion des espaces**
-  ➔ Réservation de lieux : salles de conférence, auditoriums...
-  ➔ Gestion de la disponibilité
-
-* **Gestion de blog**
-  ➔ Publication d’articles, actualités, mises à jour
-  ➔ Communication avec les participants
-
-* **Gestion des matériels**
-  ➔ Suivi des équipements, décorations, mobilier
-  ➔ Réservation et état du stock
-
-* **Gestion des produits dérivés**
-  ➔ Vente de t-shirts, mugs, etc.
-  ➔ Suivi des commandes et gestion du stock
-
----
-
-## 🛠️ Prérequis
-
-Assurez-vous d’avoir les outils suivants installés sur votre machine :
-
-* Java JDK 17 ou plus
-* Apache Maven
-* XAMPP (MySQL)
-* IntelliJ IDEA
-* Scene Builder
-
----
+- Java 17+
+- Maven
+- XAMPP (MySQL)
+- IntelliJ IDEA
+- Scene Builder
 
 ## ⚙️ Installation
 
-1. **Cloner le dépôt :**
-
+1. Cloner le dépôt :
    ```bash
    git clone https://github.com/Amal-Melki/PROJET_PI.git
    ```

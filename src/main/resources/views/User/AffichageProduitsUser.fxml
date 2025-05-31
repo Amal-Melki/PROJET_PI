@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: #FFE6EE;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.esprit.controllers.User.AffichageProduitsUserController">
+    <children>
+        <VBox alignment="TOP_CENTER" prefHeight="700.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <HBox alignment="CENTER_RIGHT" prefHeight="50.0" prefWidth="200.0" spacing="10.0" VBox.vgrow="NEVER">
+                    <children>
+                        <Button onAction="#goToPanier" style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" text="🛒 Mon Panier" />
+                        <Button onAction="#retourToSelection" style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" text="⬅ Retour" />
+                    </children>
+                    <padding>
+                        <Insets right="20.0" top="20.0" />
+                    </padding>
+                </HBox>
+                <Label alignment="CENTER" prefHeight="50.0" prefWidth="450.0" text="Découvrez nos Produits" textFill="#ff8fb3">
+                    <font>
+                        <Font name="Segoe UI Bold" size="28.0" />
+                    </font>
+                    <VBox.margin>
+                        <Insets top="10.0" />
+                    </VBox.margin>
+                </Label>
+
+                <HBox alignment="CENTER" spacing="10.0" VBox.vgrow="NEVER">
+                    <padding>
+                        <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+                    </padding>
+                    <TextField fx:id="searchField" promptText="Rechercher un produit par nom..." prefWidth="250.0" style="-fx-background-radius: 5; -fx-border-color: #ff8fb3; -fx-border-radius: 5;" />
+                    <Button onAction="#handleSearch" text="Rechercher par Nom" style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" />
+                </HBox>
+                <HBox alignment="CENTER" spacing="10.0" VBox.vgrow="NEVER">
+                    <padding>
+                        <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+                    </padding>
+                    <TextField fx:id="categoryFilterField" promptText="Filtrer par catégorie..." prefWidth="250.0" style="-fx-background-radius: 5; -fx-border-color: #ff8fb3; -fx-border-radius: 5;" />
+                    <Button onAction="#handleFilterByCategory" text="Filtrer par Catégorie" style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" />
+                    <Button onAction="#handleResetCategoryFilter" text="Réinitialiser Catégorie" style="-fx-background-color: #f06292; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" />
+                </HBox>
+                <StackPane alignment="CENTER">
+                    <Circle radius="75.0" fill="transparent" stroke="#ff8fb3" strokeWidth="2.0" />
+
+                    <ImageView fx:id="logoImageView" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
+                        <image>
+                            <Image url="/images/Event-Planner.jpg" />
+                        </image>
+                        <clip>
+                            <Circle centerX="75.0" centerY="75.0" radius="75.0" />
+                        </clip>
+                    </ImageView>
+                </StackPane>
+                <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" hbarPolicy="NEVER">
+                    <content>
+                        <FlowPane fx:id="flowPaneProduits" hgap="20.0" vgap="20.0" alignment="TOP_CENTER">
+                            <padding>
+                                <Insets bottom="10.0" left="25.0" right="25.0" top="10.0" />
+                            </padding>
+                        </FlowPane>
+                    </content>
+                </ScrollPane>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>

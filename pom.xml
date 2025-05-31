@@ -5,7 +5,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.example</groupId>
+    <groupId>com.esprit</groupId>
     <artifactId>PROJET_PI</artifactId>
     <version>1.0-SNAPSHOT</version>
 
@@ -13,63 +13,54 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring-boot.version>3.2.5</spring-boot.version>
+        <javafx.version>17.0.2</javafx.version>
+        <mysql.version>8.0.33</mysql.version>
+        <mainClass>com.esprit.tests.MainEspacesGUI</mainClass> <!-- Choix de la classe main à garder -->
     </properties>
 
     <dependencies>
-        <!-- MySQL JDBC -->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.33</version>
-        </dependency>
-
-        <!-- JavaFX -->
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-controls</artifactId>
-            <version>17.0.12</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-fxml</artifactId>
-            <version>17.0.12</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-web</artifactId>
-            <version>17.0.12</version>
-        </dependency>
-
-        <!-- SendGrid -->
-        <dependency>
-            <groupId>com.sendgrid</groupId>
-            <artifactId>sendgrid-java</artifactId>
-            <version>4.9.3</version>
-        </dependency>
-
-        <!-- PDFBox -->
-        <dependency>
-            <groupId>org.apache.pdfbox</groupId>
-            <artifactId>pdfbox</artifactId>
-            <version>2.0.29</version>
-        </dependency>
+        <!-- ... tes dépendances ... -->
     </dependencies>
-
 
     <build>
         <plugins>
+            <!-- JavaFX Maven Plugin -->
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
-            <configuration>
-                <mainClass>com.esprit.tests.MainEspacesGUI</mainClass>
-                <options>
-                    <option>--add-modules=javafx.controls,javafx.fxml,javafx.web</option>
-                </options>
-            </configuration>
+                <configuration>
+                    <mainClass>${mainClass}</mainClass>
+                    <options>
+                        <option>--add-modules=javafx.controls,javafx.fxml,javafx.web</option>
+                    </options>
+                </configuration>
+            </plugin>
+
+            <!-- Maven Compiler Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <release>17</release>
+                </configuration>
+            </plugin>
+
+            <!-- Spring Boot Maven Plugin (si utilisé) -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot.version}</version>
             </plugin>
         </plugins>
     </build>
 
+    <repositories>
+        <repository>
+            <id>openjfx</id>
+            <url>https://maven.pkg.jetbrains.space/openjfx/p/openjfx/maven</url>
+        </repository>
+    </repositories>
 </project>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<Pane prefHeight="750.0" prefWidth="650.0"
+      style="-fx-background-color: pink;"
+      xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.esprit.controllers.ModifierMaterielFormulaire">
+    <AnchorPane>
+        <ImageView fx:id="logoImage"
+                   fitWidth="100" fitHeight="100"
+                   layoutX="10" layoutY="10"
+                   pickOnBounds="true" preserveRatio="true"
+        />
+    </AnchorPane>
+    <children>
+
+        <!-- Bouton Retour -->
+        <Button fx:id="btnRetour"
+                text="↩ Retour"
+                layoutX="550.0" layoutY="20.0"
+                onAction="#retourAccueil"
+                style="-fx-background-color: #ff7fa8; -fx-text-fill: white; -fx-font-weight: bold;
+                       -fx-font-size: 13px; -fx-background-radius: 20; -fx-cursor: hand;
+                       -fx-padding: 6 12 6 12;" />
+
+        <!-- Titre -->
+        <Text text="Modifier Matériel"
+              layoutX="200.0" layoutY="70.0"
+              style="-fx-fill: white;">
+            <font>
+                <Font name="Segoe UI Bold" size="30.0"/>
+            </font>
+        </Text>
+
+        <!-- Labels + Champs -->
+        <Label layoutX="76.0" layoutY="130.0" text="Nom :" style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
+        <TextField fx:id="tfNom" layoutX="219.0" layoutY="125.0" prefWidth="300.0"
+                   style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
+
+        <Label layoutX="76.0" layoutY="180.0" text="Type :" style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
+        <ComboBox fx:id="cbType" layoutX="219.0" layoutY="175.0" prefWidth="300.0"
+                  style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
+
+        <Label layoutX="76.0" layoutY="230.0" text="Quantité :" style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
+        <TextField fx:id="tfQuantite" layoutX="219.0" layoutY="225.0" prefWidth="300.0"
+                   style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
+
+        <Label layoutX="76.0" layoutY="280.0" text="Prix :" style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
+        <TextField fx:id="tfPrix" layoutX="219.0" layoutY="275.0" prefWidth="300.0"
+                   style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
+
+        <Label layoutX="76.0" layoutY="330.0" text="État :" style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
+        <ComboBox fx:id="cbEtat" layoutX="219.0" layoutY="325.0" prefWidth="300.0"
+                  style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
+
+        <Label layoutX="76.0" layoutY="390.0" text="Description :" style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
+        <TextArea fx:id="taDescription" layoutX="219.0" layoutY="385.0" prefHeight="60.0" prefWidth="300.0"
+                  style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
+
+        <!-- Bouton Modifier l'image -->
+        <Button fx:id="btnModifierImage"
+                layoutX="219.0" layoutY="460.0"
+                text="📷 Modifier l'image"
+                onAction="#modifierImage"
+                prefWidth="300.0"
+                style="-fx-background-color: #d46a92; -fx-text-fill: white; -fx-font-weight: bold;
+                       -fx-background-radius: 20; -fx-cursor: hand;" />
+
+        <!-- Nom image -->
+        <Label fx:id="lblImageModifPath"
+               layoutX="219.0" layoutY="500.0"
+               prefWidth="300.0"
+               text="Aucune image sélectionnée"
+               style="-fx-text-fill: white; -fx-font-size: 12;" />
+
+        <!-- ImageView -->
+        <ImageView fx:id="imageViewMateriel"
+                   layoutX="230.0" layoutY="530.0"
+                   fitWidth="180.0" fitHeight="180.0"
+                   preserveRatio="true"
+                   style="-fx-border-color: white; -fx-border-width: 2;" />
+
+        <!-- Bouton Enregistrer -->
+        <Button fx:id="btnModifier" alignment="CENTER"
+                layoutX="260.0" layoutY="700.0"
+                text="Enregistrer"
+                onAction="#modifierMateriel"
+                style="-fx-background-color: #ff7fa8; -fx-text-fill: white; -fx-font-weight: bold;
+                       -fx-font-size: 15px; -fx-background-radius: 20; -fx-cursor: hand;
+                       -fx-padding: 6 12 6 12;"
+                prefWidth="120.0" prefHeight="40.0" />
+
+    </children>
+</Pane>

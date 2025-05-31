@@ -1,14 +1,24 @@
 package com.esprit.utils;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class DataSource {
 
     private Connection connection;
     private static DataSource instance;
+<<<<<<< HEAD
     private static final String URL = "jdbc:mysql://localhost:3306/gestion-espaces";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "";
+=======
+
+
+    private final String URL = "jdbc:mysql://localhost:3307/projetpi";
+
+    private final String USERNAME = "root";
+    private final String PASSWORD = "";
 
     private DataSource() {
         connectToDatabase();
@@ -20,6 +30,7 @@ public class DataSource {
      */
     private void connectToDatabase() {
         try {
+
             // Try to load the MySQL driver
             Class.forName("com.mysql.cj.jdbc.Driver");
             
@@ -46,6 +57,15 @@ public class DataSource {
                 System.err.println("CONNECTION REFUSED: Make sure MySQL server is running on localhost:3306.");
                 System.err.println("Did you start your XAMPP/MySQL service?");
             }
+
+            // Charger le driver JDBC MySQL
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            System.out.println("Connected to DB !");
+        } catch (ClassNotFoundException e) {
+            System.out.println("MySQL JDBC Driver not found !");
+        } catch (SQLException e) {
+            System.out.println("Error connecting to DB: " + e.getMessage());
         }
     }
 
@@ -55,6 +75,7 @@ public class DataSource {
      */
     public static DataSource getInstance() {
         if (instance == null) {
+        if (instance == null)
             instance = new DataSource();
         }
         return instance;
