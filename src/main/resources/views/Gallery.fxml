@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="com.esprit.controllers.GalleryController">
+    <Label text="Galerie des espaces" styleClass="page-title"/>
+    <ListView fx:id="espacesList"/>
+    <Button text="Retour" onAction="#handleBack"/>
+</VBox>

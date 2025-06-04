@@ -23,8 +23,13 @@
                   <Label text="🔄" />
                </graphic>
             </Button>
+            <Button fx:id="btnGallery" text="Galerie" onAction="#showGalleryView" styleClass="secondary-button">
+               <graphic>
+                  <Label text="🖼️" />
+               </graphic>
+            </Button>
             <Region HBox.hgrow="ALWAYS" />
-<ComboBox fx:id="comboStatusFilter" promptText="Filtrer par statut" />
+            <ComboBox fx:id="comboStatusFilter" promptText="Filtrer par statut" />
          </HBox>
          
          <padding>

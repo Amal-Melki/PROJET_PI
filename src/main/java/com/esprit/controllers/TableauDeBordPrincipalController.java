@@ -190,12 +190,11 @@ public class TableauDeBordPrincipalController implements Initializable {
     }
 
     @FXML
-    private void showMyReservations() {
-        // Highlight the selected button
+    public void showMyReservations() {
         setActiveButton(btnMyReservations);
         
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("views/MesReservations.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/MesReservations.fxml"));
             Parent reservationsView = loader.load();
             setContent(reservationsView);
             updateTitle("Mes Réservations", "Gérer vos réservations personnelles");

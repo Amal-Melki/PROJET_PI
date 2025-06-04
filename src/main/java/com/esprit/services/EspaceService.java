@@ -10,15 +10,19 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+
 
 public class EspaceService {
 
-    private final Connection connection;
+    private static final Logger logger = LoggerFactory.getLogger(EspaceService.class);
     private static final String PHOTOS_DIR = System.getProperty("user.dir") + "\\src\\main\\resources\\images\\spaces";
     private static final String WEB_PHOTOS_PATH = "/images/spaces/"; // Chemin accessible via web
 
     public EspaceService() {
-        connection = DataSource.getInstance().getConnection();
     }
 
     /**
@@ -31,16 +35,17 @@ public class EspaceService {
      */
     public int add(Espace espace) throws SQLException, IllegalArgumentException {
         validateEspace(espace);
-        
+
         String req = "INSERT INTO espace(nom, type, capacite, localisation, prix, disponibilite, photoUrl, description, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement pst = connection.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection connection = DataSource.getInstance().getConnection();
+             PreparedStatement pst = connection.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
             setEspaceParameters(pst, espace);
-            
+
             int result = pst.executeUpdate();
             if (result == 0) {
                 throw new SQLException("Échec de l'ajout, aucune ligne affectée");
             }
-            
+
             try (ResultSet generatedKeys = pst.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     return generatedKeys.getInt(1);
@@ -53,7 +58,7 @@ public class EspaceService {
 
     /**
      * Ajoute un nouvel espace avec une photo
-     * 
+     *
      * @param espace L'espace à ajouter
      * @param photoFile Le fichier photo à associer
      * @return L'ID généré de l'espace ajouté
@@ -61,27 +66,45 @@ public class EspaceService {
      * @throws IOException si la copie de la photo échoue
      * @throws IllegalArgumentException si les données sont invalides
      */
-    public int add(Espace espace, File photoFile) throws SQLException, IOException, IllegalArgumentException {
+    public int add(Espace espace, File photoFile) throws SQLException, IOException {
         validateEspace(espace);
         
-        if (photoFile == null || !photoFile.exists()) {
-            throw new IllegalArgumentException("Le fichier photo est invalide ou manquant");
+        // Create images directory if it doesn't exist
+        File photosDir = new File(PHOTOS_DIR);
+        if (!photosDir.exists()) {
+            FileUtils.forceMkdir(photosDir);
         }
         
-        File imagesDir = new File(PHOTOS_DIR);
-        if (!imagesDir.exists() && !imagesDir.mkdirs()) {
-            throw new IOException("Impossible de créer le dossier: " + PHOTOS_DIR);
+        // Generate unique filename with original extension
+        String photoName = "space_" + UUID.randomUUID() + "." + FilenameUtils.getExtension(photoFile.getName());
+        File destFile = new File(photosDir, photoName);
+        
+        // Copy file using FileUtils for better error handling
+        FileUtils.copyFile(photoFile, destFile);
+        
+        // Set the web-accessible path
+        espace.setImage(WEB_PHOTOS_PATH + photoName);
+        
+        // Insérer directement dans la base avec la photo
+        String query = "INSERT INTO espace (nom, type, capacite, localisation, prix, disponibilite, photoUrl, description, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try (Connection connection = DataSource.getInstance().getConnection();
+             PreparedStatement pst = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            
+            setEspaceParameters(pst, espace);
+            pst.setString(7, espace.getPhotoUrl());
+            pst.setString(8, espace.getDescription());
+            pst.setString(9, espace.getImage());
+            
+            pst.executeUpdate();
+            
+            try (ResultSet generatedKeys = pst.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    return generatedKeys.getInt(1);
+                }
+            }
         }
         
-        String fileName = UUID.randomUUID() + "_" + photoFile.getName();
-        File destFile = new File(PHOTOS_DIR + "\\" + fileName);
-        
-        Files.copy(photoFile.toPath(), destFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-        
-        // Stocke le chemin web accessible (pas le chemin physique)
-        espace.setPhotoUrl(WEB_PHOTOS_PATH + fileName);
-        
-        return add(espace);
+        throw new SQLException("Échec de l'ajout de l'espace, aucun ID généré.");
     }
 
     /**
@@ -117,9 +140,6 @@ public class EspaceService {
         pst.setString(4, espace.getLocalisation());
         pst.setDouble(5, espace.getPrix());
         pst.setBoolean(6, espace.isDisponibilite());
-        pst.setString(7, espace.getPhotoUrl() != null ? espace.getPhotoUrl() : "");
-        pst.setString(8, espace.getDescription() != null ? espace.getDescription() : "");
-        pst.setString(9, espace.getImage() != null ? espace.getImage() : "");
     }
 
     /**
@@ -132,7 +152,7 @@ public class EspaceService {
         try {
             return add(espace) > 0;
         } catch (SQLException | IllegalArgumentException e) {
-            System.out.println("Erreur lors de l'ajout : " + e.getMessage());
+            logger.error("Erreur lors de l'ajout : " + e.getMessage());
             return false;
         }
     }
@@ -145,24 +165,23 @@ public class EspaceService {
      */
     public int update(Espace espace) {
         String req = "UPDATE espace SET nom=?, type=?, capacite=?, localisation=?, prix=?, disponibilite=?, photoUrl=?, description=?, image=? WHERE espaceId=?";
-        try {
-            PreparedStatement pst = connection.prepareStatement(req);
+        try (Connection connection = DataSource.getInstance().getConnection();
+             PreparedStatement pst = connection.prepareStatement(req)) {
             setEspaceParameters(pst, espace);
             pst.setInt(10, espace.getEspaceId());
-            
+
             int result = pst.executeUpdate();
-            System.out.println("Espace mis à jour avec l'ID: " + espace.getEspaceId());
+            logger.info("Espace mis à jour avec l'ID: " + espace.getEspaceId());
             return result;
         } catch (SQLException e) {
-            System.out.println("Erreur lors de la mise à jour : " + e.getMessage());
-            e.printStackTrace();
+            logger.error("Erreur lors de la mise à jour : " + e.getMessage());
             return 0;
         }
     }
 
     /**
      * Met à jour un espace existant avec une nouvelle photo
-     * 
+     *
      * @param espace L'espace à mettre à jour
      * @param photoFile Le fichier photo à associer (peut être null pour ne pas changer la photo)
      * @return true si la mise à jour a réussi, false sinon
@@ -176,31 +195,31 @@ public class EspaceService {
                 if (!imagesDir.exists()) {
                     imagesDir.mkdirs();
                 }
-                
+
                 // Valider le fichier photo
                 if (!photoFile.exists()) {
                     throw new IllegalArgumentException("Le fichier photo est invalide ou manquant");
                 }
-                
+
                 // Générer un nom de fichier unique
                 String fileName = UUID.randomUUID() + "_" + photoFile.getName();
                 String relativePhotoPath = WEB_PHOTOS_PATH + fileName;
-                
+
                 // Copier le fichier dans le dossier resources
                 File destFile = new File(PHOTOS_DIR + "\\" + fileName);
                 Files.copy(photoFile.toPath(), destFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                
+
                 // Mettre à jour le chemin de la photo
                 espace.setPhotoUrl(relativePhotoPath);
             }
-            
+
             // Mettre à jour l'espace dans la base de données
             return update(espace) == 1;
         } catch (IOException e) {
-            System.out.println("Erreur lors de la copie de la photo : " + e.getMessage());
+            logger.error("Erreur lors de la copie de la photo : " + e.getMessage());
             return false;
         } catch (IllegalArgumentException e) {
-            System.out.println("Erreur lors de la mise à jour : " + e.getMessage());
+            logger.error("Erreur lors de la mise à jour : " + e.getMessage());
             return false;
         }
     }
@@ -223,15 +242,14 @@ public class EspaceService {
      */
     public int delete(int espaceId) {
         String req = "DELETE FROM espace WHERE espaceId=?";
-        try {
-            PreparedStatement pst = connection.prepareStatement(req);
+        try (Connection connection = DataSource.getInstance().getConnection();
+             PreparedStatement pst = connection.prepareStatement(req)) {
             pst.setInt(1, espaceId);
             int result = pst.executeUpdate();
-            System.out.println("Espace supprimé avec l'ID: " + espaceId);
+            logger.info("Espace supprimé avec l'ID: " + espaceId);
             return result;
         } catch (SQLException e) {
-            System.out.println("Erreur lors de la suppression : " + e.getMessage());
-            e.printStackTrace();
+            logger.error("Erreur lors de la suppression : " + e.getMessage());
             return 0;
         }
     }
@@ -254,16 +272,16 @@ public class EspaceService {
      */
     public Espace getById(int espaceId) {
         String req = "SELECT * FROM espace WHERE espaceId=?";
-        try {
-            PreparedStatement pst = connection.prepareStatement(req);
+        try (Connection connection = DataSource.getInstance().getConnection();
+             PreparedStatement pst = connection.prepareStatement(req)) {
             pst.setInt(1, espaceId);
-            ResultSet rs = pst.executeQuery();
-            if (rs.next()) {
-                return mapResultSetToEspace(rs);
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    return mapResultSetToEspace(rs);
+                }
             }
         } catch (SQLException e) {
-            System.out.println("Erreur lors de la récupération : " + e.getMessage());
-            e.printStackTrace();
+            logger.error("Erreur lors de la récupération : " + e.getMessage());
         }
         return null;
     }
@@ -274,27 +292,27 @@ public class EspaceService {
      * @return Liste de tous les espaces
      */
     public List<Espace> getAll() {
+        logger.debug("Récupération de tous les espaces");
+        long startTime = System.currentTimeMillis();
+
         List<Espace> espaces = new ArrayList<>();
         String req = "SELECT * FROM espace";
-        try {
-            PreparedStatement pst = connection.prepareStatement(req);
-            ResultSet rs = pst.executeQuery();
+        try (Connection connection = DataSource.getInstance().getConnection();
+             PreparedStatement pst = connection.prepareStatement(req);
+             ResultSet rs = pst.executeQuery()) {
+
             while (rs.next()) {
                 Espace espace = mapResultSetToEspace(rs);
                 espaces.add(espace);
             }
+
+            logger.info("Récupération réussie de {} espaces ({} ms)",
+                espaces.size(), System.currentTimeMillis() - startTime);
+            return espaces;
         } catch (SQLException e) {
-            System.out.println("Erreur lors de la récupération : " + e.getMessage());
-            e.printStackTrace();
+            logger.error("Erreur lors de la récupération des espaces", e);
+            throw new RuntimeException(e);
         }
-        
-        // Si aucun espace n'est trouvé, créer des exemples
-        if (espaces.isEmpty()) {
-            espaces = createDummyEspaces();
-            System.out.println("Aucun espace trouvé dans la base de données, utilisation de données de démonstration");
-        }
-        
-        return espaces;
     }
 
     /**
@@ -315,21 +333,28 @@ public class EspaceService {
     public List<Espace> searchByNameOrType(String keyword) {
         List<Espace> espaces = new ArrayList<>();
         String req = "SELECT * FROM espace WHERE nom LIKE ? OR type LIKE ?";
-        try {
-            PreparedStatement pst = connection.prepareStatement(req);
-            pst.setString(1, "%" + keyword + "%");
-            pst.setString(2, "%" + keyword + "%");
-            ResultSet rs = pst.executeQuery();
-            while (rs.next()) {
-                Espace espace = mapResultSetToEspace(rs);
-                espaces.add(espace);
+
+        try (Connection connection = DataSource.getInstance().getConnection();
+             PreparedStatement pst = connection.prepareStatement(req)) {
+
+            String searchKeyword = "%" + keyword + "%";
+            pst.setString(1, searchKeyword);
+            pst.setString(2, searchKeyword);
+
+            try (ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    Espace espace = mapResultSetToEspace(rs);
+                    espaces.add(espace);
+                }
             }
+
         } catch (SQLException e) {
-            System.out.println("Erreur lors de la recherche : " + e.getMessage());
-            e.printStackTrace();
+            logger.error("Erreur lors de la recherche d'espaces", e);
         }
+
         return espaces;
     }
+
 
     /**
      * Récupère tous les espaces disponibles
@@ -339,16 +364,15 @@ public class EspaceService {
     public List<Espace> getAllAvailable() {
         List<Espace> espaces = new ArrayList<>();
         String req = "SELECT * FROM espace WHERE disponibilite=true";
-        try {
-            PreparedStatement pst = connection.prepareStatement(req);
-            ResultSet rs = pst.executeQuery();
+        try (Connection connection = DataSource.getInstance().getConnection();
+             PreparedStatement pst = connection.prepareStatement(req);
+             ResultSet rs = pst.executeQuery()) {
             while (rs.next()) {
                 Espace espace = mapResultSetToEspace(rs);
                 espaces.add(espace);
             }
         } catch (SQLException e) {
-            System.out.println("Erreur lors de la récupération : " + e.getMessage());
-            e.printStackTrace();
+            logger.error("Erreur lors de la récupération : " + e.getMessage());
         }
         return espaces;
     }
@@ -360,15 +384,14 @@ public class EspaceService {
      */
     public int countTotalSpaces() {
         String req = "SELECT COUNT(*) FROM espace";
-        try {
-            PreparedStatement pst = connection.prepareStatement(req);
-            ResultSet rs = pst.executeQuery();
+        try (Connection connection = DataSource.getInstance().getConnection();
+             PreparedStatement pst = connection.prepareStatement(req);
+             ResultSet rs = pst.executeQuery()) {
             if (rs.next()) {
                 return rs.getInt(1);
             }
         } catch (SQLException e) {
-            System.out.println("Erreur lors du comptage : " + e.getMessage());
-            e.printStackTrace();
+            logger.error("Erreur lors du comptage : " + e.getMessage());
         }
         return 0;
     }
@@ -380,15 +403,14 @@ public class EspaceService {
      */
     public int countAvailableSpaces() {
         String req = "SELECT COUNT(*) FROM espace WHERE disponibilite=true";
-        try {
-            PreparedStatement pst = connection.prepareStatement(req);
-            ResultSet rs = pst.executeQuery();
+        try (Connection connection = DataSource.getInstance().getConnection();
+             PreparedStatement pst = connection.prepareStatement(req);
+             ResultSet rs = pst.executeQuery()) {
             if (rs.next()) {
                 return rs.getInt(1);
             }
         } catch (SQLException e) {
-            System.out.println("Erreur lors du comptage : " + e.getMessage());
-            e.printStackTrace();
+            logger.error("Erreur lors du comptage : " + e.getMessage());
         }
         return 0;
     }
@@ -402,6 +424,8 @@ public class EspaceService {
      */
     private Espace mapResultSetToEspace(ResultSet rs) throws SQLException {
         Espace espace = new Espace();
+        ResultSetMetaData metaData = rs.getMetaData();
+        
         espace.setEspaceId(rs.getInt("espaceId"));
         espace.setNom(rs.getString("nom"));
         espace.setType(rs.getString("type"));
@@ -410,29 +434,31 @@ public class EspaceService {
         espace.setPrix(rs.getDouble("prix"));
         espace.setDisponibilite(rs.getBoolean("disponibilite"));
         espace.setPhotoUrl(rs.getString("photoUrl"));
-        
-        // Get description if it exists
-        try {
+
+        if (hasColumn(metaData, "description")) {
             espace.setDescription(rs.getString("description"));
-        } catch (SQLException e) {
-            // Column might not exist in older schema versions
+        } else {
             espace.setDescription("");
         }
-        
-        // Get image if it exists
-        try {
+
+        if (hasColumn(metaData, "image")) {
             espace.setImage(rs.getString("image"));
-        } catch (SQLException e) {
-            // Column might not exist in older schema versions
-            // If image is not set but photoUrl is, use photoUrl for image
-            if (espace.getPhotoUrl() != null && !espace.getPhotoUrl().isEmpty()) {
-                espace.setImage(espace.getPhotoUrl());
-            }
+        } else if (espace.getPhotoUrl() != null && !espace.getPhotoUrl().isEmpty()) {
+            espace.setImage(espace.getPhotoUrl());
         }
-        
+
         return espace;
     }
     
+    private boolean hasColumn(ResultSetMetaData metaData, String columnName) throws SQLException {
+        for (int i = 1; i <= metaData.getColumnCount(); i++) {
+            if (metaData.getColumnName(i).equalsIgnoreCase(columnName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Crée des espaces de démonstration pour le prototype
      * @return Liste d'espaces de démonstration
@@ -447,50 +473,72 @@ public class EspaceService {
             "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=600&auto=format&fit=crop",
             "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=600&auto=format&fit=crop"
         };
-        
+
         // Créer des espaces de démonstration
         List<Espace> dummySpaces = new ArrayList<>();
-        
+
         Espace espace1 = new Espace(1, "Grande Salle", "Conférence", 200, "Tunis Centre", 1500.0, true);
         espace1.setImage(demoImageUrls[0]);
         espace1.setDescription("Grande salle adaptée pour des conférences et événements importants.");
         dummySpaces.add(espace1);
-        
+
         Espace espace2 = new Espace(2, "Jardin Event", "Extérieur", 150, "Gammarth", 2000.0, true);
         espace2.setImage(demoImageUrls[1]);
         espace2.setDescription("Jardin spacieux idéal pour les mariages et les cérémonies en plein air.");
         dummySpaces.add(espace2);
-        
+
         Espace espace3 = new Espace(3, "Studio Photo", "Studio", 20, "La Marsa", 500.0, false);
         espace3.setImage(demoImageUrls[2]);
         espace3.setDescription("Studio professionnel pour séances photo et petits tournages.");
         dummySpaces.add(espace3);
-        
+
         Espace espace4 = new Espace(4, "Salle de Réunion A", "Réunion", 15, "Les Berges du Lac", 350.0, true);
         espace4.setImage(demoImageUrls[3]);
         espace4.setDescription("Salle de réunion équipée de technologies modernes pour vos réunions professionnelles.");
         dummySpaces.add(espace4);
-        
+
         Espace espace5 = new Espace(5, "Salle de Réunion B", "Réunion", 10, "Les Berges du Lac", 250.0, true);
         espace5.setImage(demoImageUrls[4]);
         espace5.setDescription("Petite salle de réunion pour des rencontres professionnelles intimes.");
         dummySpaces.add(espace5);
-        
+
         Espace espace6 = new Espace(6, "Salle de Conférence", "Conférence", 100, "Sousse", 1000.0, false);
         espace6.setImage(demoImageUrls[5]);
         espace6.setDescription("Salle de conférence spacieuse à Sousse pour des événements professionnels.");
         dummySpaces.add(espace6);
-        
+
         Espace espace7 = new Espace(7, "Espace Lounge", "Cocktail", 80, "Hammamet", 1200.0, true);
         espace7.setImage(demoImageUrls[0]);
         espace7.setDescription("Espace convivial pour des cocktails et des événements de networking.");
         dummySpaces.add(espace7);
-        
+
         Espace espace8 = new Espace(8, "Terrasse Vue Mer", "Extérieur", 100, "Hammamet", 1800.0, true);
         espace8.setImage(demoImageUrls[1]);
         espace8.setDescription("Magnifique terrasse avec vue sur la mer pour des événements inoubliables.");
         dummySpaces.add(espace8);
-        
+
         return dummySpaces;
+    }
+
+
+    public void updateEspace(Espace espace) {
+        Connection conn = null;
+        try {
+            conn = DataSource.getInstance().getConnection();
+            conn.setAutoCommit(false);
+
+            // Opérations DB...
+
+            conn.commit();
+        } catch (SQLException e) {
+            if (conn != null) {
+                try { conn.rollback(); } catch (SQLException ex) {}
+            }
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try { conn.setAutoCommit(true); conn.close(); } catch (SQLException e) {}
+            }
+        }
     }
 }

@@ -4,6 +4,7 @@ import com.esprit.models.Espace;
 import com.esprit.services.EspaceService;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
@@ -94,6 +95,7 @@ public class AjouterEspaceController implements Initializable {
                 txtPrice.setText(String.valueOf(espaceToEdit.getPrix()));
                 checkAvailable.setSelected(espaceToEdit.isDisponibilite());
                 txtDescription.setText(espaceToEdit.getDescription());
+                txtPhotoUrl.setText(espaceToEdit.getPhotoUrl());
 
                 // Update image status if there's an image
                 if (espaceToEdit.getImage() != null && !espaceToEdit.getImage().isEmpty()) {
@@ -261,9 +263,10 @@ public class AjouterEspaceController implements Initializable {
         space.setPrix(Double.parseDouble(txtPrice.getText()));
         space.setDisponibilite(checkAvailable.isSelected());
         space.setDescription(txtDescription.getText());
+        space.setPhotoUrl(txtPhotoUrl.getText());
 
-        // Utiliser le même chemin pour photoUrl et image
-        if (selectedImagePath != null) {
+        // Priorité à l'URL si les deux sont fournis
+        if (selectedImagePath != null && (txtPhotoUrl.getText() == null || txtPhotoUrl.getText().isEmpty())) {
             space.setImage(selectedImagePath);
             space.setPhotoUrl(selectedImagePath);
         }
@@ -385,6 +388,7 @@ public class AjouterEspaceController implements Initializable {
                     || !txtPrice.getText().equals(String.valueOf(espaceToEdit.getPrix()))
                     || checkAvailable.isSelected() != espaceToEdit.isDisponibilite()
                     || !txtDescription.getText().equals(espaceToEdit.getDescription())
+                    || !txtPhotoUrl.getText().equals(espaceToEdit.getPhotoUrl())
                     || (selectedImagePath != null && !selectedImagePath.equals(espaceToEdit.getImage()));
         } else {
             return !txtName.getText().isEmpty()
@@ -393,6 +397,7 @@ public class AjouterEspaceController implements Initializable {
                     || !txtLocation.getText().isEmpty()
                     || !txtPrice.getText().isEmpty()
                     || !txtDescription.getText().isEmpty()
+                    || !txtPhotoUrl.getText().isEmpty()
                     || selectedImagePath != null;
         }
     }

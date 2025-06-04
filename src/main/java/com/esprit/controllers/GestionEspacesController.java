@@ -23,6 +23,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -85,6 +86,10 @@ public class GestionEspacesController implements Initializable {
     private EspaceService espaceService;
     private ObservableList<Espace> spacesList;
     private FilteredList<Espace> filteredSpaces;
+
+    private static final String IMAGES_BASE_PATH = "/images/spaces/";
+    private static final String IMAGES_DIR = System.getProperty("user.dir") + "\\src\\main\\resources\\images\\spaces\\";
+    private static final String DEFAULT_IMAGE = "default-space.png";
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -152,6 +157,7 @@ public class GestionEspacesController implements Initializable {
                 imageView.setFitHeight(50);
                 imageView.setPreserveRatio(true);
             }
+            
             @Override
             protected void updateItem(String imagePath, boolean empty) {
                 super.updateItem(imagePath, empty);
@@ -161,27 +167,47 @@ public class GestionEspacesController implements Initializable {
                 } else {
                     try {
                         javafx.scene.image.Image img;
-                        if (imagePath.startsWith("http")) {
+                        
+                        if (imagePath == null || imagePath.isEmpty()) {
+                            // Charger l'image par défaut
+                            File defaultFile = new File(IMAGES_DIR + DEFAULT_IMAGE);
+                            img = new javafx.scene.image.Image(defaultFile.toURI().toString(), 80, 50, true, true);
+                        } else if (imagePath.startsWith("http")) {
+                            // Chargement depuis URL web
                             img = new javafx.scene.image.Image(imagePath, 80, 50, true, true, true);
                             img.errorProperty().addListener((obs, wasError, isNowError) -> {
                                 if (isNowError) setGraphic(new Label("URL invalide"));
                             });
                         } else {
-                            img = new javafx.scene.image.Image(getClass().getResourceAsStream("/images/" + imagePath), 80, 50, true, true);
+                            // Chargement depuis fichier local
+                            String cleanPath = imagePath.replace("..", "").replace("/", "\\");
+                            File file = new File(IMAGES_DIR + cleanPath);
+                            
+                            if (file.exists()) {
+                                img = new javafx.scene.image.Image(file.toURI().toString(), 80, 50, true, true);
+                            } else {
+                                // Fallback sur l'image par défaut
+                                File defaultFile = new File(IMAGES_DIR + DEFAULT_IMAGE);
+                                img = new javafx.scene.image.Image(defaultFile.toURI().toString(), 80, 50, true, true);
+                            }
                         }
+                        
                         imageView.setImage(img);
                         setGraphic(imageView);
                         setOnMouseClicked(event -> showEnlargedImage(img));
                     } catch (Exception e) {
-                        setGraphic(new Label("Erreur"));
-                        setOnMouseClicked(null);
+                        System.out.println("Erreur chargement image: " + e.getMessage());
+                        // Fallback ultime
+                        setGraphic(new Label("Espace"));
                     }
                 }
             }
         });
         
         // Set up the photo URL column to display image thumbnail from internet URL with click to enlarge
-        colPhotoUrl.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPhotoUrl()));
+        colPhotoUrl.setCellValueFactory(cellData -> 
+            new SimpleStringProperty(cellData.getValue().getPhotoUrl())
+        );
         colPhotoUrl.setCellFactory(column -> new TableCell<>() {
             private final javafx.scene.image.ImageView imageView = new javafx.scene.image.ImageView();
             {
@@ -366,6 +392,7 @@ public class GestionEspacesController implements Initializable {
     
     @FXML
     private void showAddSpaceDialog() {
+        System.out.println("DEBUG: Add Space button clicked");
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("views/AjouterEspace.fxml"));
             Parent root = loader.load();
@@ -468,6 +495,7 @@ public class GestionEspacesController implements Initializable {
      * Rafraîchit la liste des espaces depuis la base de données
      */
     public void refreshSpacesList() {
+        System.out.println("DEBUG: Refresh button clicked");
         // Récupérer les espaces mis à jour depuis la base de données
         List<Espace> spaces = espaceService.getAll();
         

@@ -1,514 +1,318 @@
 package com.esprit.services;
 
-import com.esprit.models.Espace;
 import com.esprit.models.ReservationEspace;
 import com.esprit.utils.DataSource;
+
 import java.sql.*;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class ReservationEspaceService {
 
-    private Connection connection;
-    private EmailService emailService;
-    private EspaceService espaceService;
+    private static final Logger logger = Logger.getLogger(ReservationEspaceService.class.getName());
 
     public ReservationEspaceService() {
-        connection = DataSource.getInstance().getConnection();
-        emailService = new EmailService();
-        espaceService = new EspaceService();
     }
 
-    public int add(ReservationEspace r) {
-        String req = "INSERT INTO reservationespace(espaceId, nomClient, emailClient, telephoneClient, dateDebut, dateFin, nombrePersonnes, description, dateReservation, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?)";
-        int generatedId = -1;
-        try {
-            PreparedStatement pst = connection.prepareStatement(req, Statement.RETURN_GENERATED_KEYS);
-            pst.setInt(1, r.getEspaceId());
-            pst.setString(2, r.getNomClient());
-            pst.setString(3, r.getEmailClient());
-            pst.setString(4, r.getTelephoneClient());
-            pst.setDate(5, Date.valueOf(r.getDateDebut()));
-            pst.setDate(6, Date.valueOf(r.getDateFin()));
-            pst.setInt(7, r.getNombrePersonnes());
-            pst.setString(8, r.getDescription());
-            pst.setString(9, r.getStatus() != null ? r.getStatus() : "En attente");
-            pst.executeUpdate();
-            
-            // Récupérer l'ID généré
-            ResultSet generatedKeys = pst.getGeneratedKeys();
-            if (generatedKeys.next()) {
-                generatedId = generatedKeys.getInt(1);
-                r.setReservationId(generatedId); // Mettre à jour l'objet avec l'ID généré
-            }
-            
-            System.out.println("Reservation added with ID: " + generatedId);
-        } catch (SQLException e) {
-            System.out.println("Error adding reservation: " + e.getMessage());
-            e.printStackTrace();
-        }
-        return generatedId;
-    }
-
-    public int update(ReservationEspace r) {
-        String req = "UPDATE reservationespace SET espaceId=?, nomClient=?, emailClient=?, telephoneClient=?, dateDebut=?, dateFin=?, nombrePersonnes=?, description=?, status=? WHERE reservationId=?";
-        try {
-            PreparedStatement pst = connection.prepareStatement(req);
-            pst.setInt(1, r.getEspaceId());
-            pst.setString(2, r.getNomClient());
-            pst.setString(3, r.getEmailClient());
-            pst.setString(4, r.getTelephoneClient());
-            pst.setDate(5, Date.valueOf(r.getDateDebut()));
-            pst.setDate(6, Date.valueOf(r.getDateFin()));
-            pst.setInt(7, r.getNombrePersonnes());
-            pst.setString(8, r.getDescription());
-            pst.setString(9, r.getStatus() != null ? r.getStatus() : "En attente");
-            pst.setInt(10, r.getReservationId());
-            int result = pst.executeUpdate();
-            System.out.println("Reservation updated with ID: " + r.getReservationId());
-            return result;
-        } catch (SQLException e) {
-            System.out.println("Error updating reservation: " + e.getMessage());
-            e.printStackTrace();
-            return 0;
-        }
-    }
-
-    public int delete(int reservationId) {
-        String req = "DELETE FROM reservationespace WHERE reservationId=?";
-        try {
-            PreparedStatement pst = connection.prepareStatement(req);
-            pst.setInt(1, reservationId);
-            int result = pst.executeUpdate();
-            System.out.println("Reservation deleted with ID: " + reservationId);
-            return result;
-        } catch (SQLException e) {
-            System.out.println("Error deleting reservation: " + e.getMessage());
-            e.printStackTrace();
-            return 0;
-        }
-    }
-
-    /**
-     * Alias pour la méthode delete (pour maintenir la compatibilité)
-     * @param reservationId L'ID de la réservation à supprimer
-     */
-    public void supprimer(int reservationId) {
-        delete(reservationId);
-    }
-
+    // Méthode principale pour récupérer toutes les réservations
     public List<ReservationEspace> getAll() {
         List<ReservationEspace> reservations = new ArrayList<>();
-        String req = "SELECT * FROM reservationespace";
-        try {
-            PreparedStatement pst = connection.prepareStatement(req);
-            ResultSet rs = pst.executeQuery();
-            while (rs.next()) {
-                ReservationEspace r = mapResultSetToReservation(rs);
-                reservations.add(r);
+        String query = "SELECT * FROM reservationespace";
+
+        try (Connection connection = DataSource.getInstance().getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+
+            while (resultSet.next()) {
+                reservations.add(mapResultSetToReservation(resultSet));
             }
-            System.out.println("Retrieved " + reservations.size() + " reservations from database");
+            logger.info("Récupération de " + reservations.size() + " réservations");
         } catch (SQLException e) {
-            System.out.println("Error fetching reservations: " + e.getMessage());
-            e.printStackTrace();
-        }
-        
-        // Si aucune réservation n'est trouvée, créer des exemples
-        if (reservations.isEmpty()) {
-            reservations = createDummyReservations();
-            System.out.println("No reservations found in database, using demo data");
-        }
-        
-        return reservations;
-    }
-
-    /**
-     * Méthode alternative pour récupérer toutes les réservations (pour maintenir la compatibilité)
-     * @return Liste de toutes les réservations
-     */
-    public List<ReservationEspace> getAllReservations() {
-        return getAll();
-    }
-
-    public List<ReservationEspace> getReservationsBetweenDates(LocalDate start, LocalDate end) {
-        List<ReservationEspace> reservations = new ArrayList<>();
-        String req = "SELECT * FROM reservationespace WHERE dateDebut >= ? AND dateFin <= ?";
-
-        try {
-            PreparedStatement pst = connection.prepareStatement(req);
-            pst.setDate(1, Date.valueOf(start));
-            pst.setDate(2, Date.valueOf(end));
-
-            ResultSet rs = pst.executeQuery();
-            while (rs.next()) {
-                ReservationEspace r = mapResultSetToReservation(rs);
-                reservations.add(r);
-            }
-            System.out.println("Retrieved " + reservations.size() + " reservations between dates " + 
-                               start + " and " + end);
-        } catch (SQLException e) {
-            System.out.println("Error fetching reservations between dates: " + e.getMessage());
-            e.printStackTrace();
+            logger.severe("Erreur lors de la récupération des réservations: " + e.getMessage());
         }
         return reservations;
     }
 
-    public int creerReservation(int espaceId, String nomClient, String emailClient, String telephoneClient,
-                                LocalDate dateDebut, LocalDate dateFin, int nombrePersonnes, String description) {
-        ReservationEspace r = new ReservationEspace();
-        r.setEspaceId(espaceId);
-        r.setNomClient(nomClient);
-        r.setEmailClient(emailClient);
-        r.setTelephoneClient(telephoneClient);
-        r.setDateDebut(dateDebut);
-        r.setDateFin(dateFin);
-        r.setNombrePersonnes(nombrePersonnes);
-        r.setDescription(description);
-        r.setStatus("En attente");
-        
-        int reservationId = add(r);
-        
-        // Le contenu de l'email est maintenant géré dans le contrôleur pour inclure plus de détails
-        // et le numéro de réservation
-        
-        return reservationId;
-    }
-
-    public int creerReservation(String currentUserEmail, int espaceId, LocalDate dateDebut, LocalDate dateFin) {
-        ReservationEspace r = new ReservationEspace();
-        r.setEspaceId(espaceId);
-        r.setNomClient("Client"); // Default name
-        r.setEmailClient(currentUserEmail);
-        r.setTelephoneClient(""); // Will need to be updated later
-        r.setDateDebut(dateDebut);
-        r.setDateFin(dateFin);
-        r.setNombrePersonnes(1); // Default value
-        r.setDescription("Réservation en ligne"); // Default description
-        r.setStatus("En attente");
-        
-        // Add the reservation to the database
-        return add(r);
-    }
-
-    /**
-     * Récupère une réservation par son ID
-     * @param id L'identifiant de la réservation
-     * @return La réservation correspondante ou null si non trouvée
-     */
-    public ReservationEspace getReservationById(int id) {
-        String req = "SELECT * FROM reservationespace WHERE reservationId = ?";
-        try {
-            PreparedStatement pst = connection.prepareStatement(req);
-            pst.setInt(1, id);
-            ResultSet rs = pst.executeQuery();
-            
-            if (rs.next()) {
-                return mapResultSetToReservation(rs);
-            }
-        } catch (SQLException e) {
-            System.out.println("Error fetching reservation by ID: " + e.getMessage());
-            e.printStackTrace();
-        }
-        return null;
-    }
-    
-    /**
-     * Récupère toutes les réservations pour un espace donné
-     * @param espaceId L'ID de l'espace
-     * @return Liste des réservations pour cet espace
-     */
-    public List<ReservationEspace> getReservationsByEspaceId(int espaceId) {
-        List<ReservationEspace> reservations = new ArrayList<>();
-        String req = "SELECT * FROM reservationespace WHERE espaceId = ?";
-        
-        try {
-            PreparedStatement pst = connection.prepareStatement(req);
-            pst.setInt(1, espaceId);
-            ResultSet rs = pst.executeQuery();
-            
-            while (rs.next()) {
-                ReservationEspace r = mapResultSetToReservation(rs);
-                reservations.add(r);
-            }
-            System.out.println("Retrieved " + reservations.size() + " reservations for space ID " + espaceId);
-        } catch (SQLException e) {
-            System.out.println("Error fetching reservations by space ID: " + e.getMessage());
-            e.printStackTrace();
-        }
-        
-        return reservations;
-    }
-    
-    /**
-     * Récupère toutes les réservations pour un client donné
-     * @param emailClient L'email du client
-     * @return Liste des réservations pour ce client
-     */
-    public List<ReservationEspace> getReservationsByClient(String emailClient) {
-        List<ReservationEspace> reservations = new ArrayList<>();
-        String req = "SELECT * FROM reservationespace WHERE emailClient = ?";
-        
-        try {
-            PreparedStatement pst = connection.prepareStatement(req);
-            pst.setString(1, emailClient);
-            ResultSet rs = pst.executeQuery();
-            
-            while (rs.next()) {
-                ReservationEspace r = mapResultSetToReservation(rs);
-                reservations.add(r);
-            }
-            System.out.println("Retrieved " + reservations.size() + " reservations for client " + emailClient);
-        } catch (SQLException e) {
-            System.out.println("Error fetching reservations by client: " + e.getMessage());
-            e.printStackTrace();
-        }
-        
-        return reservations;
-    }
-    
-    /**
-     * Helper method to map a ResultSet to a ReservationEspace object
-     * @param rs ResultSet to map
-     * @return Mapped ReservationEspace object
-     * @throws SQLException if a database access error occurs
-     */
+    // Mapping ResultSet -> ReservationEspace (unifié)
     private ReservationEspace mapResultSetToReservation(ResultSet rs) throws SQLException {
-        ReservationEspace r = new ReservationEspace();
-        r.setReservationId(rs.getInt("reservationId"));
-        r.setEspaceId(rs.getInt("espaceId"));
-        r.setNomClient(rs.getString("nomClient"));
-        r.setEmailClient(rs.getString("emailClient"));
-        r.setTelephoneClient(rs.getString("telephoneClient"));
-        r.setDateDebut(rs.getDate("dateDebut").toLocalDate());
-        r.setDateFin(rs.getDate("dateFin").toLocalDate());
-        r.setNombrePersonnes(rs.getInt("nombrePersonnes"));
-        r.setDescription(rs.getString("description"));
-        
-        // Get status if it exists
-        try {
-            r.setStatus(rs.getString("status"));
-        } catch (SQLException e) {
-            // Column might not exist in older schema versions
-            r.setStatus("En attente");
+        ReservationEspace reservation = new ReservationEspace();
+        reservation.setReservationId(rs.getInt("reservationId"));
+        reservation.setEspaceId(rs.getInt("espaceId"));
+        reservation.setNomClient(rs.getString("nomClient"));
+        reservation.setEmailClient(rs.getString("emailClient"));
+        reservation.setTelephoneClient(rs.getString("telephoneClient"));
+        reservation.setDateDebut(rs.getDate("dateDebut").toLocalDate());
+        reservation.setDateFin(rs.getDate("dateFin").toLocalDate());
+        reservation.setNombrePersonnes(rs.getInt("nombrePersonnes"));
+        reservation.setDescription(rs.getString("description"));
+        Timestamp dateReservationTimestamp = rs.getTimestamp("dateReservation");
+        if (dateReservationTimestamp != null) {
+            reservation.setDateReservation(dateReservationTimestamp.toLocalDateTime());
         }
-        
-        return r;
-    }
-    
-    /**
-     * Crée des réservations de démonstration pour le prototype
-     * @return Liste de réservations de démonstration
-     */
-    private List<ReservationEspace> createDummyReservations() {
-        List<ReservationEspace> dummyReservations = new ArrayList<>();
-        Random random = new Random();
-        LocalDate today = LocalDate.now();
-        
-        // Noms de clients de démonstration
-        String[] clientNames = {
-            "Sophie Martin", "Thomas Dubois", "Emma Bernard", "Lucas Robert", 
-            "Chloé Petit", "Antoine Durand", "Léa Richard", "Hugo Moreau"
-        };
-        
-        // Emails de démonstration
-        String[] clientEmails = {
-            "sophie.martin@example.com", "thomas.dubois@example.com", 
-            "emma.bernard@example.com", "lucas.robert@example.com",
-            "chloe.petit@example.com", "antoine.durand@example.com", 
-            "lea.richard@example.com", "hugo.moreau@example.com"
-        };
-        
-        // Téléphones de démonstration
-        String[] clientPhones = {
-            "0123456789", "0234567890", "0345678901", "0456789012",
-            "0567890123", "0678901234", "0789012345", "0890123456"
-        };
-        
-        // Descriptions de démonstration
-        String[] descriptions = {
-            "Réunion d'entreprise", "Mariage", "Conférence annuelle", 
-            "Séminaire de formation", "Fête d'anniversaire", "Exposition", 
-            "Lancement de produit", "Atelier"
-        };
-        
-        // Créer des réservations pour les 6 derniers mois avec différents espaces
-        for (int i = 0; i < 20; i++) {
-            ReservationEspace reservation = new ReservationEspace();
-            
-            // ID unique pour la réservation
-            reservation.setReservationId(i + 1);
-            
-            // Espace ID entre 1 et 8
-            int espaceId = random.nextInt(8) + 1;
-            reservation.setEspaceId(espaceId);
-            
-            // Client aléatoire
-            int clientIndex = random.nextInt(clientNames.length);
-            reservation.setNomClient(clientNames[clientIndex]);
-            reservation.setEmailClient(clientEmails[clientIndex]);
-            reservation.setTelephoneClient(clientPhones[clientIndex]);
-            
-            // Date aléatoire dans les 6 derniers mois
-            int randomMonthOffset = random.nextInt(6);
-            LocalDate startDate = today.minusMonths(randomMonthOffset).minusDays(random.nextInt(28));
-            LocalDate endDate = startDate.plusDays(random.nextInt(5) + 1); // Durée de 1 à 5 jours
-            
-            reservation.setDateDebut(startDate);
-            reservation.setDateFin(endDate);
-            
-            // Nombre de personnes aléatoire
-            reservation.setNombrePersonnes(random.nextInt(50) + 5); // Entre 5 et 54 personnes
-            
-            // Description aléatoire
-            reservation.setDescription(descriptions[random.nextInt(descriptions.length)]);
-            
-            // Status aléatoire (la plupart confirmées)
-            String[] statuses = {"En attente", "En attente", "En attente", "En attente", "Annulée"};
-            reservation.setStatus(statuses[random.nextInt(statuses.length)]);
-            
-            dummyReservations.add(reservation);
-        }
-        
-        return dummyReservations;
-    }
-    
-    /**
-     * Récupère le nombre total de réservations
-     * @return Le nombre total de réservations
-     */
-    public int countTotalReservations() {
-        String req = "SELECT COUNT(*) FROM reservationespace";
-        try {
-            PreparedStatement pst = connection.prepareStatement(req);
-            ResultSet rs = pst.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1);
-            }
-        } catch (SQLException e) {
-            System.out.println("Error counting reservations: " + e.getMessage());
-            e.printStackTrace();
-        }
-        return 0;
-    }
-    
-    /**
-     * Récupère le nombre de réservations par mois
-     * @return Map avec le mois (1-12) comme clé et le nombre de réservations comme valeur
-     */
-    public List<ReservationEspace> getReservationsForMonth(Month month, int year) {
-        List<ReservationEspace> reservations = new ArrayList<>();
-        
-        // Créer les dates de début et de fin du mois
-        LocalDate startOfMonth = LocalDate.of(year, month, 1);
-        LocalDate endOfMonth = startOfMonth.plusMonths(1).minusDays(1);
-        
-        String req = "SELECT * FROM reservationespace WHERE dateDebut >= ? AND dateDebut <= ?";
-        try {
-            PreparedStatement pst = connection.prepareStatement(req);
-            pst.setDate(1, Date.valueOf(startOfMonth));
-            pst.setDate(2, Date.valueOf(endOfMonth));
-            
-            ResultSet rs = pst.executeQuery();
-            while (rs.next()) {
-                ReservationEspace r = mapResultSetToReservation(rs);
-                reservations.add(r);
-            }
-            System.out.println("Retrieved " + reservations.size() + " reservations for " + 
-                              month + " " + year);
-        } catch (SQLException e) {
-            System.out.println("Error fetching reservations for month: " + e.getMessage());
-            e.printStackTrace();
-        }
-        
-        return reservations;
+        reservation.setStatus(rs.getString("status"));
+        reservation.setPrixTotal(rs.getDouble("prixTotal"));
+        return reservation;
     }
 
-    public Map<String, Long> getMonthlyStats() {
-        Map<String, Long> stats = new java.util.LinkedHashMap<>();
-        
-        // Récupérer les 12 derniers mois
-        LocalDate now = LocalDate.now();
-        for (int i = 11; i >= 0; i--) {
-            LocalDate month = now.minusMonths(i);
-            String monthKey = month.getMonth().toString() + " " + month.getYear();
+    // Gestion centralisée des erreurs
+    private void handleDatabaseError(String context, SQLException e) {
+        String errorMsg = String.format("[ERREUR] %s\nCode: %d\nMessage: %s",
+                context, e.getErrorCode(), e.getMessage());
+        logger.severe(errorMsg);
+
+        // TODO: Implémenter une notification utilisateur via Alert
+    }
+
+    // Vérifie s'il existe une réservation qui chevauche la nouvelle réservation
+    private boolean hasOverlappingReservation(ReservationEspace reservation) {
+        String query = "SELECT COUNT(*) FROM reservationespace WHERE espaceId = ? AND status NOT IN ('Annulée', 'Terminée') "
+                + "AND ((dateDebut <= ? AND dateFin >= ?) OR (dateDebut <= ? AND dateFin >= ?) OR (dateDebut >= ? AND dateFin <= ?))";
+
+        try (Connection conn = DataSource.getInstance().getConnection();
+             PreparedStatement pst = conn.prepareStatement(query)) {
+
+            pst.setInt(1, reservation.getEspaceId());
+            pst.setDate(2, Date.valueOf(reservation.getDateFin()));
+            pst.setDate(3, Date.valueOf(reservation.getDateDebut()));
+            pst.setDate(4, Date.valueOf(reservation.getDateFin()));
+            pst.setDate(5, Date.valueOf(reservation.getDateDebut()));
+            pst.setDate(6, Date.valueOf(reservation.getDateDebut()));
+            pst.setDate(7, Date.valueOf(reservation.getDateFin()));
+
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            handleDatabaseError("Erreur lors de la vérification des chevauchements de réservation", e);
+        }
+        return false;
+    }
+
+    // Méthode utilitaire pour les paramètres
+    private void setReservationParameters(PreparedStatement pst, ReservationEspace r) throws SQLException {
+        pst.setInt(1, r.getEspaceId());
+        pst.setString(2, r.getNomClient());
+        pst.setString(3, r.getEmailClient());
+        pst.setString(4, r.getTelephoneClient());
+        pst.setDate(5, Date.valueOf(r.getDateDebut()));
+        pst.setDate(6, Date.valueOf(r.getDateFin()));
+        pst.setInt(7, r.getNombrePersonnes());
+        pst.setString(8, r.getDescription());
+        pst.setString(9, r.getStatus() != null ? r.getStatus() : "En attente");
+    }
+
+    // Méthodes CRUD avec gestion des transactions
+    public int add(ReservationEspace reservation) {
+        if (hasOverlappingReservation(reservation)) {
+            logger.warning("Tentative de création d'une réservation en conflit pour l'espace " + reservation.getEspaceId());
+            return -2; // Indicateur de conflit
+        }
+
+        String query = "INSERT INTO reservationespace(espaceId, nomClient, emailClient, telephoneClient, "
+                + "dateDebut, dateFin, nombrePersonnes, description, status, prixTotal) "
+                + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (Connection conn = DataSource.getInstance().getConnection()) {
+            conn.setAutoCommit(false);
             
-            long count = getAll().stream()
-                .filter(r -> {
-                    LocalDate start = r.getDateDebut();
-                    LocalDate end = r.getDateFin();
-                    return (start != null && start.getMonth() == month.getMonth() && start.getYear() == month.getYear()) ||
-                           (end != null && end.getMonth() == month.getMonth() && end.getYear() == month.getYear());
-                })
-                .count();
+            try (PreparedStatement pst = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+                setReservationParameters(pst, reservation);
+                pst.setDouble(10, reservation.getPrixTotal());
+
+                int affectedRows = pst.executeUpdate();
+                if (affectedRows == 0) {
+                    conn.rollback();
+                    return -1;
+                }
+
+                try (ResultSet generatedKeys = pst.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        conn.commit();
+                        return generatedKeys.getInt(1);
+                    }
+                }
+                conn.rollback();
+                return -1;
+            } catch (SQLException e) {
+                conn.rollback();
+                logger.severe("Erreur lors de l'ajout d'une réservation: " + e.getMessage());
+                return -1;
+            }
+        } catch (SQLException e) {
+            logger.severe("Erreur de connexion: " + e.getMessage());
+            return -1;
+        }
+    }
+
+    // Autres méthodes CRUD (update, delete) avec le même pattern
+    public int update(ReservationEspace r) {
+        if (hasOverlappingReservation(r)) {
+            logger.warning("Tentative de mise à jour d'une réservation en conflit pour l'espace " + r.getEspaceId());
+            return 0; // Indicateur de conflit
+        }
+
+        String req = "UPDATE reservationespace SET espaceId=?, nomClient=?, emailClient=?, telephoneClient=?, dateDebut=?, dateFin=?, nombrePersonnes=?, description=?, status=?, prixTotal=? WHERE reservationId=?";
+        try (Connection conn = DataSource.getInstance().getConnection()) {
+            conn.setAutoCommit(false);
+            
+            try (PreparedStatement pst = conn.prepareStatement(req)) {
+                pst.setInt(1, r.getEspaceId());
+                pst.setString(2, r.getNomClient());
+                pst.setString(3, r.getEmailClient());
+                pst.setString(4, r.getTelephoneClient());
+                pst.setDate(5, Date.valueOf(r.getDateDebut()));
+                pst.setDate(6, Date.valueOf(r.getDateFin()));
+                pst.setInt(7, r.getNombrePersonnes());
+                pst.setString(8, r.getDescription());
+                pst.setString(9, r.getStatus());
+                pst.setDouble(10, r.getPrixTotal());
+                pst.setInt(11, r.getReservationId());
                 
-            stats.put(monthKey, count);
-        }
-        
-        return stats;
-    }
-    
-    public Map<String, Long> getStatusStats() {
-        return getAll().stream()
-            .collect(Collectors.groupingBy(
-                ReservationEspace::getStatus,
-                Collectors.counting()
-            ));
-    }
-
-    public int addReservation(ReservationEspace reservation) {
-        return 0;
-    }
-    
-    public Map<String, Long> getPopularSpacesStats() {
-        return getAll().stream()
-            .collect(Collectors.groupingBy(
-                r -> {
-                    Espace espace = espaceService.getById(r.getEspaceId());
-                    return espace != null ? ((com.esprit.models.Espace) espace).getNom() : "Espace Inconnu";
-                },
-                Collectors.counting()
-            ))
-            .entrySet().stream()
-            .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
-            .limit(5)
-            .collect(Collectors.toMap(
-                Map.Entry::getKey,
-                Map.Entry::getValue,
-                (e1, e2) -> e1,
-                LinkedHashMap::new
-            ));
-    }
-
-    public List<ReservationEspace> getByUserAndStatus(String userId, String status) {
-        return getAll().stream()
-            .filter(r -> r.getUserId().equals(userId))
-            .filter(r -> status.equals("Tous") || r.getStatus().equalsIgnoreCase(status))
-            .collect(Collectors.toList());
-    }
-
-    public List<ReservationEspace> getByUser(String email) {
-        List<ReservationEspace> reservations = new ArrayList<>();
-        String req = "SELECT * FROM reservationespace WHERE emailClient = ?";
-        try {
-            PreparedStatement pst = connection.prepareStatement(req);
-            pst.setString(1, email);
-            ResultSet rs = pst.executeQuery();
-            
-            while (rs.next()) {
-                reservations.add(mapResultSetToReservation(rs));
+                int result = pst.executeUpdate();
+                conn.commit();
+                logger.info("Reservation updated with ID: " + r.getReservationId());
+                return result;
+            } catch (SQLException e) {
+                conn.rollback();
+                handleDatabaseError("Erreur lors de la mise à jour d'une réservation", e);
+                return 0;
             }
-            
-            System.out.println("Found " + reservations.size() + " reservations for user " + email);
         } catch (SQLException e) {
-            System.out.println("Error fetching user reservations: " + e.getMessage());
-            e.printStackTrace();
+            handleDatabaseError("Erreur de connexion", e);
+            return 0;
+        }
+    }
+
+    public List<ReservationEspace> getAllReservations() {
+        List<ReservationEspace> reservations = new ArrayList<>();
+        String query = "SELECT * FROM reservationespace ORDER BY dateDebut DESC";
+
+        try (Connection conn = DataSource.getInstance().getConnection()) {
+            if (conn == null || conn.isClosed()) {
+                throw new SQLException("La connexion à la base de données est indisponible");
+            }
+
+            try (Statement stmt = conn.createStatement();
+                 ResultSet rs = stmt.executeQuery(query)) {
+
+                while (rs.next()) {
+                    reservations.add(mapResultSetToReservation(rs));
+                }
+                logger.info("Récupération de " + reservations.size() + " réservations");
+            }
+        } catch (SQLException e) {
+            handleDatabaseError("Erreur lors de la récupération des réservations", e);
+            throw new RuntimeException("Échec du chargement des réservations", e);
         }
         return reservations;
+    }
+
+    // Méthode pour récupérer les réservations par espace
+    public List<ReservationEspace> getReservationsByEspace(int espaceId) {
+        List<ReservationEspace> reservations = new ArrayList<>();
+        String query = "SELECT * FROM reservationespace WHERE espace_id = ?";
+
+        try (Connection conn = DataSource.getInstance().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            
+            stmt.setInt(1, espaceId);
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    reservations.add(mapResultSetToReservation(rs));
+                }
+            }
+        } catch (SQLException e) {
+            logger.info("Erreur lors de la récupération des réservations");
+            throw new RuntimeException(e);
+        }
+        return reservations;
+    }
+
+    // Méthode pour récupérer les réservations par statut
+    public List<ReservationEspace> getByStatus(String status) {
+        String query = "SELECT * FROM reservationespace WHERE status = ? ORDER BY dateDebut";
+        List<ReservationEspace> reservations = new ArrayList<>();
+
+        try (Connection conn = DataSource.getInstance().getConnection();
+             PreparedStatement pst = conn.prepareStatement(query)) {
+            
+            pst.setString(1, status);
+            try (ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    reservations.add(mapResultSetToReservation(rs));
+                }
+            }
+        } catch (SQLException e) {
+            handleDatabaseError("Erreur lors de la récupération des réservations par statut", e);
+        }
+        return reservations;
+    }
+
+    // Méthode pour annuler une réservation
+    public boolean cancelReservation(int reservationId) {
+        String query = "UPDATE reservationespace SET status = 'Annulée' WHERE reservationId = ?";
+        
+        try (Connection conn = DataSource.getInstance().getConnection();
+             PreparedStatement pst = conn.prepareStatement(query)) {
+            
+            conn.setAutoCommit(false);
+            pst.setInt(1, reservationId);
+            int rowsAffected = pst.executeUpdate();
+            conn.commit();
+            
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            handleDatabaseError("Erreur lors de l'annulation de la réservation", e);
+            return false;
+        }
+    }
+
+    // Méthode pour confirmer une réservation
+    public boolean confirmReservation(int reservationId) {
+        String query = "UPDATE reservationespace SET status = 'Confirmée' WHERE reservationId = ?";
+        
+        try (Connection conn = DataSource.getInstance().getConnection();
+             PreparedStatement pst = conn.prepareStatement(query)) {
+            
+            conn.setAutoCommit(false);
+            pst.setInt(1, reservationId);
+            int rowsAffected = pst.executeUpdate();
+            conn.commit();
+            
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            handleDatabaseError("Erreur lors de la confirmation de la réservation", e);
+            return false;
+        }
+    }
+
+    // Méthode pour calculer le prix total
+    public double calculatePrice(int espaceId, LocalDate startDate, LocalDate endDate) {
+        String query = "SELECT prix FROM espace WHERE espaceId = ?";
+        
+        try (Connection conn = DataSource.getInstance().getConnection();
+             PreparedStatement pst = conn.prepareStatement(query)) {
+            
+            pst.setInt(1, espaceId);
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    double dailyPrice = rs.getDouble("prix");
+                    long days = ChronoUnit.DAYS.between(startDate, endDate) + 1;
+                    return dailyPrice * days;
+                }
+            }
+        } catch (SQLException e) {
+            handleDatabaseError("Erreur lors du calcul du prix", e);
+        }
+        return 0;
     }
 }

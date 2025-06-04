@@ -4,6 +4,8 @@ import com.esprit.models.Espace;
 import com.esprit.models.ReservationEspace;
 import com.esprit.services.EspaceService;
 import com.esprit.services.ReservationEspaceService;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -50,6 +52,11 @@ public class TableauDeBordController implements Initializable {
     private final EspaceService espaceService = new EspaceService();
     private final ReservationEspaceService reservationService = new ReservationEspaceService();
 
+    private IntegerProperty totalSpaces = new SimpleIntegerProperty();
+    private IntegerProperty availableSpaces = new SimpleIntegerProperty();
+    private IntegerProperty reservedSpaces = new SimpleIntegerProperty();
+    private IntegerProperty totalReservations = new SimpleIntegerProperty();
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         // Load statistics and data visualizations
@@ -57,6 +64,12 @@ public class TableauDeBordController implements Initializable {
         loadPieChart();
         loadBarChart();
         loadRecentActivity();
+
+        // Bind statistics
+        lblTotalSpaces.textProperty().bind(totalSpaces.asString());
+        lblAvailableSpaces.textProperty().bind(availableSpaces.asString());
+        lblReservedSpaces.textProperty().bind(reservedSpaces.asString());
+        lblTotalReservations.textProperty().bind(totalReservations.asString());
     }
     
     private void loadStatistics() {
@@ -65,33 +78,33 @@ public class TableauDeBordController implements Initializable {
             List<Espace> spaces = espaceService.getAll();
             
             // Count total spaces, available spaces, and reserved spaces
-            int totalSpaces = spaces.size();
-            long availableSpaces = spaces.stream().filter(Espace::isDisponible).count();
-            long reservedSpaces = totalSpaces - availableSpaces;
+            int totalSpacesValue = spaces.size();
+            long availableSpacesValue = spaces.stream().filter(Espace::isDisponible).count();
+            long reservedSpacesValue = totalSpacesValue - availableSpacesValue;
             
             // Get total reservations
             List<ReservationEspace> reservations = reservationService.getAll();
-            int totalReservations = reservations.size();
+            int totalReservationsValue = reservations.size();
             
-            // Update the labels
-            lblTotalSpaces.setText(String.valueOf(totalSpaces));
-            lblAvailableSpaces.setText(String.valueOf(availableSpaces));
-            lblReservedSpaces.setText(String.valueOf(reservedSpaces));
-            lblTotalReservations.setText(String.valueOf(totalReservations));
+            // Update the properties
+            totalSpaces.set(totalSpacesValue);
+            availableSpaces.set((int) availableSpacesValue);
+            reservedSpaces.set((int) reservedSpacesValue);
+            totalReservations.set(totalReservationsValue);
             
-            System.out.println("Statistiques chargées: " + totalSpaces + " espaces, " + 
-                               availableSpaces + " disponibles, " + 
-                               reservedSpaces + " réservés, " + 
-                               totalReservations + " réservations totales");
+            System.out.println("Statistiques chargées: " + totalSpacesValue + " espaces, " + 
+                               availableSpacesValue + " disponibles, " + 
+                               reservedSpacesValue + " réservés, " + 
+                               totalReservationsValue + " réservations totales");
         } catch (Exception e) {
             System.err.println("Erreur lors du chargement des statistiques: " + e.getMessage());
             e.printStackTrace();
             
             // En cas d'erreur, afficher des valeurs par défaut
-            lblTotalSpaces.setText("0");
-            lblAvailableSpaces.setText("0");
-            lblReservedSpaces.setText("0");
-            lblTotalReservations.setText("0");
+            totalSpaces.set(0);
+            availableSpaces.set(0);
+            reservedSpaces.set(0);
+            totalReservations.set(0);
         }
     }
     

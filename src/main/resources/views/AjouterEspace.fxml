@@ -52,18 +52,18 @@
         <Label text="Disponibilité:" GridPane.columnIndex="0" GridPane.rowIndex="5" styleClass="section-title" />
         <CheckBox fx:id="checkAvailable" text="L'espace est disponible pour réservation" GridPane.columnIndex="1" GridPane.rowIndex="5" selected="true" />
 
-        <!-- Photo URL -->
-        <Label text="Photo URL:" GridPane.columnIndex="0" GridPane.rowIndex="6" styleClass="section-title" />
-        <TextField fx:id="txtPhotoUrl" promptText="Lien de l'image (optionnel)" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-
         <!-- Description -->
-        <Label text="Description:" GridPane.columnIndex="0" GridPane.rowIndex="7" styleClass="section-title" />
-        <TextArea fx:id="txtDescription" promptText="Description détaillée de l'espace (optionnel)" GridPane.columnIndex="1" GridPane.rowIndex="7" prefHeight="80" wrapText="true" />
+        <Label text="Description:" GridPane.columnIndex="0" GridPane.rowIndex="6" styleClass="section-title" />
+        <TextArea fx:id="txtDescription" promptText="Description détaillée de l'espace (optionnel)" GridPane.columnIndex="1" GridPane.rowIndex="6" prefHeight="80" wrapText="true" />
+
+        <!-- URL Photo -->
+        <Label text="URL Photo:" GridPane.columnIndex="0" GridPane.rowIndex="7" styleClass="section-title" />
+        <TextField fx:id="txtPhotoUrl" promptText="URL de la photo" GridPane.columnIndex="1" GridPane.rowIndex="7" />
 
         <!-- Image Upload -->
         <Label text="Images:" GridPane.columnIndex="0" GridPane.rowIndex="8" styleClass="section-title" />
         <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="8" alignment="CENTER_LEFT">
-<Button fx:id="btnUploadImage" text="Télécharger Image" styleClass="secondary-button" onAction="#handleUploadImage" />
+            <Button fx:id="btnUploadImage" text="Télécharger Image" styleClass="secondary-button" onAction="#handleUploadImage" />
             <Label fx:id="lblImageStatus" text="Aucune image téléchargée" />
         </HBox>
     </GridPane>

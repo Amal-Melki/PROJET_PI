@@ -215,32 +215,11 @@ public class FormulaireReservationController implements Initializable {
     }
 
     private boolean validateNumberOfPeople() {
-        if (txtNumberOfPeople == null) return false;
-
         try {
-            String value = txtNumberOfPeople.getText().trim();
-            if (value.isEmpty()) {
-                txtNumberOfPeople.setStyle("-fx-border-color: red;");
-                return false;
-            }
-
-            int numberOfPeople = Integer.parseInt(value);
-            if (numberOfPeople <= 0) {
-                showAlert(Alert.AlertType.WARNING, "Saisie Invalide", null,
-                        "Le nombre de personnes doit être supérieur à 0.");
-                txtNumberOfPeople.setStyle("-fx-border-color: red;");
-                return false;
-            } else if (selectedSpace != null && numberOfPeople > selectedSpace.getCapacite()) {
-                showAlert(Alert.AlertType.WARNING, "Capacité Dépassée", null,
-                        "Le nombre de personnes dépasse la capacité de l'espace (" + selectedSpace.getCapacite() + ").");
-                txtNumberOfPeople.setStyle("-fx-border-color: red;");
-                return false;
-            } else {
-                txtNumberOfPeople.setStyle("");
-                return true;
-            }
+            Integer.parseInt(txtNumberOfPeople.getText().trim());
+            return true;
         } catch (NumberFormatException e) {
-            txtNumberOfPeople.setStyle("-fx-border-color: red;");
+            showErrorAlert("Nombre de personnes invalide");
             return false;
         }
     }
@@ -358,76 +337,51 @@ public class FormulaireReservationController implements Initializable {
 
     @FXML
     private void handleReserve() {
-        System.out.println("handleReserve method called"); // Debug log
-
         try {
-            // Validate all form fields
+            // Validate form
             if (!validateForm(true) || !validateNumberOfPeople()) {
-                System.out.println("Form validation failed");
                 return;
             }
 
-            // Create the reservation
+            // Create reservation object
             ReservationEspace reservation = new ReservationEspace();
             reservation.setEspace(selectedSpace);
-            if (dateStart != null) reservation.setDateDebut(dateStart.getValue());
-            if (dateEnd != null) reservation.setDateFin(dateEnd.getValue());
-            if (txtClientName != null) reservation.setNomClient(txtClientName.getText().trim());
-            if (txtEmail != null) reservation.setEmail(txtEmail.getText().trim());
-            if (txtPhone != null) reservation.setTelephone(txtPhone.getText().trim());
+            reservation.setNomClient(txtClientName.getText().trim());
+            reservation.setEmail(txtEmail.getText().trim());
+            reservation.setTelephone(txtPhone.getText().trim());
+            reservation.setDateDebut(dateStart.getValue());
+            reservation.setDateFin(dateEnd.getValue());
+            reservation.setNombrePersonnes(Integer.parseInt(txtNumberOfPeople.getText().trim()));
+            reservation.setDescription(txtDescription.getText().trim());
+            reservation.setStatus("En attente");
+            
+            // Calculate price
+            long days = ChronoUnit.DAYS.between(dateStart.getValue(), dateEnd.getValue()) + 1;
+            reservation.setPrixTotal(days * selectedSpace.getPrix());
 
-            if (txtNumberOfPeople != null && !txtNumberOfPeople.getText().trim().isEmpty()) {
-                try {
-                    reservation.setNombrePersonnes(Integer.parseInt(txtNumberOfPeople.getText().trim()));
-                } catch (NumberFormatException e) {
-                    showAlert(Alert.AlertType.ERROR, "Erreur", "Format invalide",
-                            "Le nombre de personnes doit être un nombre entier.");
-                    return;
-                }
+            // Call service to add reservation
+            int reservationId = reservationService.add(reservation);
+            
+            if (reservationId == -1) {
+                showErrorAlert("Échec de l'enregistrement");
+                return;
             }
 
-            if (txtDescription != null && txtDescription.getText() != null) {
-                reservation.setDescription(txtDescription.getText().trim());
-            } else {
-                reservation.setDescription("");
-            }
+            // Generate and send confirmation
+            File pdfFile = generateReservationPDF("reservation_" + reservationId);
+            emailService.sendEmailWithAttachment(
+                txtEmail.getText().trim(),
+                "Confirmation Réservation #" + reservationId,
+                "Détails de votre réservation...",
+                pdfFile
+            );
 
-            // Calculate total price
-            if (dateStart != null && dateEnd != null && dateStart.getValue() != null && dateEnd.getValue() != null) {
-                long days = ChronoUnit.DAYS.between(dateStart.getValue(), dateEnd.getValue()) + 1;
-                double totalPrice = days * selectedSpace.getPrix();
-                reservation.setPrixTotal(totalPrice);
-            }
-
-            // Add to database
-            int reservationId = reservationService.addReservation(reservation);
-
-            // Generate PDF receipt
-            String identifier = "reservation_" + reservationId;
-            File pdfFile = generateReservationPDF(identifier);
-
-            // Send confirmation email with attached PDF
-            if (txtClientName != null && txtEmail != null) {
-                try {
-                    simulateSendEmail(txtClientName.getText().trim(), txtEmail.getText().trim(), pdfFile);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur d'envoi d'email",
-                            "Une erreur s'est produite lors de l'envoi de l'email : " + e.getMessage());
-                }
-            }
-
-            // Show success message
-            String emailText = (txtEmail != null) ? txtEmail.getText().trim() : "votre adresse email";
-            showSuccessAlert("Réservation Confirmée\nUn email de confirmation a été envoyé à " + emailText +
-                    " avec les détails de votre réservation.");
-
-            // Close the dialog
+            showSuccessAlert("Réservation #" + reservationId + " confirmée!");
             closeDialog();
-
+            
         } catch (Exception e) {
             e.printStackTrace();
-            showErrorAlert("Erreur lors de la réservation: " + e.getMessage());
+            showErrorAlert("Erreur: " + e.getMessage());
         }
     }
 

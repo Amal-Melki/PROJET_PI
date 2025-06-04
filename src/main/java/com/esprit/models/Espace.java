@@ -129,6 +129,15 @@ public class Espace {
         this.photoUrl = photoUrl;
     }
 
+    public void setImage(String imagePath) {
+        this.image = imagePath;
+        this.photoUrl = imagePath; // Pour maintenir la compatibilité
+    }
+
+    public String getImage() {
+        return image != null ? image : photoUrl;
+    }
+
     @Override
     public String toString() {
         return "Espace{" +
@@ -151,15 +160,6 @@ public class Espace {
 
     public String getDescription() {
         return description != null ? description : "";
-    }
-
-    public void setImage(String imagePath) {
-        this.image = imagePath;
-        this.photoUrl = imagePath; // Pour maintenir la compatibilité
-    }
-
-    public String getImage() {
-        return image != null ? image : photoUrl;
     }
 
     public boolean isDisponible() {

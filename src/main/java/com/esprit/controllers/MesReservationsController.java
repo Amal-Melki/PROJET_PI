@@ -1,170 +1,155 @@
 package com.esprit.controllers;
 
+import com.esprit.models.ReservationEspace;
+import com.esprit.services.ReservationEspaceService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.net.URL;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.ResourceBundle;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class MesReservationsController {
+public class MesReservationsController implements Initializable {
 
     @FXML
-    private Button btnRefresh;
+    private TableView<ReservationEspace> reservationsTable;
+
+    // Colonnes TableView
+    @FXML
+    private TableColumn<ReservationEspace, Integer> colId;
+    @FXML
+    private TableColumn<ReservationEspace, String> colSpace;
+    @FXML
+    private TableColumn<ReservationEspace, LocalDate> colStartDate;
+    @FXML
+    private TableColumn<ReservationEspace, LocalDate> colEndDate;
+    @FXML
+    private TableColumn<ReservationEspace, Integer> colPeople;
+    @FXML
+    private TableColumn<ReservationEspace, String> colPhone;
+    @FXML
+    private TableColumn<ReservationEspace, String> colDescription;
+    @FXML
+    private TableColumn<ReservationEspace, String> colStatus;
 
     @FXML
     private ComboBox<String> comboStatusFilter;
+    @FXML
+    private Button btnRefresh;
+    @FXML
+    private Button btnGallery;
+
+    private final ObservableList<ReservationEspace> allReservations = FXCollections.observableArrayList();
+    private final ObservableList<ReservationEspace> filteredReservations = FXCollections.observableArrayList();
 
     @FXML
-    private TableView<Reservation> reservationsTable;
+    public void initialize() {
+        setupTableColumns();
+        loadData();
+        setupFilter();
+        setupButtons();
+    }
 
-    @FXML
-    private TableColumn<Reservation, Integer> colId;
+    private void setupTableColumns() {
+        colId.setCellValueFactory(new PropertyValueFactory<>("reservationId"));
+        colSpace.setCellValueFactory(new PropertyValueFactory<>("nomClient"));
+        colStartDate.setCellValueFactory(new PropertyValueFactory<>("dateDebut"));
+        colEndDate.setCellValueFactory(new PropertyValueFactory<>("dateFin"));
+        colPeople.setCellValueFactory(new PropertyValueFactory<>("nombrePersonnes"));
+        colPhone.setCellValueFactory(new PropertyValueFactory<>("telephoneClient"));
+        colDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
+        colStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
+    }
 
-    @FXML
-    private TableColumn<Reservation, String> colSpace;
+    private void loadData() {
+        try {
+            allReservations.setAll(new ReservationEspaceService().getAll());
+            reservationsTable.setItems(allReservations);
+        } catch (Exception e) {
+            showErrorAlert("Erreur", "Impossible de charger les réservations");
+        }
+    }
 
-    @FXML
-    private TableColumn<Reservation, LocalDate> colStartDate;
-
-    @FXML
-    private TableColumn<Reservation, LocalDate> colEndDate;
-
-    @FXML
-    private TableColumn<Reservation, Integer> colPeople;
-
-    @FXML
-    private TableColumn<Reservation, String> colPhone;
-
-    @FXML
-    private TableColumn<Reservation, String> colDescription;
-
-    @FXML
-    private TableColumn<Reservation, String> colStatus;
-
-    @FXML
-    private TableColumn<Reservation, Void> colActions;
-
-    @FXML
-    private VBox emptyStateContainer;
-
-    private ObservableList<Reservation> allReservations = FXCollections.observableArrayList();
-
-    @FXML
-    private void initialize() {
-        // Initialisation des colonnes avec les propriétés de Reservation
-        colId.setCellValueFactory(data -> data.getValue().idProperty().asObject());
-        colSpace.setCellValueFactory(data -> data.getValue().espaceProperty());
-        colStartDate.setCellValueFactory(data -> data.getValue().dateDebutProperty());
-        colEndDate.setCellValueFactory(data -> data.getValue().dateFinProperty());
-        colPeople.setCellValueFactory(data -> data.getValue().personnesProperty().asObject());
-        colPhone.setCellValueFactory(data -> data.getValue().telephoneProperty());
-        colDescription.setCellValueFactory(data -> data.getValue().descriptionProperty());
-        colStatus.setCellValueFactory(data -> data.getValue().statutProperty());
-
-        // Charger les données simulées (remplace par un appel à ta source de données)
-        loadReservations();
-
-        // Remplir la table
-        reservationsTable.setItems(allReservations);
-
-        // Initialiser le comboBox pour le filtre de statut (ajout de "Terminé")
-        comboStatusFilter.getItems().addAll("Tous", "Confirmé", "Annulé", "En attente", "Terminé");
+    private void setupFilter() {
+        comboStatusFilter.getItems().addAll("Tous", "En attente", "Confirmé", "Annulé");
         comboStatusFilter.setValue("Tous");
-
-        // Écoute du filtre par statut
-        comboStatusFilter.setOnAction(e -> filterReservations());
-
-        // Vérifie si la liste est vide pour afficher le message "empty state"
-        updateEmptyState();
+        comboStatusFilter.valueProperty().addListener((obs, oldVal, newVal) -> filterReservations());
     }
 
-    private void loadReservations() {
-        // Exemple de données factices
-        allReservations.clear();
-        allReservations.addAll(
-                new Reservation(1, "Salle A", LocalDate.now().plusDays(1), LocalDate.now().plusDays(2), 10, "12345678", "Réunion", "Confirmé"),
-                new Reservation(2, "Salle B", LocalDate.now().plusDays(3), LocalDate.now().plusDays(4), 20, "87654321", "Conférence", "En attente"),
-                new Reservation(3, "Salle C", LocalDate.now().minusDays(5), LocalDate.now().minusDays(3), 15, "11223344", "Formation terminée", "Terminé")
-        );
-    }
-
-    @FXML
-    private void refreshReservations() {
-        // TODO: Remplacer par ta logique réelle de rafraîchissement (ex: requête base de données)
-        loadReservations();
-        filterReservations();
-        updateEmptyState();
+    private void setupButtons() {
+        btnRefresh.setOnAction(e -> loadData());
+        btnGallery.setOnAction(e -> showGalleryView());
     }
 
     private void filterReservations() {
         String selectedStatus = comboStatusFilter.getValue();
+
         if (selectedStatus == null || selectedStatus.equals("Tous")) {
             reservationsTable.setItems(allReservations);
         } else {
-            Predicate<Reservation> filter = r -> r.getStatut().equalsIgnoreCase(selectedStatus);
-            reservationsTable.setItems(allReservations.stream().filter(filter).collect(Collectors.toCollection(FXCollections::observableArrayList)));
+            filteredReservations.setAll(
+                allReservations.stream()
+                    .filter(r -> r.getStatus().equalsIgnoreCase(selectedStatus))
+                    .collect(Collectors.toList())
+            );
+            reservationsTable.setItems(filteredReservations);
         }
-        updateEmptyState();
-    }
-
-    private void updateEmptyState() {
-        boolean empty = reservationsTable.getItems().isEmpty();
-        emptyStateContainer.setVisible(empty);
-        emptyStateContainer.setManaged(empty);
-        reservationsTable.setVisible(!empty);
     }
 
     @FXML
-    private void showGalleryView() {
-        // TODO: Implémenter la navigation vers la galerie des espaces
-        System.out.println("Navigation vers la galerie des espaces...");
+    public void refreshReservations() {
+        try {
+            allReservations.setAll(new ReservationEspaceService().getAll());
+            filterReservations();
+            showAlert("Actualisation", "Les réservations ont été actualisées");
+        } catch (Exception e) {
+            showErrorAlert("Erreur", "Échec de l'actualisation: " + e.getMessage());
+        }
     }
 
-    // Classe interne simple pour modèle Reservation (à mettre dans son propre fichier normalement)
-    public static class Reservation {
-        private final javafx.beans.property.IntegerProperty id;
-        private final javafx.beans.property.StringProperty espace;
-        private final javafx.beans.property.ObjectProperty<LocalDate> dateDebut;
-        private final javafx.beans.property.ObjectProperty<LocalDate> dateFin;
-        private final javafx.beans.property.IntegerProperty personnes;
-        private final javafx.beans.property.StringProperty telephone;
-        private final javafx.beans.property.StringProperty description;
-        private final javafx.beans.property.StringProperty statut;
-
-        public Reservation(int id, String espace, LocalDate dateDebut, LocalDate dateFin, int personnes,
-                           String telephone, String description, String statut) {
-            this.id = new javafx.beans.property.SimpleIntegerProperty(id);
-            this.espace = new javafx.beans.property.SimpleStringProperty(espace);
-            this.dateDebut = new javafx.beans.property.SimpleObjectProperty<>(dateDebut);
-            this.dateFin = new javafx.beans.property.SimpleObjectProperty<>(dateFin);
-            this.personnes = new javafx.beans.property.SimpleIntegerProperty(personnes);
-            this.telephone = new javafx.beans.property.SimpleStringProperty(telephone);
-            this.description = new javafx.beans.property.SimpleStringProperty(description);
-            this.statut = new javafx.beans.property.SimpleStringProperty(statut);
+    @FXML
+    public void showGalleryView() {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/views/Gallery.fxml"));
+            Stage stage = (Stage) btnGallery.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            showErrorAlert("Erreur", "Impossible d'ouvrir la galerie: " + e.getMessage());
         }
+    }
 
-        // Getters JavaFX properties pour TableView bindings
-        public javafx.beans.property.IntegerProperty idProperty() { return id; }
-        public javafx.beans.property.StringProperty espaceProperty() { return espace; }
-        public javafx.beans.property.ObjectProperty<LocalDate> dateDebutProperty() { return dateDebut; }
-        public javafx.beans.property.ObjectProperty<LocalDate> dateFinProperty() { return dateFin; }
-        public javafx.beans.property.IntegerProperty personnesProperty() { return personnes; }
-        public javafx.beans.property.StringProperty telephoneProperty() { return telephone; }
-        public javafx.beans.property.StringProperty descriptionProperty() { return description; }
-        public javafx.beans.property.StringProperty statutProperty() { return statut; }
+    private void showErrorAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 
-        // Getters normaux
-        public int getId() { return id.get(); }
-        public String getEspace() { return espace.get(); }
-        public LocalDate getDateDebut() { return dateDebut.get(); }
-        public LocalDate getDateFin() { return dateFin.get(); }
-        public int getPersonnes() { return personnes.get(); }
-        public String getTelephone() { return telephone.get(); }
-        public String getDescription() { return description.get(); }
-        public String getStatut() { return statut.get(); }
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
     }
 }
