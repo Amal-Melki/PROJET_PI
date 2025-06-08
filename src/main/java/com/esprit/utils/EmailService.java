@@ -12,7 +12,7 @@ import java.time.format.DateTimeFormatter;
 public class EmailService {
 
     private static final String EMAIL_FROM = "ahmetchaouch19@gmail.com";
-    private static final String APP_PASSWORD = "votre_mot_de_passe_d_application_ici_sans_espaces"; // Votre mot de passe d'application
+    private static final String APP_PASSWORD = "votre_mot_de_passe_d_application_ici_sans_espaces";
 
     private static final String EMAIL_TO_DEFAULT = "ahmetchaouch19@gmail.com";
 

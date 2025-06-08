@@ -14,7 +14,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.Label; // Gardez cette importation car Label est utilisé pour d'autres éléments
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -94,12 +94,12 @@ public class AffichageProduitsUserController {
         produitBox.setPadding(new Insets(10));
         produitBox.setStyle("-fx-background-color: #ffffff; -fx-border-color: #ff8fb3; -fx-border-width: 1px; " +
                 "-fx-border-radius: 10; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 0);");
-        produitBox.setPrefWidth(200);
-        produitBox.setMaxWidth(200);
+        produitBox.setPrefWidth(300); // Garder la largeur ajustée
+        produitBox.setMaxWidth(300); // Garder la largeur ajustée
 
         ImageView imageView = new ImageView();
-        imageView.setFitWidth(180);
-        imageView.setFitHeight(180);
+        imageView.setFitWidth(200);
+        imageView.setFitHeight(200);
         imageView.setPreserveRatio(true);
 
         Image productImage = null;
@@ -160,11 +160,13 @@ public class AffichageProduitsUserController {
         imageView.setImage(productImage);
         produitBox.getChildren().add(imageView);
 
-        // NOUVEAU: Ajout du label pour l'ID du produit
+        // NOUVEAU: Éliminer le label pour l'ID du produit
+        // Supprimez ou commentez les lignes suivantes :
+        /*
         Label idLabel = new Label("ID: " + produit.getId());
         idLabel.setFont(Font.font("Segoe UI", 10));
         idLabel.setStyle("-fx-text-fill: #888888;");
-
+        */
 
         Label nomLabel = new Label(produit.getNom());
         nomLabel.setFont(Font.font("Segoe UI", javafx.scene.text.FontWeight.BOLD, 14));
@@ -181,10 +183,11 @@ public class AffichageProduitsUserController {
 
         VBox detailsBox = new VBox(5);
         detailsBox.setAlignment(Pos.CENTER_LEFT);
-        detailsBox.getChildren().addAll(idLabel, nomLabel, categorieLabel, prixLabel); // AJOUTÉ idLabel
+        // MODIFICATION: Supprimez 'idLabel' de la liste des enfants si vous l'avez commenté/supprimé ci-dessus
+        detailsBox.getChildren().addAll(/*idLabel,*/ nomLabel, categorieLabel, prixLabel);
         produitBox.getChildren().add(detailsBox);
 
-        Button ajouterAuPanierButton = new Button("🛒 Ajouter au Panier");
+        Button ajouterAuPanierButton = new Button("Ajouter au panier");
         ajouterAuPanierButton.setStyle("-fx-background-color: #ff8fb3; -fx-text-fill: white; " +
                 "-fx-font-weight: bold; -fx-cursor: hand; -fx-background-radius: 20; " +
                 "-fx-padding: 8 15 8 15; -fx-font-size: 12px; -fx-font-family: 'Segoe UI Semibold';");
@@ -197,7 +200,7 @@ public class AffichageProduitsUserController {
             }
         });
 
-        Button detailsButton = new Button("ℹ️ Détails");
+        Button detailsButton = new Button("Détails du Produit");
         detailsButton.setStyle("-fx-background-color: #f06292; -fx-text-fill: white; " +
                 "-fx-font-weight: bold; -fx-cursor: hand; -fx-background-radius: 20; " +
                 "-fx-padding: 8 15 8 15; -fx-font-size: 12px; -fx-font-family: 'Segoe UI Semibold';");
@@ -206,10 +209,9 @@ public class AffichageProduitsUserController {
                 FXMLLoader detailLoader = new FXMLLoader(getClass().getResource("/views/User/DetailsProduitUser.fxml"));
                 Parent detailRoot = detailLoader.load();
                 DetailsProduitUserController detailController = detailLoader.getController();
-                detailController.setProduitById(produit.getId()); // S'assure que l'ID est passé
-                // Si vous avez un ProduitServiceUser pour obtenir un produit par ID, assurez-vous qu'il fonctionne.
-                // Ou, vous pouvez passer l'objet produit complet si vous le souhaitez et que DetailController l'accepte
-                // detailController.setProduit(produit);
+                detailController.setProduitById(produit.getId());
+                // L'ID est toujours passé au contrôleur de détails pour la logique interne,
+                // mais il ne sera plus affiché sur la carte du produit.
 
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 stage.setScene(new Scene(detailRoot));

@@ -3,33 +3,99 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" prefHeight="250.0" prefWidth="400.0" spacing="20.0" style="-fx-background-color: #FFE6EE; -fx-border-color: #ff8fb3; -fx-border-width: 2px; -fx-border-radius: 10;" xmlns="http://javafx.com/javafx/17.0.10" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.esprit.Controllers.User.ConfirmationPaiementPopupController">
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.esprit.Controllers.User.AffichageProduitsUserController"
+      spacing="24"
+      style="-fx-background-color: linear-gradient(to bottom right, #f8f9fa, #e9ecef);">
     <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+        <Insets top="32" right="32" bottom="32" left="32"/>
     </padding>
-    <children>
-        <Label alignment="CENTER" text="Paiement Réussi !" textFill="#ff8fb3">
-            <font>
-                <Font name="Segoe UI Bold" size="24.0" />
-            </font>
-        </Label>
-        <Label alignment="CENTER" text="Votre commande a été traitée avec succès." textFill="#555555" textAlignment="CENTER" wrapText="true">
-            <font>
-                <Font name="Segoe UI Regular" size="14.0" />
-            </font>
-        </Label>
-        <Button fx:id="downloadPdfButton" mnemonicParsing="false" onAction="#handleDownloadPdf" prefWidth="180.0" style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" text="Télécharger la Facture (PDF)">
-            <font>
-                <Font name="Segoe UI Semibold" size="12.0" />
-            </font>
-        </Button>
-        <Button mnemonicParsing="false" onAction="#handleClosePopup" prefWidth="120.0" style="-fx-background-color: #f06292; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" text="Fermer">
-            <font>
-                <Font name="Segoe UI Semibold" size="12.0" />
-            </font>
-        </Button>
-    </children>
+
+    <VBox spacing="16" style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+        <padding>
+            <Insets top="24" right="24" bottom="24" left="24"/>
+        </padding>
+        <HBox alignment="CENTER_LEFT" spacing="20">
+            <Label text="Découvrez nos Produits"
+                   style="-fx-text-fill: #2c3e50; -fx-font-size: 28px; -fx-font-weight: bold;"/>
+            <HBox HBox.hgrow="ALWAYS" alignment="CENTER_RIGHT" spacing="10">
+                <Button onAction="#goToPanier"
+                        style="-fx-background-color: linear-gradient(to right, #2ecc71, #27ae60); -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 8; -fx-font-family: 'Segoe UI Semibold'; -fx-cursor: hand; -fx-padding: 12 24; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);"
+                        text="🛒 Mon Panier" />
+                <Button onAction="#retourToSelection"
+                        style="-fx-background-color: linear-gradient(to right, #e74c3c, #c0392b); -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 8; -fx-font-family: 'Segoe UI Semibold'; -fx-cursor: hand; -fx-padding: 12 24; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);"
+                        text="⬅ Retour" />
+            </HBox>
+        </HBox>
+        <Label text="Parcourez notre collection de produits dérivés et trouvez vos favoris."
+               style="-fx-text-fill: #7f8c8d; -fx-font-size: 14px;"/>
+    </VBox>
+
+    <VBox spacing="16" style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+        <padding>
+            <Insets top="24" right="24" bottom="24" left="24"/>
+        </padding>
+        <HBox alignment="CENTER_LEFT" spacing="10">
+            <Label text="Recherche :" style="-fx-font-weight: bold;"/>
+            <TextField fx:id="searchField" promptText="Rechercher un produit par nom..." prefWidth="250.0"
+                       style="-fx-background-radius: 8; -fx-border-radius: 8; -fx-border-color: #e0e0e0; -fx-border-width: 1; -fx-padding: 8 12 8 12;"
+                       HBox.hgrow="ALWAYS" />
+            <Button onAction="#handleSearch" text="Rechercher"
+                    style="-fx-background-color: linear-gradient(to right, #3498db, #2980b9); -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 8; -fx-font-family: 'Segoe UI Semibold'; -fx-cursor: hand; -fx-padding: 8 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);" />
+        </HBox>
+        <HBox alignment="CENTER_LEFT" spacing="10">
+            <Label text="Catégorie :" style="-fx-font-weight: bold;"/>
+            <TextField fx:id="categoryFilterField" promptText="Filtrer par catégorie..." prefWidth="250.0"
+                       style="-fx-background-radius: 8; -fx-border-radius: 8; -fx-border-color: #e0e0e0; -fx-border-width: 1; -fx-padding: 8 12 8 12;"
+                       HBox.hgrow="ALWAYS" />
+            <Button onAction="#handleFilterByCategory" text="Filtrer"
+                    style="-fx-background-color: linear-gradient(to right, #3498db, #2980b9); -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 8; -fx-font-family: 'Segoe UI Semibold'; -fx-cursor: hand; -fx-padding: 8 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);" />
+            <Button onAction="#handleResetCategoryFilter" text="Réinitialiser"
+                    style="-fx-background-color: linear-gradient(to right, #f39c12, #e67e22); -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 8; -fx-font-family: 'Segoe UI Semibold'; -fx-cursor: hand; -fx-padding: 8 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);" />
+        </HBox>
+    </VBox>
+
+    <VBox VBox.vgrow="ALWAYS" style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+        <padding>
+            <Insets top="24" right="24" bottom="24" left="24"/>
+        </padding>
+
+        <StackPane alignment="CENTER" VBox.vgrow="NEVER">
+            <Circle radius="75.0" fill="transparent" stroke="#ced4da" strokeWidth="2.0" />
+            <ImageView fx:id="logoImageView" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
+                <image>
+                    <Image url="/images/Event-Planner.jpg" />
+                </image>
+                <clip>
+                    <Circle centerX="75.0" centerY="75.0" radius="75.0" />
+                </clip>
+            </ImageView>
+            <VBox.margin>
+                <Insets bottom="20.0" />
+            </VBox.margin>
+        </StackPane>
+
+        <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" hbarPolicy="NEVER">
+            <content>
+                <FlowPane fx:id="flowPaneProduits" hgap="20.0" vgap="20.0" alignment="TOP_CENTER">
+                    <padding>
+                        <Insets bottom="10.0" left="25.0" right="25.0" top="10.0" />
+                    </padding>
+                </FlowPane>
+            </content>
+        </ScrollPane>
+    </VBox>
 </VBox>
