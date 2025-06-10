@@ -2,6 +2,7 @@ package com.esprit.controllers;
 
 import com.esprit.models.Espace;
 import com.esprit.services.EspaceService;
+import com.esprit.utils.SessionManager;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
@@ -9,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -77,11 +79,26 @@ public class VueGalerieController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        System.out.println("Initialisation de VueGalerieController");
+        loadSpaces();
+        
+        Espace selected = SessionManager.getSelectedEspace();
+        System.out.println("Espace sélectionné depuis SessionManager: " + selected);
+        if (selected != null) {
+            focusOnEspace(selected);
+        }
+
+        // Check if there's a selected space from Gallery
+        Espace selectedEspace = SessionManager.getSelectedEspace();
+        if (selectedEspace != null) {
+            // Focus on the selected space
+            focusOnEspace(selectedEspace);
+            // Clear the selection after handling
+            SessionManager.setSelectedEspace(null);
+        }
+
         // Setup numeric validation for capacity fields
         setupNumericValidation();
-        
-        // Load all spaces
-        loadSpaces();
         
         // Populate type filter
         populateTypeFilter();
@@ -371,9 +388,41 @@ public class VueGalerieController implements Initializable {
         
         card.getChildren().addAll(new Separator(), buttonContainer);
         
+        setupSpaceSelection(card, space);
+        
         return card;
     }
     
+    private void setupSpaceSelection(VBox card, Espace espace) {
+        card.setOnMouseClicked(event -> {
+            try {
+                // Charger le formulaire de réservation
+                FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("views/FormulaireReservation.fxml"));
+                Parent root = loader.load();
+                
+                // Passer les données de l'espace au contrôleur
+                FormulaireReservationController controller = loader.getController();
+                controller.setEspaceData(espace);
+                
+                // Afficher dans une nouvelle fenêtre ou dans le panneau principal
+                Stage stage = new Stage();
+                stage.setScene(new Scene(root));
+                stage.setTitle("Réservation - " + espace.getNom());
+                stage.show();
+            } catch (IOException e) {
+                showAlert(Alert.AlertType.ERROR, "Erreur lors du chargement du formulaire de réservation", "Impossible d'ouvrir le formulaire de réservation");
+            }
+        });
+    }
+
+    private void showAlert(Alert.AlertType type, String title, String message) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
     private void showReservationForm(Espace space) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("views/FormulaireReservation.fxml"));
@@ -381,7 +430,7 @@ public class VueGalerieController implements Initializable {
             
             // Get controller and pass the space
             FormulaireReservationController controller = loader.getController();
-            controller.setSpace(space);
+            controller.setEspaceData(space);
             
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Réserver l'Espace");
@@ -394,9 +443,7 @@ public class VueGalerieController implements Initializable {
             applyFilters();
             
         } catch (IOException e) {
-            showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible de charger le formulaire de réservation", 
-                    "Détails de l'erreur: " + e.getMessage());
-            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Erreur lors de la réservation", "Impossible de charger le formulaire de réservation");
         }
     }
     
@@ -463,9 +510,7 @@ public class VueGalerieController implements Initializable {
             mapStage.show();
             
         } catch (Exception e) {
-            showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible d'afficher la carte", 
-                    "Détails de l'erreur: " + e.getMessage());
-            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Erreur lors de l'affichage de la carte", "Impossible d'afficher la carte: " + e.getMessage());
         }
     }
     
@@ -499,11 +544,31 @@ public class VueGalerieController implements Initializable {
         }
     }
     
-    private void showAlert(Alert.AlertType alertType, String title, String header, String content) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setHeaderText(header);
-        alert.setContentText(content);
-        alert.showAndWait();
+    void focusOnEspace(Espace espace) {
+        if (espace == null || spacesGrid == null) return;
+        
+        // Find and select the space in the grid
+        for (Node node : spacesGrid.getChildren()) {
+            if (node instanceof VBox card) {
+                if (!card.getChildren().isEmpty() && card.getChildren().size() > 1
+                        && card.getChildren().get(1) instanceof Label) {
+                    Label nameLabel = (Label) card.getChildren().get(1);
+                    if (nameLabel.getText() != null && nameLabel.getText().equals(espace.getNom())) {
+                        // Highlight the selected space
+                        card.setStyle("-fx-border-color: #007bff; -fx-border-width: 2px;");
+                        
+                        // Configurer le clic sur l'espace (mais ne pas déclencher)
+                        setupSpaceSelection(card, espace);
+                        
+                        // Scroll to the space
+                        ScrollPane scrollPane = (ScrollPane) spacesGrid.getParent().getParent();
+                        double viewportHeight = scrollPane.getViewportBounds().getHeight();
+                        double nodeY = card.getBoundsInParent().getMinY();
+                        scrollPane.setVvalue(nodeY / spacesGrid.getHeight());
+                        break;
+                    }
+                }
+            }
+        }
     }
 }

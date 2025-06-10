@@ -16,23 +16,36 @@ import java.util.stream.Collectors;
 public class ReservationEspaceService {
 
     private static final Logger logger = Logger.getLogger(ReservationEspaceService.class.getName());
-
-    public ReservationEspaceService() {
+    private static volatile ReservationEspaceService instance;
+    
+    public ReservationEspaceService() {}
+    
+    public static ReservationEspaceService getInstance() {
+        if (instance == null) {
+            synchronized (ReservationEspaceService.class) {
+                if (instance == null) {
+                    instance = new ReservationEspaceService();
+                }
+            }
+        }
+        return instance;
     }
 
     // Méthode principale pour récupérer toutes les réservations
-    public List<ReservationEspace> getAll() {
+    public List<ReservationEspace> getAll(int userId) {
         List<ReservationEspace> reservations = new ArrayList<>();
-        String query = "SELECT * FROM reservationespace";
+        String query = "SELECT * FROM reservationespace WHERE id_user = ?";
 
         try (Connection connection = DataSource.getInstance().getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(query)) {
+             PreparedStatement statement = connection.prepareStatement(query)) {
+        
+            statement.setInt(1, userId);
+            ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
                 reservations.add(mapResultSetToReservation(resultSet));
             }
-            logger.info("Récupération de " + reservations.size() + " réservations");
+            logger.info("Récupération de " + reservations.size() + " réservations pour l'utilisateur " + userId);
         } catch (SQLException e) {
             logger.severe("Erreur lors de la récupération des réservations: " + e.getMessage());
         }
@@ -257,22 +270,28 @@ public class ReservationEspaceService {
         return reservations;
     }
 
-    // Méthode pour annuler une réservation
-    public boolean cancelReservation(int reservationId) {
-        String query = "UPDATE reservationespace SET status = 'Annulée' WHERE reservationId = ?";
+    /**
+     * Annule une réservation et retourne true si réussite
+     */
+    public boolean cancelReservation(int reservationId) throws SQLException {
+        String query = "UPDATE reservationespace SET status = 'Annulée' WHERE reservationId = ? AND status NOT IN ('Terminée', 'Annulée')";
         
-        try (Connection conn = DataSource.getInstance().getConnection();
-             PreparedStatement pst = conn.prepareStatement(query)) {
+        try (Connection connection = DataSource.getInstance().getConnection();
+             PreparedStatement pst = connection.prepareStatement(query)) {
             
-            conn.setAutoCommit(false);
             pst.setInt(1, reservationId);
             int rowsAffected = pst.executeUpdate();
-            conn.commit();
             
-            return rowsAffected > 0;
+            if (rowsAffected > 0) {
+                logger.info("Réservation annulée : " + reservationId);
+                return true;
+            } else {
+                logger.warning("Échec annulation réservation : " + reservationId + " (déjà annulée/terminée ou ID invalide)");
+                return false;
+            }
         } catch (SQLException e) {
-            handleDatabaseError("Erreur lors de l'annulation de la réservation", e);
-            return false;
+            logger.log(Level.SEVERE, "Erreur SQL lors de l'annulation", e);
+            throw e;
         }
     }
 
@@ -314,5 +333,26 @@ public class ReservationEspaceService {
             handleDatabaseError("Erreur lors du calcul du prix", e);
         }
         return 0;
+    }
+
+    public List<ReservationEspace> getReservationsByUser(int userId) {
+        List<ReservationEspace> reservations = new ArrayList<>();
+        String query = "SELECT * FROM reservationespace WHERE id_user = ? ORDER BY dateDebut DESC";
+        
+        try (Connection connection = DataSource.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            
+            statement.setInt(1, userId);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                reservations.add(mapResultSetToReservation(resultSet));
+            }
+            logger.info("Récupération de " + reservations.size() + " réservations pour l'utilisateur " + userId);
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Erreur lors de la récupération des réservations utilisateur", e);
+            throw new RuntimeException("Erreur lors du chargement des réservations", e);
+        }
+        return reservations;
     }
 }

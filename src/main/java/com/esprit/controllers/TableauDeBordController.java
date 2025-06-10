@@ -83,7 +83,7 @@ public class TableauDeBordController implements Initializable {
             long reservedSpacesValue = totalSpacesValue - availableSpacesValue;
             
             // Get total reservations
-            List<ReservationEspace> reservations = reservationService.getAll();
+            List<ReservationEspace> reservations = reservationService.getAllReservations();
             int totalReservationsValue = reservations.size();
             
             // Update the properties
@@ -158,7 +158,7 @@ public class TableauDeBordController implements Initializable {
     private void loadBarChart() {
         try {
             // Récupérer les réservations
-            List<ReservationEspace> reservations = reservationService.getAll();
+            List<ReservationEspace> reservations = reservationService.getAllReservations();
             
             if (reservations.isEmpty()) {
                 // Si aucune réservation n'est trouvée, utiliser des données de démonstration
@@ -241,7 +241,7 @@ public class TableauDeBordController implements Initializable {
             recentActivityContainer.getChildren().clear();
             
             // Récupérer les dernières réservations
-            List<ReservationEspace> recentReservations = reservationService.getAll();
+            List<ReservationEspace> recentReservations = reservationService.getAllReservations();
             
             if (recentReservations.isEmpty()) {
                 // Si aucune activité récente n'est trouvée, utiliser des données de démonstration

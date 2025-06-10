@@ -8,6 +8,7 @@ import com.esprit.services.ReservationEspaceService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -90,7 +91,7 @@ public class FormulaireReservationController implements Initializable {
 
     private Espace selectedSpace;
     private EspaceService espaceService = new EspaceService();
-    private ReservationEspaceService reservationService = new ReservationEspaceService();
+    private ReservationEspaceService reservationService = ReservationEspaceService.getInstance();
     private EmailService emailService = new EmailService();
 
     // Number format for currency
@@ -140,29 +141,20 @@ public class FormulaireReservationController implements Initializable {
 
     /**
      * Set the space that is being reserved
-     * @param space The space to reserve
+     * @param espace The space to reserve
      */
-    public void setSpace(Espace space) {
-        this.selectedSpace = space;
-
-        if (space != null) {
-            // Populate space info
-            if (lblSpaceName != null) lblSpaceName.setText(space.getNom());
-            if (lblSpaceType != null) lblSpaceType.setText(space.getType());
-            if (lblSpaceCapacity != null) lblSpaceCapacity.setText(String.valueOf(space.getCapacite()) + " personnes");
-            if (lblSpaceLocation != null) lblSpaceLocation.setText(space.getLocalisation());
-            if (lblSpacePrice != null) lblSpacePrice.setText(currencyFormat.format(space.getPrix()) + "/jour");
-
-            // Initialize the start date to tomorrow
-            LocalDate tomorrow = LocalDate.now().plusDays(1);
-            if (dateStart != null) dateStart.setValue(tomorrow);
-
-            // Initialize the end date to the day after tomorrow
-            if (dateEnd != null) dateEnd.setValue(tomorrow.plusDays(1));
-
-            // Update the summary
-            updateSummary();
-        }
+    public void setEspaceData(Espace espace) {
+        this.selectedSpace = espace;
+        
+        // Mettre à jour les champs avec les données de l'espace
+        if (lblSpaceName != null) lblSpaceName.setText(espace.getNom());
+        if (lblSpaceType != null) lblSpaceType.setText(espace.getType());
+        if (lblSpaceCapacity != null) lblSpaceCapacity.setText(String.valueOf(espace.getCapacite()));
+        if (lblSpaceLocation != null) lblSpaceLocation.setText(espace.getEmplacement());
+        if (lblSpacePrice != null) lblSpacePrice.setText(String.format("%.2f €", espace.getPrix()));
+        
+        // Mettre à jour le résumé
+        updateSummary();
     }
 
     private void setupDatePickers() {
@@ -247,7 +239,7 @@ public class FormulaireReservationController implements Initializable {
 
             // Update total cost label
             if (lblTotalCost != null) {
-                lblTotalCost.setText(currencyFormat.format(totalCost));
+                lblTotalCost.setText(String.format("%.2f €", totalCost));
             }
         }
     }
@@ -503,7 +495,7 @@ public class FormulaireReservationController implements Initializable {
                     yPosition -= 20;
                     contentStream.beginText();
                     contentStream.newLineAtOffset(70, yPosition);
-                    contentStream.showText("Localisation: " + selectedSpace.getLocalisation());
+                    contentStream.showText("Localisation: " + selectedSpace.getEmplacement());
                     contentStream.endText();
                 }
 
@@ -586,7 +578,7 @@ public class FormulaireReservationController implements Initializable {
                     yPosition -= 20;
                     contentStream.beginText();
                     contentStream.newLineAtOffset(70, yPosition);
-                    contentStream.showText("Prix par jour: " + String.format("%.2f TND", selectedSpace.getPrix()));
+                    contentStream.showText("Prix par jour: " + String.format("%.2f €", selectedSpace.getPrix()));
                     contentStream.endText();
 
                     yPosition -= 20;
@@ -594,7 +586,7 @@ public class FormulaireReservationController implements Initializable {
                     contentStream.beginText();
                     contentStream.newLineAtOffset(70, yPosition);
                     double totalPrice = days * selectedSpace.getPrix();
-                    contentStream.showText("Total: " + String.format("%.2f TND", totalPrice));
+                    contentStream.showText("Total: " + String.format("%.2f €", totalPrice));
                     contentStream.endText();
                 }
 
@@ -630,7 +622,7 @@ public class FormulaireReservationController implements Initializable {
             if (selectedSpace != null) {
                 emailContent.append("Espace: ").append(selectedSpace.getNom()).append("\n");
                 emailContent.append("Type: ").append(selectedSpace.getType()).append("\n");
-                emailContent.append("Localisation: ").append(selectedSpace.getLocalisation()).append("\n");
+                emailContent.append("Localisation: ").append(selectedSpace.getEmplacement()).append("\n");
             }
 
             if (dateStart != null && dateEnd != null &&
@@ -643,7 +635,7 @@ public class FormulaireReservationController implements Initializable {
                 double totalPrice = (selectedSpace != null) ? days * selectedSpace.getPrix() : 0;
 
                 emailContent.append("Durée: ").append(days).append(" jour").append(days > 1 ? "s" : "").append("\n");
-                emailContent.append("Prix total: ").append(String.format("%.2f TND", totalPrice)).append("\n\n");
+                emailContent.append("Prix total: ").append(String.format("%.2f €", totalPrice)).append("\n\n");
             }
 
             emailContent.append("Vous trouverez en pièce jointe le PDF de confirmation de votre réservation.\n\n");
@@ -714,7 +706,7 @@ public class FormulaireReservationController implements Initializable {
         if (container == null) return;
 
         // Check if the label already exists
-        for (javafx.scene.Node node : container.getChildren()) {
+        for (Node node : container.getChildren()) {
             if (node instanceof Label && node.getId() != null && node.getId().equals(id)) {
                 ((Label) node).setText(text);
                 return;

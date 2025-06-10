@@ -33,26 +33,31 @@ public class EspaceService {
      * @throws SQLException si l'ajout échoue
      * @throws IllegalArgumentException si les données sont invalides
      */
-    public int add(Espace espace) throws SQLException, IllegalArgumentException {
+    public int add(Espace espace) throws SQLException {
         validateEspace(espace);
-
         String req = "INSERT INTO espace(nom, type, capacite, localisation, prix, disponibilite, photoUrl, description, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = DataSource.getInstance().getConnection();
              PreparedStatement pst = connection.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
+            
             setEspaceParameters(pst, espace);
-
+            
             int result = pst.executeUpdate();
             if (result == 0) {
+                logger.error("Échec de l'ajout de l'espace : aucune ligne affectée");
                 throw new SQLException("Échec de l'ajout, aucune ligne affectée");
             }
-
+            
             try (ResultSet generatedKeys = pst.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     return generatedKeys.getInt(1);
                 } else {
+                    logger.error("Échec de la récupération de l'ID généré");
                     throw new SQLException("Échec de la récupération de l'ID généré");
                 }
             }
+        } catch (SQLException e) {
+            logger.error("Erreur SQL lors de l'ajout d'un espace", e);
+            throw e;
         }
     }
 

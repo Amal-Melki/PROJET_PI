@@ -14,6 +14,7 @@ public class Espace {
     private String photoUrl;
     private String description;
     private String image;
+    private String emplacement;
 
     public Espace(){};
 
@@ -151,6 +152,7 @@ public class Espace {
                 ", photoUrl='" + photoUrl + '\'' +
                 ", description='" + description + '\'' +
                 ", image='" + image + '\'' +
+                ", emplacement='" + emplacement + '\'' +
                 '}';
     }
 
@@ -172,5 +174,13 @@ public class Espace {
      */
     public double getPrixLocation() {
         return prix;
+    }
+
+    public String getEmplacement() {
+        return emplacement;
+    }
+
+    public void setEmplacement(String emplacement) {
+        this.emplacement = emplacement;
     }
 }

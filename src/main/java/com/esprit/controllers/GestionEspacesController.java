@@ -2,6 +2,7 @@ package com.esprit.controllers;
 
 import com.esprit.models.Espace;
 import com.esprit.services.EspaceService;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -17,6 +18,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
@@ -30,10 +33,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.Predicate;
+
 import java.util.stream.Collectors;
 
 public class GestionEspacesController implements Initializable {
+
+    private static final Logger logger = Logger.getLogger(GestionEspacesController.class.getName());
 
     @FXML
     private TableView<Espace> tblSpaces;
@@ -151,55 +160,36 @@ public class GestionEspacesController implements Initializable {
         // Set up the image column to display thumbnails with click to enlarge
         colImage.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getImage()));
         colImage.setCellFactory(column -> new TableCell<>() {
-            private final javafx.scene.image.ImageView imageView = new javafx.scene.image.ImageView();
-            {
-                imageView.setFitWidth(80);
-                imageView.setFitHeight(50);
-                imageView.setPreserveRatio(true);
-            }
-            
             @Override
             protected void updateItem(String imagePath, boolean empty) {
                 super.updateItem(imagePath, empty);
-                if (empty || imagePath == null || imagePath.isEmpty()) {
-                    setGraphic(new Label("Aucune image"));
-                    setOnMouseClicked(null);
+                if (empty || imagePath == null) {
+                    setGraphic(null);
                 } else {
-                    try {
-                        javafx.scene.image.Image img;
-                        
-                        if (imagePath == null || imagePath.isEmpty()) {
-                            // Charger l'image par défaut
-                            File defaultFile = new File(IMAGES_DIR + DEFAULT_IMAGE);
-                            img = new javafx.scene.image.Image(defaultFile.toURI().toString(), 80, 50, true, true);
-                        } else if (imagePath.startsWith("http")) {
-                            // Chargement depuis URL web
-                            img = new javafx.scene.image.Image(imagePath, 80, 50, true, true, true);
-                            img.errorProperty().addListener((obs, wasError, isNowError) -> {
-                                if (isNowError) setGraphic(new Label("URL invalide"));
-                            });
-                        } else {
-                            // Chargement depuis fichier local
-                            String cleanPath = imagePath.replace("..", "").replace("/", "\\");
-                            File file = new File(IMAGES_DIR + cleanPath);
-                            
-                            if (file.exists()) {
-                                img = new javafx.scene.image.Image(file.toURI().toString(), 80, 50, true, true);
+                    ImageView imageView = new ImageView();
+                    imageView.setFitWidth(80);
+                    imageView.setFitHeight(50);
+                    
+                    ExecutorService executor = Executors.newSingleThreadExecutor();
+                    executor.submit(() -> {
+                        try {
+                            Image img;
+                            if (imagePath.startsWith("http")) {
+                                img = new Image(imagePath, 80, 50, true, true, true);
                             } else {
-                                // Fallback sur l'image par défaut
-                                File defaultFile = new File(IMAGES_DIR + DEFAULT_IMAGE);
-                                img = new javafx.scene.image.Image(defaultFile.toURI().toString(), 80, 50, true, true);
+                                String cleanPath = imagePath.replace("..", "").replace("/", "\\");
+                                File file = new File(IMAGES_DIR + cleanPath);
+                                img = new Image(file.toURI().toString(), 80, 50, true, true, true);
                             }
+                            Platform.runLater(() -> {
+                                imageView.setImage(img);
+                                setGraphic(imageView);
+                            });
+                        } catch (Exception e) {
+                            Platform.runLater(() -> setGraphic(new Label("Image non disponible")));
                         }
-                        
-                        imageView.setImage(img);
-                        setGraphic(imageView);
-                        setOnMouseClicked(event -> showEnlargedImage(img));
-                    } catch (Exception e) {
-                        System.out.println("Erreur chargement image: " + e.getMessage());
-                        // Fallback ultime
-                        setGraphic(new Label("Espace"));
-                    }
+                    });
+                    executor.shutdown();
                 }
             }
         });
@@ -363,22 +353,16 @@ public class GestionEspacesController implements Initializable {
     
     private Predicate<Espace> createFilterPredicate() {
         return space -> {
-            boolean matchesType = true;
-            boolean matchesAvailability = true;
+            boolean matchesType = comboTypeFilter.getValue() == null 
+                || comboTypeFilter.getValue().equals("Tous")
+                || space.getType().equals(comboTypeFilter.getValue());
+                
+            boolean matchesAvailability = !checkAvailableOnly.isSelected() 
+                || space.isDisponibilite();
+                
             boolean matchesSearch = true;
             
-            // Check type filter
-            String selectedType = comboTypeFilter.getValue();
-            if (selectedType != null && !selectedType.equals("Tous les Types")) {
-                matchesType = space.getType().equals(selectedType);
-            }
-            
-            // Check availability filter
-            if (checkAvailableOnly.isSelected()) {
-                matchesAvailability = space.isDisponibilite();
-            }
-            
-            // Check search text
+            // Vérification du texte de recherche
             String searchText = txtSearch.getText().toLowerCase();
             if (searchText != null && !searchText.isEmpty()) {
                 boolean nameMatches = space.getNom().toLowerCase().contains(searchText);
@@ -446,31 +430,19 @@ public class GestionEspacesController implements Initializable {
     }
     
     private void confirmAndDeleteSpace(Espace space) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmation de Suppression");
-        alert.setHeaderText("Supprimer l'espace " + space.getNom());
-        alert.setContentText("Êtes-vous sûr de vouloir supprimer cet espace? Cette action ne peut pas être annulée.");
+        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmation.setTitle("Confirmation de suppression");
+        confirmation.setHeaderText(null);
+        confirmation.setContentText("Êtes-vous sûr de vouloir supprimer l'espace \"" + space.getNom() + "\" ?");
         
-        // Customize the buttons
-        ButtonType buttonTypeYes = new ButtonType("Oui, Supprimer");
-        ButtonType buttonTypeNo = new ButtonType("Annuler", ButtonBar.ButtonData.CANCEL_CLOSE);
-        
-        alert.getButtonTypes().setAll(buttonTypeYes, buttonTypeNo);
-        
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == buttonTypeYes) {
-            // User confirmed, delete the space
-            int success = espaceService.delete(space.getEspaceId());
-            
-            if (success > 0) {
-                // Remove from the list and show success message
-                spacesList.remove(space);
+        Optional<ButtonType> result = confirmation.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            try {
+                espaceService.delete(space.getId());
+                refreshSpacesList();
                 showAlert(Alert.AlertType.INFORMATION, "Succès", "Espace supprimé", "L'espace a été supprimé avec succès.");
-                
-                // Refresh the type filter options
-                updateTypeFilterOptions();
-            } else {
-                showAlert(Alert.AlertType.ERROR, "Erreur", "Échec de la suppression", "Impossible de supprimer l'espace. Réessayez plus tard.");
+            } catch (Exception e) {
+                showAlert(Alert.AlertType.ERROR, "Erreur", "Échec de la suppression", "Une erreur est survenue lors de la suppression : " + e.getMessage());
             }
         }
     }

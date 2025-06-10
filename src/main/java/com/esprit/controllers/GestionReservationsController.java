@@ -3,7 +3,6 @@ package com.esprit.controllers;
 import com.esprit.models.ReservationEspace;
 import com.esprit.services.ReservationEspaceService;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -18,16 +17,19 @@ import javafx.util.StringConverter;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.ResourceBundle.Control;
+import java.util.function.Predicate;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class GestionReservationsController implements Initializable {
-    private final ReservationEspaceService reservationService = new ReservationEspaceService();
+    private final ReservationEspaceService reservationService = ReservationEspaceService.getInstance();
     private static final Logger logger = Logger.getLogger(GestionReservationsController.class.getName());
 
     @FXML private TableView<ReservationEspace> reservationsTable;
@@ -81,7 +83,7 @@ public class GestionReservationsController implements Initializable {
 
                 cancelBtn.setOnAction(e -> {
                     ReservationEspace reservation = getTableView().getItems().get(getIndex());
-                    cancelReservation(reservation);
+                    handleCancelReservation(reservation);
                 });
             }
 
@@ -128,36 +130,68 @@ public class GestionReservationsController implements Initializable {
     }
 
     private void setupFilters() {
-        statusFilter.setItems(FXCollections.observableArrayList(
-                "Tous", "Confirmée", "En attente", "Annulée", "Terminée"
-        ));
+        // Initialiser les filtres
+        statusFilter.getItems().addAll("Tous", "Confirmée", "En attente", "Annulée", "Terminée");
         statusFilter.getSelectionModel().selectFirst();
-
+        
+        // Appliquer les filtres lors des changements
         statusFilter.valueProperty().addListener((obs, oldVal, newVal) -> applyFilters());
         dateDebutPicker.valueProperty().addListener((obs, oldVal, newVal) -> applyFilters());
         dateFinPicker.valueProperty().addListener((obs, oldVal, newVal) -> applyFilters());
+        
+        // Formater les dates
+        dateDebutPicker.setConverter(new StringConverter<LocalDate>() {
+            final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            
+            @Override 
+            public String toString(LocalDate date) {
+                return date != null ? dateFormatter.format(date) : "";
+            }
+
+            @Override
+            public LocalDate fromString(String string) {
+                return string != null && !string.isEmpty() 
+                    ? LocalDate.parse(string, dateFormatter) 
+                    : null;
+            }
+        });
+        
+        dateFinPicker.setConverter(new StringConverter<LocalDate>() {
+            final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            
+            @Override 
+            public String toString(LocalDate date) {
+                return date != null ? dateFormatter.format(date) : "";
+            }
+
+            @Override
+            public LocalDate fromString(String string) {
+                return string != null && !string.isEmpty() 
+                    ? LocalDate.parse(string, dateFormatter) 
+                    : null;
+            }
+        });
     }
-
-    @FXML
+    
     private void applyFilters() {
-        String status = statusFilter.getValue();
-        LocalDate startDate = dateDebutPicker.getValue();
-        LocalDate endDate = dateFinPicker.getValue();
-
         try {
-            List<ReservationEspace> allReservations = reservationService.getAllReservations();
-
-            List<ReservationEspace> filtered = allReservations.stream()
-                    .filter(r -> status == null || status.equals("Tous") || r.getStatus().equals(status))
-                    .filter(r -> startDate == null || !r.getDateDebut().isBefore(startDate))
-                    .filter(r -> endDate == null || r.getDateFin().isBefore(endDate.plusDays(1)))
-                    .collect(Collectors.toList());
-
-            reservationsTable.setItems(FXCollections.observableArrayList(filtered));
-            updateStatusLabel(filtered.size(), allReservations.size());
-
+            String status = statusFilter.getValue();
+            LocalDate startDate = dateDebutPicker.getValue();
+            LocalDate endDate = dateFinPicker.getValue();
+            
+            Predicate<ReservationEspace> predicate = r -> 
+                (status == null || status.equals("Tous") || r.getStatus().equals(status))
+                && (startDate == null || !r.getDateFin().isBefore(startDate))
+                && (endDate == null || !r.getDateDebut().isAfter(endDate));
+                
+            reservationsTable.setItems(FXCollections.observableArrayList(
+                reservationsTable.getItems().stream()
+                    .filter(predicate)
+                    .collect(Collectors.toList())
+            ));
+                
         } catch (Exception e) {
-            showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors du filtrage", e.getMessage());
+            logger.log(Level.SEVERE, "Erreur lors du filtrage", e);
         }
     }
 
@@ -230,37 +264,12 @@ public class GestionReservationsController implements Initializable {
 
     private void loadReservations() {
         try {
-            List<ReservationEspace> reservations = reservationService.getAllReservations();
-            
-            // Vérifier si la liste est vide
-            if (reservations.isEmpty()) {
-                showAlert(Alert.AlertType.INFORMATION, "Information", "Aucune réservation", 
-                        "Aucune réservation trouvée dans la base de données.");
-            }
-            
-            // Configurer le format des dates
-            debutColumn.setCellFactory(column -> new TableCell<>() {
-                @Override
-                protected void updateItem(LocalDate item, boolean empty) {
-                    super.updateItem(item, empty);
-                    setText(empty ? "" : item.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-                }
-            });
-            
-            finColumn.setCellFactory(column -> new TableCell<>() {
-                @Override
-                protected void updateItem(LocalDate item, boolean empty) {
-                    super.updateItem(item, empty);
-                    setText(empty ? "" : item.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-                }
-            });
-            
-            reservationsTable.setItems(FXCollections.observableArrayList(reservations));
+            List<ReservationEspace> reservations = ReservationEspaceService.getInstance().getAllReservations();
+            reservationsTable.getItems().setAll(reservations);
             updateStatusLabel(reservations.size(), reservations.size());
         } catch (Exception e) {
-            showAlert(Alert.AlertType.ERROR, "Erreur", "Chargement des réservations", 
-                    "Une erreur est survenue : " + e.getMessage());
-            logger.severe("Erreur loadReservations: " + e.getMessage());
+            logger.log(Level.SEVERE, "Erreur lors du chargement des réservations", e);
+            showAlert("Erreur", "Échec du chargement", "Impossible de charger les réservations : " + e.getMessage());
         }
     }
 
@@ -291,7 +300,7 @@ public class GestionReservationsController implements Initializable {
         confirmAlert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
                 try {
-                    if (reservationService.confirmReservation(reservation.getReservationId())) {
+                    if (ReservationEspaceService.getInstance().confirmReservation(reservation.getReservationId())) {
                         showAlert(Alert.AlertType.INFORMATION, "Succès", "Réservation confirmée",
                                 "La réservation a été confirmée avec succès.");
                         refreshTable();
@@ -306,39 +315,22 @@ public class GestionReservationsController implements Initializable {
         });
     }
 
-    private void cancelReservation(ReservationEspace reservation) {
-        if (reservation == null) return;
+    private void handleCancelReservation(ReservationEspace reservation) {
+        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmation.setTitle("Confirmer l'annulation");
+        confirmation.setHeaderText(null);
+        confirmation.setContentText("Annuler la réservation #" + reservation.getReservationId() + " ?\nCette action est irréversible.");
 
-        if ("Annulée".equals(reservation.getStatus())) {
-            showAlert(Alert.AlertType.INFORMATION, "Information", "Réservation déjà annulée",
-                    "Cette réservation est déjà annulée.");
-            return;
-        }
-
-        if ("Terminée".equals(reservation.getStatus())) {
-            showAlert(Alert.AlertType.WARNING, "Action impossible", "Réservation terminée",
-                    "Une réservation terminée ne peut pas être annulée.");
-            return;
-        }
-
-        Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmAlert.setTitle("Confirmation");
-        confirmAlert.setHeaderText("Annuler la réservation");
-        confirmAlert.setContentText("Êtes-vous sûr de vouloir annuler cette réservation ? Cette action est irréversible.");
-
-        confirmAlert.showAndWait().ifPresent(response -> {
+        confirmation.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
                 try {
-                    if (reservationService.cancelReservation(reservation.getReservationId())) {
-                        showAlert(Alert.AlertType.INFORMATION, "Succès", "Réservation annulée",
-                                "La réservation a été annulée avec succès.");
-                        refreshTable();
-                    } else {
-                        showAlert(Alert.AlertType.ERROR, "Erreur", "Échec d'annulation",
-                                "L'annulation de la réservation a échoué.");
-                    }
-                } catch (Exception e) {
-                    showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors de l'annulation", e.getMessage());
+                    ReservationEspaceService.getInstance().cancelReservation(reservation.getReservationId());
+                    logger.log(Level.INFO, "Réservation annulée : {0}", reservation.getReservationId());
+                    loadReservations();
+                    showAlert("Succès", "Réservation annulée", "La réservation a été annulée avec succès.");
+                } catch (SQLException e) {
+                    logger.log(Level.SEVERE, "Erreur lors de l'annulation", e);
+                    showAlert("Erreur", "Échec de l'annulation", "Impossible d'annuler la réservation : " + e.getMessage());
                 }
             }
         });

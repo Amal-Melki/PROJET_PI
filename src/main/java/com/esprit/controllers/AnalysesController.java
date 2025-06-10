@@ -99,7 +99,7 @@ public class AnalysesController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Initialize services
-        reservationService = new ReservationEspaceService();
+        reservationService = ReservationEspaceService.getInstance();
         espaceService = new EspaceService();
 
         // Set up period combo box
