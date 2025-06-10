@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.web.WebView?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.esprit.Controllers.MapStreetController"
+            style="-fx-background-color: #ffccff; -fx-padding: 15;"
+            prefWidth="800" prefHeight="600">
+
+    <!-- Titre -->
+    <Label text="Carte de Tunisie"
+           style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #cc0066;"
+           layoutX="15" layoutY="15"/>
+
+    <!-- Barre de recherche -->
+    <HBox alignment="CENTER_LEFT" spacing="10"
+          style="-fx-background-color: #ff99cc; -fx-background-radius: 10; -fx-padding: 10;"
+          layoutX="15" layoutY="50">
+        <TextField fx:id="addressField"
+                   promptText="Entrez une adresse à Tunis..."
+                   style="-fx-pref-width: 400px; -fx-background-radius: 15; -fx-padding: 8 15; -fx-font-size: 14px;"/>
+        <Button text="Rechercher"
+                onAction="#handleSearch"
+                style="-fx-background-color: #ff3399; -fx-text-fill: white; -fx-font-weight: bold;
+                       -fx-background-radius: 15; -fx-padding: 8 25; -fx-font-size: 14px;"/>
+    </HBox>
+
+    <!-- Carte OpenStreetMap -->
+    <WebView fx:id="webView"
+             layoutX="15" layoutY="150"
+             prefWidth="770" prefHeight="430"
+             style="-fx-border-color: #ff3399; -fx-border-radius: 10; -fx-border-width: 3;"/>
+</AnchorPane>

@@ -1,28 +1,40 @@
 package com.esprit.Controllers;
-
+import javafx.geometry.Insets;
 import com.esprit.modules.Blog;
 import com.esprit.modules.CategorieEnum;
 import com.esprit.services.BlogServices;
-import com.esprit.services.CommentaireService;
-import com.esprit.services.LikeService;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
-import java.awt.Desktop;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.net.*;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.sql.Timestamp;
-
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class BlogController {
 
@@ -38,18 +50,20 @@ public class BlogController {
     @FXML private Button likeButton;
     @FXML private Label likeCount;
     @FXML private Button commentButton;
-
+    @FXML private Button aiButton;
     @FXML private TextField latitudeField;
     @FXML private TextField longitudeField;
     @FXML private Button btnVoirLocation;
-
+    @FXML private Button btnChoisirIA;
     @FXML private Button btnDownloadPDF;
-    private final LikeService likeService = new LikeService();
-    private final CommentaireService commentaireService = new CommentaireService();
-    private int currentUserId = 1; // À remplacer par l'ID utilisateur connecté
 
+
+    @FXML private TextField cityField;   // champ texte où l'utilisateur écrit la ville
+    @FXML private Button btnShowWeather;  // bouton "Afficher Weather"
+    @FXML private Label weatherResultLabel;
     private final BlogServices blogService = new BlogServices();
     private String imagePath;
+
 
     @FXML
     public void initialize() {
@@ -103,6 +117,7 @@ public class BlogController {
 
             checkFields();
         }
+
     }
 
     @FXML
@@ -211,26 +226,142 @@ public class BlogController {
         return Slogo;
     }
 
-    @FXML
-    private void showMap() {
-        System.out.println("showMap called");
+    // Nouvelle méthode pour ouvrir la fenêtre de carte
 
-        // ✅ Coordonnées fixes, pas de latitudeField/longitudeField
-        double lat = 36.8065; // latitude de Tunis
-        double lon = 10.1815; // longitude de Tunis
-
+    public void openMapWindow() {
         try {
-            String url = "https://www.openstreetmap.org/?mlat=" + lat + "&mlon=" + lon + "#map=15/" + lat + "/" + lon;
-
-            if (Desktop.isDesktopSupported()) {
-                Desktop.getDesktop().browse(new java.net.URI(url));
-            } else {
-                showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible d'ouvrir le navigateur.");
+            URL fxmlLocation = getClass().getResource("/mapstreet.fxml");
+            if (fxmlLocation == null) {
+                System.out.println("❌ mapstreet.fxml introuvable !");
+                return;
             }
-        } catch (Exception e) {
-            showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors de l'ouverture de la carte : " + e.getMessage());
+
+            FXMLLoader loader = new FXMLLoader(fxmlLocation);
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("Localisation");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
+
+
+    @FXML
+    void handleChatGPT(ActionEvent event) {
+        Stage chatStage = new Stage();
+        chatStage.setTitle("ChatGPT");
+
+        VBox vbox = new VBox(10);
+        vbox.setPadding(new Insets(10));
+        vbox.setAlignment(Pos.CENTER);
+
+        TextArea chatArea = new TextArea();
+        chatArea.setPromptText("Écrivez votre message ici...");
+        chatArea.setWrapText(true);
+
+        Button sendButton = new Button("Envoyer");
+
+        TextArea responseArea = new TextArea();
+        responseArea.setWrapText(true);
+        responseArea.setEditable(false);
+        responseArea.setPromptText("Réponse de ChatGPT");
+
+        sendButton.setOnAction(e -> {
+            String userInput = chatArea.getText();
+            if (!userInput.isEmpty()) {
+                String response = "Réponse de ChatGPT : " + userInput; // Remplacer par appel API réel
+                responseArea.setText(response);
+            }
+        });
+
+        vbox.getChildren().addAll(chatArea, sendButton, responseArea);
+
+        Scene scene = new Scene(vbox, 400, 300);
+        chatStage.setScene(scene);
+        chatStage.show();
+    }
+
+    private void fetchWeather(String city) {
+        String apiKey = "YOUR_API_KEY";  // Remplace par ta clé OpenWeatherMap
+        String url = "https://api.openweathermap.org/data/2.5/weather?q=" + city +
+                "&appid=" + apiKey + "&units=metric&lang=fr";
+
+        // On utilise un thread séparé pour ne pas bloquer l'UI
+        new Thread(() -> {
+            try {
+                HttpClient client = HttpClient.newHttpClient();
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(new URI(url))
+                        .GET()
+                        .build();
+
+                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                String json = response.body();
+
+                // Parse JSON simple avec Gson (assure-toi d’avoir la librairie Gson)
+                JsonObject obj = JsonParser.parseString(json).getAsJsonObject();
+
+                if (obj.has("main")) {
+                    JsonObject main = obj.getAsJsonObject("main");
+                    double temp = main.get("temp").getAsDouble();
+                    String description = obj.getAsJsonArray("weather").get(0).getAsJsonObject().get("description").getAsString();
+
+                    // Mise à jour de l'interface graphique dans le thread JavaFX
+                    Platform.runLater(() -> {
+                        weatherResultLabel.setText("Température: " + temp + " °C, " + description);
+                    });
+                } else {
+                    Platform.runLater(() -> weatherResultLabel.setText("Ville non trouvée"));
+                }
+            } catch (Exception e) {
+                Platform.runLater(() -> weatherResultLabel.setText("Erreur lors de la récupération météo"));
+            }
+        }).start();
+    }
+
+    @FXML
+    private void onShowWeatherClicked() {
+        String city = cityField.getText().trim();
+        if (city.isEmpty()) {
+            weatherResultLabel.setText("Merci d'entrer une ville");
+            return;
+        }
+        fetchWeather(city);
+    }
+    private void copierImageDansRessources(File sourceFile) {
+        try {
+            // Chemin vers ton dossier ressources blog_images
+            File targetDir = new File("src/main/resources/blog_images");
+            if (!targetDir.exists()) {
+                targetDir.mkdirs();
+            }
+
+            // Fichier de destination dans le dossier blog_images
+            File destFile = new File(targetDir, sourceFile.getName());
+
+            // Copier le fichier (remplace s'il existe déjà)
+            Files.copy(sourceFile.toPath(), destFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+            // Chemin relatif pour afficher + sauvegarder en DB
+            String cheminRelatif = "/blog_images/" + sourceFile.getName();
+            System.out.println("Image copiée : " + cheminRelatif);
+
+            // Affiche l’image dans ImageView
+            Image image = new Image(getClass().getResourceAsStream(cheminRelatif));
+            imageView.setImage(image);
+
+            // Ici tu peux sauvegarder cheminRelatif en variable ou en DB
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors de la copie de l'image.");
+        }
+    }
+
+
 
 
 

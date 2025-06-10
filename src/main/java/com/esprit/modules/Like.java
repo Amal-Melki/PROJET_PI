@@ -6,27 +6,27 @@ import java.util.Objects;
 public class Like {
     private int id_like;
     private int id_Blog;
-    private int id;
+    private int id_user;  // Renommé pour correspondre à la table 'user'
     private Timestamp date_like;
     private User utilisateur;
 
-    // Constructeur vide (nécessaire pour certaines opérations JDBC ou frameworks)
+    // Constructeur vide
     public Like() {
     }
 
     // Constructeur sans utilisateur
-    public Like(int id_like, int id_Blog, int id, Timestamp date_like) {
+    public Like(int id_like, int id_Blog, int id_user, Timestamp date_like) {
         this.id_like = id_like;
         this.id_Blog = id_Blog;
-        this.id = id;
+        this.id_user = id_user;
         this.date_like = date_like;
     }
 
     // Constructeur complet
-    public Like(int id_like, int id_Blog, int id, Timestamp date_like, User utilisateur) {
+    public Like(int id_like, int id_Blog, int id_user, Timestamp date_like, User utilisateur) {
         this.id_like = id_like;
         this.id_Blog = id_Blog;
-        this.id = id;
+        this.id_user = id_user;
         this.date_like = date_like;
         this.utilisateur = utilisateur;
     }
@@ -48,12 +48,12 @@ public class Like {
         this.id_Blog = id_Blog;
     }
 
-    public int getId() {
-        return id;
+    public int getId_user() {
+        return id_user;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setId_user(int id_user) {
+        this.id_user = id_user;
     }
 
     public Timestamp getDate_like() {
@@ -72,19 +72,19 @@ public class Like {
         this.utilisateur = utilisateur;
     }
 
-    // equals et hashCode — utiles pour la comparaison et les collections
+    // equals et hashCode
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true; // même objet
+        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Like like = (Like) o;
         return id_like == like.id_like &&
                 id_Blog == like.id_Blog &&
-                id == like.id;
+                id_user == like.id_user;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id_like, id_Blog, id);
+        return Objects.hash(id_like, id_Blog, id_user);
     }
 }

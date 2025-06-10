@@ -1,16 +1,14 @@
 package com.esprit.Controllers;
-
 import com.esprit.modules.Blog;
 import com.esprit.modules.CategorieEnum;
 import com.esprit.services.BlogServices;
 import com.esprit.services.LikeService;
 import com.esprit.services.CommentaireService;
 import javafx.animation.ScaleTransition;
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -30,9 +28,7 @@ import javafx.scene.effect.DropShadow;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.time.format.DateTimeFormatter;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -45,6 +41,7 @@ public class RecupererBlog {
     @FXML private ComboBox<CategorieEnum> categorieFilterCombo;
     @FXML private Button addBlogButton;
     @FXML private TextArea apiResponseArea;
+    @FXML private Button  btnTraduire;
 
     private final BlogServices blogService = new BlogServices();
     private final LikeService likeService = new LikeService();
@@ -79,6 +76,9 @@ public class RecupererBlog {
         // Chargement initial des blogs
         loadBlogs();
     }
+    @FXML
+    private TableView<Blog> tableBlogs;
+
 
     @FXML
     private void openAddBlogWindow() {
@@ -153,6 +153,9 @@ public class RecupererBlog {
     }
 
     private VBox createBlogBox(Blog blog) {
+        // Bouton Traduire
+        Button translateButton = new Button("Traduire");
+
         VBox blogBox = new VBox(10);
         blogBox.getStyleClass().add("blog-item");
         blogBox.setPrefWidth(300);
@@ -177,6 +180,7 @@ public class RecupererBlog {
             shadow.setRadius(10);
             shadow.setSpread(0.1);
             blogBox.setEffect(shadow);
+
         });
 
         blogBox.setOnMouseExited(e -> {
@@ -260,14 +264,21 @@ public class RecupererBlog {
         modifierButton.setOnAction(e -> modifierBlog(blog));
         supprimerButton.setOnAction(e -> supprimerBlog(blog));
 
-        // Ajout des boutons au HBox
+        FlowPane buttonsFlowBox = new FlowPane(Orientation.HORIZONTAL);
+        buttonsFlowBox.setHgap(8);
+        buttonsFlowBox.setVgap(3);
+
+
+// Ajoute les boutons que tu veux afficher pour chaque blog
         buttonsBox.getChildren().addAll(
                 likeButton,
                 likeCountLabel,
                 commentButton,
                 modifierButton,
                 supprimerButton
+
         );
+
 
         // Ajout des éléments au VBox principal
         blogBox.getChildren().addAll(
@@ -416,24 +427,15 @@ public class RecupererBlog {
         }
     }
 
-    @FXML
-    private void callApiExample() {
-        new Thread(() -> {
-            String apiResponse = ApiClientController.fetchDataFromApi();
-            Platform.runLater(() -> {
-                System.out.println("Réponse API: " + apiResponse);
-            });
-        }).start();
-    }
 
-    @FXML
-    private void handleApiCall() {
-        new Thread(() -> {
-            String response = ApiClientController.fetchDataFromApi();
-            Platform.runLater(() -> {
-                apiResponseArea.setText(response);
-                showAlert(Alert.AlertType.INFORMATION, "API", "Données reçues avec succès");
-            });
-        }).start();
-    }
+
+
+
+
+
+
 }
+
+
+
+

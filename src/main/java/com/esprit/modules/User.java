@@ -3,12 +3,11 @@ package com.esprit.modules;
 import java.util.Objects;
 
 public class User {
-    private int id;
-    private String username;
-    private String password;
-    private String email;
-    private String nom;
-    private String prenom;
+    private int id_user;
+    private String nom_suser;
+    private String prenom_user;
+    private String email_user;
+    private String password_user;
     private int numero;
     private int contactUrgence;
     private String role;
@@ -18,66 +17,57 @@ public class User {
     }
 
     // Constructeur complet
-    public User(int id, String username, String password, String email, String nom, String prenom,
-                int numero, int contactUrgence, String role) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.nom = nom;
-        this.prenom = prenom;
+    public User(int id_user, String nom_suser, String prenom_user, String email_user,
+                String password_user, int numero, int contactUrgence, String role) {
+        this.id_user = id_user;
+        this.nom_suser = nom_suser;
+        this.prenom_user = prenom_user;
+        this.email_user = email_user;
+        this.password_user = password_user;
         this.numero = numero;
         this.contactUrgence = contactUrgence;
         this.role = role;
     }
 
     // Getters et Setters
-    public int getId() {
-        return id;
+    public int getId_user() {
+        return id_user;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setId_user(int id_user) {
+        this.id_user = id_user;
     }
 
-    public String getUsername() {
-        return username;
+    public String getNom_suser() {
+        return nom_suser;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setNom_suser(String nom_suser) {
+        this.nom_suser = nom_suser;
     }
 
-    public String getPassword() {
-        return password;
+    public String getPrenom_user() {
+        return prenom_user;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setPrenom_user(String prenom_user) {
+        this.prenom_user = prenom_user;
     }
 
-    public String getEmail() {
-        return email;
+    public String getEmail_user() {
+        return email_user;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setEmail_user(String email_user) {
+        this.email_user = email_user;
     }
 
-    public String getNom() {
-        return nom;
+    public String getPassword_user() {
+        return password_user;
     }
 
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
-
-    public String getPrenom() {
-        return prenom;
-    }
-
-    public void setPrenom(String prenom) {
-        this.prenom = prenom;
+    public void setPassword_user(String password_user) {
+        this.password_user = password_user;
     }
 
     public int getNumero() {
@@ -104,30 +94,31 @@ public class User {
         this.role = role;
     }
 
-    // equals() pour comparer par ID et email
+    // equals() basé sur id_user et email_user
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        User that = (User) o;
-        return id == that.id && Objects.equals(email, that.email);
+        User user = (User) o;
+        return id_user == user.id_user &&
+                Objects.equals(email_user, user.email_user);
     }
 
-    // hashCode() basé sur ID et email
+    // hashCode() basé sur id_user et email_user
     @Override
     public int hashCode() {
-        return Objects.hash(id, email);
+        return Objects.hash(id_user, email_user);
     }
 
-    // toString() pour affichage utile en debug ou logs
+    // toString() avec tous les champs
     @Override
     public String toString() {
-        return "Utilisateur{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", email='" + email + '\'' +
-                ", nom='" + nom + '\'' +
-                ", prenom='" + prenom + '\'' +
+        return "User{" +
+                "id_user=" + id_user +
+                ", nom_suser='" + nom_suser + '\'' +
+                ", prenom_user='" + prenom_user + '\'' +
+                ", email_user='" + email_user + '\'' +
+                ", password_user='" + password_user + '\'' +
                 ", numero=" + numero +
                 ", contactUrgence=" + contactUrgence +
                 ", role='" + role + '\'' +

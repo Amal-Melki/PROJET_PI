@@ -9,7 +9,7 @@ public class CommentaireService {
     private final Connection connection = DataSource.getInstance().getConnection();
 
     public void ajouterCommentaire(int blogId, int userId, String texte) throws SQLException {
-        String query = "INSERT INTO `commentaire (` (id_Blog, id, description, date_Commentaire) VALUES (?, ?, ?, NOW())";
+        String query = "INSERT INTO `commentaire` (id_Blog, id, description, date_Commentaire) VALUES (?, ?, ?, NOW())";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, blogId);
             ps.setInt(2, userId);
@@ -19,8 +19,8 @@ public class CommentaireService {
     }
 
     public List<String> getCommentaires(int blogId) throws SQLException {
-        String query = "SELECT u.username, c.description FROM `commentaire (` c " +
-                "JOIN users u ON c.id = u.id " +
+        String query = "SELECT u.username, c.description FROM `commentaire` c " +
+                "JOIN pos u ON c.id = u.id " +
                 "WHERE c.id_Blog = ? " +
                 "ORDER BY c.date_Commentaire DESC";
         List<String> commentaires = new ArrayList<>();
