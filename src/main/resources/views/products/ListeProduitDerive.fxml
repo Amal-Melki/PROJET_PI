@@ -29,7 +29,7 @@
             <Insets top="24" right="24" bottom="24" left="24"/>
         </padding>
         <HBox alignment="CENTER_LEFT" spacing="20">
-            <Label text="📦 Liste des Produits Dérivés"
+            <Label text="📦 Inventaire des Articles"
                    style="-fx-text-fill: #2c3e50; -fx-font-size: 28px; -fx-font-weight: bold;"/>
             <HBox HBox.hgrow="ALWAYS" alignment="CENTER_RIGHT">
                 <Button fx:id="btnRetourAccueil"
@@ -67,7 +67,6 @@
         </padding>
         <TableView fx:id="tableProduits" prefHeight="400.0" VBox.vgrow="ALWAYS">
             <columns>
-                <TableColumn fx:id="colId" prefWidth="50.0" text="ID" styleClass="table-column-center"/>
                 <TableColumn fx:id="colNom" prefWidth="120.0" text="Nom" styleClass="table-column-center"/>
                 <TableColumn fx:id="colCategorie" prefWidth="100.0" text="Catégorie" styleClass="table-column-center"/>
                 <TableColumn fx:id="colPrix" prefWidth="80.0" text="Prix" styleClass="table-column-center"/>

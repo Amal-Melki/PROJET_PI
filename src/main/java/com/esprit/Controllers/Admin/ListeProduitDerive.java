@@ -1,4 +1,3 @@
-// ListeProduitDerive.java
 package com.esprit.Controllers.Admin;
 
 import com.esprit.modules.produits.ProduitDerive;
@@ -23,7 +22,7 @@ import java.io.IOException;
 
 public class ListeProduitDerive {
     @FXML private TableView<ProduitDerive> tableProduits;
-    @FXML private TableColumn<ProduitDerive, Integer> colId; // NOUVEAU: Colonne pour l'ID
+    // Supprimez cette ligne : @FXML private TableColumn<ProduitDerive, Integer> colId;
     @FXML private TableColumn<ProduitDerive, String> colNom;
     @FXML private TableColumn<ProduitDerive, String> colCategorie;
     @FXML private TableColumn<ProduitDerive, Double> colPrix;
@@ -57,8 +56,8 @@ public class ListeProduitDerive {
     }
 
     private void configurerColonnes() {
-        // NOUVEAU: Configuration de la colonne ID
-        colId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        // Supprimez toutes ces lignes concernant colId :
+        // colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         // L'ID ne devrait pas être modifiable directement
         // colId.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
         // colId.setOnEditCommit(event -> { /* Ne rien faire ou gérer une erreur */ });
@@ -67,12 +66,15 @@ public class ListeProduitDerive {
         colNom.setCellFactory(TextFieldTableCell.forTableColumn());
         colNom.setOnEditCommit(event -> {
             event.getRowValue().setNom(event.getNewValue());
+            // Il est bon de mettre à jour la base de données après chaque modification de cellule
+            produitService.modifierProd(event.getRowValue());
         });
 
         colCategorie.setCellValueFactory(new PropertyValueFactory<>("categorie"));
         colCategorie.setCellFactory(TextFieldTableCell.forTableColumn());
         colCategorie.setOnEditCommit(event -> {
             event.getRowValue().setCategorie(event.getNewValue());
+            produitService.modifierProd(event.getRowValue());
         });
 
         colPrix.setCellValueFactory(new PropertyValueFactory<>("prix"));
@@ -80,6 +82,7 @@ public class ListeProduitDerive {
         colPrix.setOnEditCommit(event -> {
             try {
                 event.getRowValue().setPrix(event.getNewValue());
+                produitService.modifierProd(event.getRowValue());
             } catch (NumberFormatException e) {
                 afficherAlerte("Erreur", "Le prix doit être un nombre valide.");
                 tableProduits.refresh();
@@ -91,6 +94,7 @@ public class ListeProduitDerive {
         colStock.setOnEditCommit(event -> {
             try {
                 event.getRowValue().setStock(event.getNewValue());
+                produitService.modifierProd(event.getRowValue());
             } catch (NumberFormatException e) {
                 afficherAlerte("Erreur", "Le stock doit être un nombre entier valide.");
                 tableProduits.refresh();
@@ -98,6 +102,9 @@ public class ListeProduitDerive {
         });
 
         colImageUrl.setCellValueFactory(new PropertyValueFactory<>("imageUrl"));
+        // colImageUrl ne devrait pas être modifiable directement via le tableau,
+        // car l'URL est souvent liée à un choix de fichier.
+        // Si vous voulez la rendre modifiable, ajoutez un CellFactory approprié.
     }
 
     private void chargerProduits() {
@@ -158,7 +165,7 @@ public class ListeProduitDerive {
         boolean success = produitService.modifierProd(produit);
         if (success) {
             afficherAlerte("Succès", "Produit mis à jour avec succès.");
-            chargerProduits();
+            chargerProduits(); // Recharger pour rafraîchir l'affichage
         } else {
             afficherAlerte("Erreur", "Échec de la mise à jour du produit.");
         }
@@ -175,7 +182,7 @@ public class ListeProduitDerive {
                 boolean success = produitService.supprimerProduit(produit.getId());
                 if (success) {
                     afficherAlerte("Succès", "Produit supprimé avec succès.");
-                    chargerProduits();
+                    chargerProduits(); // Recharger pour rafraîchir l'affichage
                 } else {
                     afficherAlerte("Erreur", "Échec de la suppression du produit.");
                 }
@@ -198,8 +205,9 @@ public class ListeProduitDerive {
                     (statut.equals("Rupture") && produit.getStock() == 0) ||
                     (statut.equals("Alerte") && produit.getStock() > 0 && produit.getStock() <= 10);
             boolean matchRecherche = produit.getNom().toLowerCase().contains(recherche) ||
-                    produit.getCategorie().toLowerCase().contains(recherche) || // Ajoutez la recherche par ID
-                    String.valueOf(produit.getId()).contains(recherche); // Recherche par ID
+                    produit.getCategorie().toLowerCase().contains(recherche);
+            // Supprimez la ligne suivante : || String.valueOf(produit.getId()).contains(recherche);
+
             if (matchType && matchStatut && matchRecherche) {
                 produitsFiltres.add(produit);
             }
@@ -210,7 +218,7 @@ public class ListeProduitDerive {
 
     @FXML
     private void handleModifier() {
-        // This method is no longer needed
+        // Cette méthode n'est plus utile si la modification se fait par cellule et via le bouton "Enregistrer" dans colAction
     }
 
     @FXML
@@ -227,7 +235,24 @@ public class ListeProduitDerive {
     private void handleVoirDetails() {
         ProduitDerive produitSelectionne = tableProduits.getSelectionModel().getSelectedItem();
         if (produitSelectionne != null) {
-            // Afficher les détails du produit
+            // Logique pour afficher les détails du produit
+            // Par exemple, ouvrir une nouvelle fenêtre avec les détails
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/User/DetailsProduitUser.fxml")); // Assurez-vous que le chemin est correct
+                Parent root = loader.load();
+
+                // Si vous avez un contrôleur pour DetailsProduitUser, vous pouvez passer le produit :
+                // DetailsProduitUserController controller = loader.getController();
+                // controller.setProduit(produitSelectionne);
+
+                Stage stage = new Stage();
+                stage.setTitle("Détails du Produit : " + produitSelectionne.getNom());
+                stage.setScene(new Scene(root));
+                stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+                afficherAlerte("Erreur", "Impossible d'ouvrir la vue des détails du produit.");
+            }
         } else {
             afficherAlerte("Aucun produit sélectionné", "Veuillez sélectionner un produit à afficher.");
         }
@@ -243,16 +268,16 @@ public class ListeProduitDerive {
 
     public void ajouterProduit(ActionEvent actionEvent) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/products/AjoutProduitDerive.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Admin/AjoutDeriveProduit.fxml")); // Vérifiez le chemin
             Parent root = loader.load();
 
             Stage stage = new Stage();
-            stage.setTitle("Ajouter un produit dérivé");
+            stage.setTitle("Ajouter un Nouveau Produit"); // Titre cohérent
             stage.setScene(new Scene(root));
             stage.show();
 
             stage.setOnHiding(event -> {
-                chargerProduits();
+                chargerProduits(); // Recharger les produits quand la fenêtre d'ajout est fermée
             });
         } catch (IOException e) {
             e.printStackTrace();
@@ -263,12 +288,17 @@ public class ListeProduitDerive {
     @FXML
     private void retourAccueil() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/products/AccueilProduitDerive.fxml"));
+            // Remplacez par le FXML de votre Tableau de Bord Admin ou de la page de sélection.
+            // Si c'est votre page de sélection principale (où vous choisissez Admin/User) :
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/SelectionInterface.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) btnRetourAccueil.getScene().getWindow();
             stage.setScene(new Scene(root));
+            stage.setTitle("Choisissez votre interface"); // Ou le titre de votre page d'accueil
+            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
+            afficherAlerte("Erreur", "Impossible de retourner à la page d'accueil.");
         }
     }
 }
