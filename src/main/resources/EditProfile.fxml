@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.image.ImageView?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="com.esprit.controllers.EditProfileController"
+      spacing="20" alignment="CENTER" style="-fx-background-color: white;">
+    
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+    
+    <Label text="Modifier votre profil" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+    
+    <GridPane vgap="10" hgap="10" alignment="CENTER">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+        
+        <!-- Profile Image -->
+        <VBox alignment="CENTER" spacing="10" GridPane.columnSpan="2">
+            <ImageView fx:id="profileImageView" fitWidth="150" fitHeight="150" preserveRatio="true" 
+                      style="-fx-background-color: #f0f0f0; -fx-background-radius: 75;"/>
+            <Button text="Changer l'image" onAction="#handleImageUpload" 
+                    style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;"/>
+        </VBox>
+        
+        <!-- Nom -->
+        <Label text="Nom:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <TextField fx:id="nomField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+        
+        <!-- Prénom -->
+        <Label text="Prénom:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <TextField fx:id="prenomField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+        
+        <!-- Téléphone -->
+        <Label text="Téléphone:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <TextField fx:id="telephoneField" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+    </GridPane>
+    
+    <HBox spacing="10" alignment="CENTER">
+        <Button text="Enregistrer" onAction="#handleSave" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;"/>
+        <Button text="Annuler" onAction="#handleCancel" style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-weight: bold;"/>
+    </HBox>
+</VBox> 

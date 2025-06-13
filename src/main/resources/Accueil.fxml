@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="com.esprit.controllers.AccueilController">
+    
+    <center>
+        <VBox spacing="20" style="-fx-background-color: white;">
+            <padding>
+                <Insets top="40" right="40" bottom="40" left="40"/>
+            </padding>
+            
+            <!-- Welcome Section -->
+            <VBox spacing="10" alignment="CENTER">
+                <Label text="Bienvenue sur notre plateforme d'événements" 
+                       style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #333333;"/>
+                <Label text="Découvrez et participez à des événements passionnants" 
+                       style="-fx-font-size: 18px; -fx-text-fill: #666666;"/>
+            </VBox>
+            
+            <!-- Features Section -->
+            <HBox spacing="30" alignment="CENTER">
+                <VBox spacing="10" alignment="CENTER" style="-fx-background-color: #f8f8f8; -fx-padding: 20; -fx-background-radius: 10;">
+                    <Label text="🎯" style="-fx-font-size: 40px;"/>
+                    <Label text="Événements Diversifiés" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                    <Label text="Un large choix d'événements pour tous les goûts" 
+                           style="-fx-text-fill: #666666;" wrapText="true"/>
+                </VBox>
+                
+                <VBox spacing="10" alignment="CENTER" style="-fx-background-color: #f8f8f8; -fx-padding: 20; -fx-background-radius: 10;">
+                    <Label text="📅" style="-fx-font-size: 40px;"/>
+                    <Label text="Gestion Simple" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                    <Label text="Inscription et gestion facile de vos participations" 
+                           style="-fx-text-fill: #666666;" wrapText="true"/>
+                </VBox>
+                
+                <VBox spacing="10" alignment="CENTER" style="-fx-background-color: #f8f8f8; -fx-padding: 20; -fx-background-radius: 10;">
+                    <Label text="🔔" style="-fx-font-size: 40px;"/>
+                    <Label text="Notifications" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                    <Label text="Restez informé des derniers événements" 
+                           style="-fx-text-fill: #666666;" wrapText="true"/>
+                </VBox>
+            </HBox>
+            
+            <!-- Call to Action -->
+            <VBox spacing="10" alignment="CENTER">
+                <Label text="Prêt à découvrir nos événements ?" 
+                       style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #333333;"/>
+                <Button text="Voir les événements" 
+                        style="-fx-background-color: #ff7fa8; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 20; -fx-padding: 10 20;"
+                        onAction="#handleVoirEvenements"/>
+            </VBox>
+        </VBox>
+    </center>
+</BorderPane> 
