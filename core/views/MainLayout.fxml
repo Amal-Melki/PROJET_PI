@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.esprit.core.MainAppController">
+  <left>
+    <VBox styleClass="sidebar" stylesheets="@../../gestion_utilisateurs/src/main/resources/css/main.css">
+      <Button text="Gestion Utilisateurs" styleClass="menu-btn" onAction="#loadUsersModule" />
+      <Button text="Gestion Espaces" onAction="#loadSpacesModule" styleClass="menu-btn"/>
+      <Button text="Accès aux Espaces" styleClass="menu-btn" onAction="#loadSpacesModule" />
+    </VBox>
+  </left>
+  <center>
+    <StackPane fx:id="moduleContainer" />
+  </center>
+</BorderPane>
