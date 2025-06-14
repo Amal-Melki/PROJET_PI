@@ -1,74 +1,92 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.effect.DropShadow?>
 
-<VBox xmlns="http://javafx.com/javafx/17" 
+<VBox xmlns="http://javafx.com/javafx/17"
       xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.esprit.controllers.ModifierReservationController"
-      spacing="24" 
+      fx:controller="com.esprit.controllers.ModifierReservation"
+      spacing="24"
       style="-fx-background-color: linear-gradient(to bottom right, #f8f9fa, #e9ecef);">
-    
+
     <padding>
         <Insets top="32" right="32" bottom="32" left="32"/>
     </padding>
 
-    <!-- Header Section -->
-    <VBox spacing="16">
-        <HBox alignment="CENTER_LEFT" style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);" spacing="20">
-            <padding>
-                <Insets top="20" right="24" bottom="20" left="24"/>
-            </padding>
-            <VBox spacing="4">
-                <Label text="Modifier la Réservation" style="-fx-text-fill: #2c3e50; -fx-font-size: 24px; -fx-font-weight: bold;"/>
-                <Label text="Mettez à jour les détails de la réservation" style="-fx-text-fill: #7f8c8d; -fx-font-size: 14px;"/>
-            </VBox>
-        </HBox>
-    </VBox>
-
-    <!-- Form Section -->
-    <VBox spacing="24" style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+    <!-- ✅ Titre avec logo -->
+    <HBox spacing="20" alignment="CENTER_LEFT" style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
         <padding>
-            <Insets top="24" right="24" bottom="24" left="24"/>
+            <Insets top="20" right="24" bottom="20" left="24"/>
         </padding>
+        <ImageView fx:id="logoImage" fitWidth="60" fitHeight="60" preserveRatio="true" />
+        <VBox spacing="4">
+            <Label text="Gestion des Réservations" style="-fx-text-fill: #2c3e50; -fx-font-size: 24px; -fx-font-weight: bold;" />
+            <Label text="Filtrer, rechercher et modifier vos réservations" style="-fx-text-fill: #7f8c8d; -fx-font-size: 14px;" />
+        </VBox>
+        <Pane HBox.hgrow="ALWAYS"/>
+        <Button fx:id="btnRetourAccueil" text="↩ Retour"
+                onAction="#retourAccueil"
+                style="-fx-background-color: #ff7fa8; -fx-text-fill: white;
+                       -fx-font-weight: bold; -fx-font-size: 13px;
+                       -fx-background-radius: 20; -fx-cursor: hand;
+                       -fx-padding: 6 12;" />
+    </HBox>
 
-        <GridPane vgap="16" hgap="16">
-            <columnConstraints>
-                <ColumnConstraints minWidth="150" prefWidth="150"/>
-                <ColumnConstraints minWidth="300" prefWidth="300"/>
-            </columnConstraints>
+    <TextField fx:id="tfRechercheReservation"
+               promptText="🔍 Rechercher par nom..."
+               alignment="CENTER"
+               maxWidth="500"
+               style="-fx-background-color: white; -fx-background-radius: 20;
+                  -fx-border-radius: 20; -fx-border-color: #ff8cb3;
+                  -fx-font-size: 14px; -fx-padding: 8 14;">
+        <VBox.margin>
+            <Insets top="0" right="0" bottom="0" left="0"/>
+        </VBox.margin>
+    </TextField>
 
-            <!-- Client Field -->
-            <Label text="Client" style="-fx-text-fill: #2c3e50; -fx-font-size: 14px; -fx-font-weight: bold;" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-            <ComboBox fx:id="clientComboBox" prefWidth="300" style="-fx-background-radius: 8; -fx-border-radius: 8; -fx-border-color: #e0e0e0; -fx-border-width: 1; -fx-padding: 8 12 8 12; -fx-font-size: 14px;" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
-            <!-- Event Field -->
-            <Label text="Événement" style="-fx-text-fill: #2c3e50; -fx-font-size: 14px; -fx-font-weight: bold;" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-            <ComboBox fx:id="eventComboBox" prefWidth="300" style="-fx-background-radius: 8; -fx-border-radius: 8; -fx-border-color: #e0e0e0; -fx-border-width: 1; -fx-padding: 8 12 8 12; -fx-font-size: 14px;" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+    <!-- ✅ Filtres avancés -->
+    <HBox spacing="20" alignment="CENTER">
+        <ComboBox fx:id="cbFiltreStatut" promptText="Tous les statuts"
+                  prefWidth="150"
+                  style="-fx-background-radius: 20; -fx-border-radius: 20;
+                         -fx-border-color: #ff8cb3; -fx-font-size: 13px;" />
+        <DatePicker fx:id="dpFiltreDebut" promptText="Date début"
+                    prefWidth="150"
+                    style="-fx-background-radius: 20; -fx-border-radius: 20;
+                           -fx-border-color: #ff8cb3; -fx-font-size: 13px;" />
+        <DatePicker fx:id="dpFiltreFin" promptText="Date fin"
+                    prefWidth="150"
+                    style="-fx-background-radius: 20; -fx-border-radius: 20;
+                           -fx-border-color: #ff8cb3; -fx-font-size: 13px;" />
+        <Button text="Filtrer"
+                onAction="#filtrerReservationsAvance"
+                style="-fx-background-color: #b23b5c;
+                       -fx-text-fill: white;
+                       -fx-font-weight: bold;
+                       -fx-background-radius: 20;
+                       -fx-font-size: 14px;
+                       -fx-padding: 6 20;" />
+    </HBox>
 
-            <!-- Date Field -->
-            <Label text="Date" style="-fx-text-fill: #2c3e50; -fx-font-size: 14px; -fx-font-weight: bold;" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-            <DatePicker fx:id="datePicker" prefWidth="300" style="-fx-background-radius: 8; -fx-border-radius: 8; -fx-border-color: #e0e0e0; -fx-border-width: 1; -fx-padding: 8 12 8 12; -fx-font-size: 14px;" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-
-            <!-- Status Field -->
-            <Label text="Statut" style="-fx-text-fill: #2c3e50; -fx-font-size: 14px; -fx-font-weight: bold;" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-            <ComboBox fx:id="statusComboBox" prefWidth="300" style="-fx-background-radius: 8; -fx-border-radius: 8; -fx-border-color: #e0e0e0; -fx-border-width: 1; -fx-padding: 8 12 8 12; -fx-font-size: 14px;" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
-
-            <!-- Number of Tickets Field -->
-            <Label text="Nombre de Tickets" style="-fx-text-fill: #2c3e50; -fx-font-size: 14px; -fx-font-weight: bold;" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-            <TextField fx:id="nbTicketsField" prefWidth="300" style="-fx-background-radius: 8; -fx-border-radius: 8; -fx-border-color: #e0e0e0; -fx-border-width: 1; -fx-padding: 8 12 8 12; -fx-font-size: 14px;" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
-        </GridPane>
-
-        <!-- Buttons Section -->
-        <HBox spacing="16" alignment="CENTER_RIGHT">
-            <Button text="Annuler" 
-                    onAction="#handleAnnuler"
-                    style="-fx-background-color: #e0e0e0; -fx-text-fill: #2c3e50; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 8; -fx-font-family: 'Segoe UI Semibold'; -fx-cursor: hand; -fx-padding: 8 16 8 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);"/>
-            <Button text="Enregistrer" 
-                    onAction="#handleEnregistrer"
-                    style="-fx-background-color: linear-gradient(to right, #3498db, #2980b9); -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 8; -fx-font-family: 'Segoe UI Semibold'; -fx-cursor: hand; -fx-padding: 8 16 8 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);"/>
-        </HBox>
-    </VBox>
-</VBox> 
+    <!-- ✅ Tableau des réservations -->
+    <TableView fx:id="tableReservations"
+               prefHeight="550.0"
+               style="-fx-background-color: #ffe6eb;
+                      -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0.5, 0, 2);">
+        <columns>
+            <TableColumn fx:id="colNomMateriel" prefWidth="140.0" text="Matériel" />
+            <TableColumn fx:id="colDateDebut" prefWidth="140.0" text="Date Début" />
+            <TableColumn fx:id="colDateFin" prefWidth="140.0" text="Date Fin" />
+            <TableColumn fx:id="colQuantite" prefWidth="100.0" text="Quantité" />
+            <TableColumn fx:id="colStatut" prefWidth="100.0" text="Statut" />
+            <TableColumn fx:id="colClientId" text="ID Client" />
+            <TableColumn fx:id="colAction" prefWidth="200.0" text="Action" />
+        </columns>
+    </TableView>
+</VBox>
