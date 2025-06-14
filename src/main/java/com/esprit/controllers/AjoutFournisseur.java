@@ -68,7 +68,7 @@ public class AjoutFournisseur implements Initializable {
         }
 
         ServiceFournisseur service = new ServiceFournisseur();
-        List<Fournisseur> fournisseursExistants = service.recuperer();
+        List<Fournisseur> fournisseursExistants = service.rechercher();
 
         for (Fournisseur f : fournisseursExistants) {
             if (f.getNom().equalsIgnoreCase(nom)

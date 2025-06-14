@@ -67,7 +67,7 @@ public class ModifierFournisseur implements Initializable {
     private void chargerDonnees() {
         data.clear();
         ServiceFournisseur sf = new ServiceFournisseur();
-        List<Fournisseur> liste = sf.recuperer();
+        List<Fournisseur> liste = sf.rechercher();
         data.addAll(liste);
         tableFournisseurs.setItems(data);
     }

@@ -41,7 +41,7 @@ public class AjoutReservation implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ServiceMateriel sm = new ServiceMateriel();
-        List<Materiels> listeMateriels = sm.recuperer();
+        List<Materiels> listeMateriels = sm.rechercher();
         cbMateriel.setItems(FXCollections.observableArrayList(listeMateriels));
         cbStatut.setItems(FXCollections.observableArrayList("EN_ATTENTE", "VALIDEE", "ANNULEE"));
         cbStatut.setValue("EN_ATTENTE");
@@ -107,7 +107,7 @@ public class AjoutReservation implements Initializable {
         }
 
         ServiceReservationMateriel serviceReservation = new ServiceReservationMateriel();
-        for (ReservationMateriel r : serviceReservation.recuperer()) {
+        for (ReservationMateriel r : serviceReservation.rechercher()) {
             if (r.getMaterielId() == materiel.getId()
                     && !(r.getDateFin().toLocalDate().isBefore(dateDebut) || r.getDateDebut().toLocalDate().isAfter(dateFin))) {
                 showAlert(Alert.AlertType.ERROR, "Conflit", "Ce matériel est déjà réservé sur cette période.");

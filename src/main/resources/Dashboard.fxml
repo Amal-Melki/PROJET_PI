@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.esprit.controllers.DashboardController" spacing="24" style="-fx-background-color: white; -fx-background-radius: 16;">
+    <padding>
+        <Insets top="32" right="32" bottom="32" left="32"/>
+    </padding>
+
+    <!-- Title & Welcome -->
+    <HBox alignment="CENTER_LEFT" spacing="18">
+        <ImageView fitHeight="48" fitWidth="48" preserveRatio="true">
+            <Image url="@/logo.jpg"/>
+        </ImageView>
+        <VBox>
+            <Text text="Tableau de Bord" style="-fx-fill: #3498db; -fx-font-weight: bold;">
+                <font>
+                    <Font name="Segoe UI Bold" size="28.0"/>
+                </font>
+            </Text>
+            <Text text="Bienvenue dans votre application de gestion d'événements" style="-fx-fill: #666666;">
+                <font>
+                    <Font name="Segoe UI" size="16.0"/>
+                </font>
+            </Text>
+        </VBox>
+    </HBox>
+
+    <!-- Charts Section -->
+    <HBox spacing="32" alignment="CENTER">
+        <!-- User Types PieChart -->
+        <VBox alignment="CENTER" spacing="10">
+            <Label text="Répartition des Utilisateurs" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #3498db;"/>
+            <PieChart fx:id="userTypePieChart" prefWidth="320" prefHeight="240"/>
+        </VBox>
+        <!-- Events BarChart -->
+        <VBox alignment="CENTER" spacing="10">
+            <Label text="Événements (Réservés vs Non Réservés)" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #3498db;"/>
+            <BarChart fx:id="eventsBarChart" prefWidth="320" prefHeight="240">
+                <xAxis>
+                    <CategoryAxis fx:id="eventsCategoryAxis" label="Type"/>
+                </xAxis>
+                <yAxis>
+                    <NumberAxis fx:id="eventsNumberAxis" label="Nombre"/>
+                </yAxis>
+            </BarChart>
+        </VBox>
+        <!-- Reservation Status PieChart -->
+        <VBox alignment="CENTER" spacing="10">
+            <Label text="Statut des Réservations" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #3498db;"/>
+            <PieChart fx:id="reservationStatusPieChart" prefWidth="320" prefHeight="240"/>
+        </VBox>
+    </HBox>
+</VBox> 

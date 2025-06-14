@@ -21,14 +21,14 @@ public class Main {
 
         // Afficher tous les matériels
         System.out.println("Liste des matériels :");
-        for (Materiels m : serviceMateriel.recuperer()) {
+        for (Materiels m : serviceMateriel.rechercher()) {
           System.out.println(m);
        }
         Fournisseur f = new Fournisseur("TechPro", "contact@techpro.com", "22554411", "Tunis, Centre Urbain Nord");
         servicefournisseur.ajouter(f);
 
         // Affichage test
-        for (Fournisseur fournisseur : servicefournisseur.recuperer()) {
+        for (Fournisseur fournisseur : servicefournisseur.rechercher()) {
             System.out.println(fournisseur);
         }
 
@@ -42,7 +42,7 @@ public class Main {
         servicereservation.modifier(r);
 
         // Affichage
-        for (ReservationMateriel res : servicereservation.recuperer()) {
+        for (ReservationMateriel res : servicereservation.rechercher()) {
             System.out.println(res);
         }
 

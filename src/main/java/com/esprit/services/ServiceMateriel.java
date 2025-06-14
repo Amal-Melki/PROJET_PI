@@ -86,7 +86,7 @@ public class ServiceMateriel implements IService<Materiels> {
 
 
     @Override
-    public List<Materiels> recuperer() {
+    public List<Materiels> rechercher() {
         List<Materiels> materiels = new ArrayList<>();
         String req = "SELECT * FROM materiel";
 

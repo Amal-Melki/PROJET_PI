@@ -70,7 +70,7 @@ public class AjoutReservationClient implements Initializable {
 
         // ✅ Remplissage automatique si vide
         if (cbMateriel.getItems().isEmpty()) {
-            List<Materiels> materiels = new ServiceMateriel().recuperer().stream()
+            List<Materiels> materiels = new ServiceMateriel().rechercher().stream()
                     .filter(m -> m.getQuantite() > 0 && "DISPONIBLE".equalsIgnoreCase(m.getEtat()))
                     .toList();
             cbMateriel.getItems().setAll(materiels);

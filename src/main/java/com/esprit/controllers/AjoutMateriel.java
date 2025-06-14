@@ -116,7 +116,7 @@ public class AjoutMateriel implements Initializable {
             }
 
             ServiceMateriel sm = new ServiceMateriel();
-            for (Materiels m : sm.recuperer()) {
+            for (Materiels m : sm.rechercher()) {
                 if (m.getNom().equalsIgnoreCase(nom) &&
                         m.getType().equalsIgnoreCase(type) &&
                         m.getQuantite() == quantite &&

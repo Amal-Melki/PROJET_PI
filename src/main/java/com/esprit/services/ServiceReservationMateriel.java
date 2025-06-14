@@ -166,7 +166,7 @@ public class ServiceReservationMateriel implements IService<ReservationMateriel>
     }
 
     @Override
-    public List<ReservationMateriel> recuperer() {
+    public List<ReservationMateriel> rechercher() {
         List<ReservationMateriel> list = new ArrayList<>();
         String req = "SELECT * FROM reservation_materiel";
 

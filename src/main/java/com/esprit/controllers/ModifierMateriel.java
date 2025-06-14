@@ -64,7 +64,7 @@ public class ModifierMateriel implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ServiceMateriel sm = new ServiceMateriel();
-        materiels.setAll(sm.recuperer());
+        materiels.setAll(sm.rechercher());
         afficherMateriels();
 
         tfRecherche.textProperty().addListener((obs, oldVal, newVal) -> filtrerMateriels(newVal));
@@ -266,7 +266,7 @@ public class ModifierMateriel implements Initializable {
         String type = cbFiltreType.getValue();
         String quantiteStr = tfFiltreQuantite.getText().trim();
 
-        List<Materiels> tous = new ServiceMateriel().recuperer();
+        List<Materiels> tous = new ServiceMateriel().rechercher();
         ObservableList<Materiels> filtres = FXCollections.observableArrayList();
 
         for (Materiels m : tous) {

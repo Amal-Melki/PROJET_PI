@@ -14,7 +14,7 @@ public class MaterielRestController {
 
     @GetMapping("/stock-faible")
     public List<Materiels> getStockFaible() {
-        return serviceMateriel.recuperer().stream()
+        return serviceMateriel.rechercher().stream()
                 .filter(m -> m.getQuantite() < 10)
                 .toList();
     }

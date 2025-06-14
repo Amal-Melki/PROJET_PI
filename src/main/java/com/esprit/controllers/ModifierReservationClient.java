@@ -56,7 +56,7 @@ public class ModifierReservationClient implements Initializable {
         this.ancienneQuantiteReservee = r.getQuantiteReservee();
 
         ServiceMateriel sm = new ServiceMateriel();
-        for (Materiels m : sm.recuperer()) {
+        for (Materiels m : sm.rechercher()) {
             if (m.getId() == r.getMaterielId()) {
                 materielAssocie = m;
                 lblNomMateriel.setText(m.getNom());

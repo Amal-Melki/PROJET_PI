@@ -24,7 +24,7 @@ public class ExportMaterielCSV {
         response.setContentType("text/csv");
         response.setHeader("Content-Disposition", "attachment; filename=materiels.csv");
 
-        List<Materiels> materiels = serviceMateriel.recuperer();
+        List<Materiels> materiels = serviceMateriel.rechercher();
 
         try (PrintWriter writer = response.getWriter()) {
             writer.println("ID,Nom,Type,Quantité,État,Description,Image,Prix");

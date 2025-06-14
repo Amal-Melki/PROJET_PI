@@ -129,11 +129,11 @@ public class ModifierReservation implements Initializable {
     private void chargerDonnees() {
         data.clear();
         ServiceReservationMateriel srm = new ServiceReservationMateriel();
-        List<ReservationMateriel> reservations = srm.recuperer();
+        List<ReservationMateriel> reservations = srm.rechercher();
 
         ServiceMateriel sm = new ServiceMateriel();
         HashMap<Integer, String> mapMateriel = new HashMap<>();
-        for (Materiels m : sm.recuperer()) {
+        for (Materiels m : sm.rechercher()) {
             mapMateriel.put(m.getId(), m.getNom());
         }
 

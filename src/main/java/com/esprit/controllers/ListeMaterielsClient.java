@@ -47,7 +47,7 @@ public class ListeMaterielsClient implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         ServiceMateriel sm = new ServiceMateriel();
-        tousMateriels.setAll(sm.recuperer().stream()
+        tousMateriels.setAll(sm.rechercher().stream()
                 .filter(m -> m.getQuantite() > 0 && "DISPONIBLE".equalsIgnoreCase(m.getEtat()))
                 .collect(Collectors.toList()));
 

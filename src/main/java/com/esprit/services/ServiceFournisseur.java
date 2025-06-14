@@ -63,7 +63,7 @@ public class ServiceFournisseur implements IService<Fournisseur> {
     }
 
     @Override
-    public List<Fournisseur> recuperer() {
+    public List<Fournisseur> rechercher() {
         List<Fournisseur> list = new ArrayList<>();
         String req = "SELECT * FROM fournisseur";
 

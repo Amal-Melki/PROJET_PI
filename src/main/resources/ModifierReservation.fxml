@@ -5,69 +5,65 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.effect.DropShadow?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/17"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.esprit.controllers.ModifierReservation"
-            prefHeight="900.0" prefWidth="950.0"
-            style="-fx-background-color: #ffc0cb;">
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.esprit.controllers.ModifierReservation"
+      spacing="24"
+      style="-fx-background-color: linear-gradient(to bottom right, #f8f9fa, #e9ecef);">
 
-    <!-- ✅ Logo -->
-    <ImageView fx:id="logoImage"
-               fitWidth="100" fitHeight="100"
-               layoutX="10" layoutY="10"
-               pickOnBounds="true" preserveRatio="true" />
+    <padding>
+        <Insets top="32" right="32" bottom="32" left="32"/>
+    </padding>
 
-    <!-- ✅ Titre -->
-    <HBox layoutX="0" layoutY="20" prefWidth="950.0" alignment="CENTER">
-        <Text text="Liste des Réservations" style="-fx-fill: white;">
-            <font>
-                <Font name="Segoe UI Bold" size="30.0"/>
-            </font>
-        </Text>
+    <!-- ✅ Titre avec logo -->
+    <HBox spacing="20" alignment="CENTER_LEFT" style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+        <padding>
+            <Insets top="20" right="24" bottom="20" left="24"/>
+        </padding>
+        <ImageView fx:id="logoImage" fitWidth="60" fitHeight="60" preserveRatio="true" />
+        <VBox spacing="4">
+            <Label text="Gestion des Réservations" style="-fx-text-fill: #2c3e50; -fx-font-size: 24px; -fx-font-weight: bold;" />
+            <Label text="Filtrer, rechercher et modifier vos réservations" style="-fx-text-fill: #7f8c8d; -fx-font-size: 14px;" />
+        </VBox>
+        <Pane HBox.hgrow="ALWAYS"/>
+        <Button fx:id="btnRetourAccueil" text="↩ Retour"
+                onAction="#retourAccueil"
+                style="-fx-background-color: #ff7fa8; -fx-text-fill: white;
+                       -fx-font-weight: bold; -fx-font-size: 13px;
+                       -fx-background-radius: 20; -fx-cursor: hand;
+                       -fx-padding: 6 12;" />
     </HBox>
 
-    <!-- ✅ Bouton Retour -->
-    <Button fx:id="btnRetourAccueil"
-            text="↩ Retour"
-            layoutX="820.0" layoutY="20.0"
-            onAction="#retourAccueil"
-            style="-fx-background-color: #ff7fa8; -fx-text-fill: white;
-                   -fx-font-weight: bold; -fx-font-size: 13px;
-                   -fx-background-radius: 20; -fx-cursor: hand;
-                   -fx-padding: 6 12;" />
+    <TextField fx:id="tfRechercheReservation"
+               promptText="🔍 Rechercher par nom..."
+               alignment="CENTER"
+               maxWidth="500"
+               style="-fx-background-color: white; -fx-background-radius: 20;
+                  -fx-border-radius: 20; -fx-border-color: #ff8cb3;
+                  -fx-font-size: 14px; -fx-padding: 8 14;">
+        <VBox.margin>
+            <Insets top="0" right="0" bottom="0" left="0"/>
+        </VBox.margin>
+    </TextField>
 
-    <!-- ✅ Zone de recherche -->
-    <HBox layoutX="0" layoutY="90" prefWidth="950.0" alignment="CENTER">
-        <TextField fx:id="tfRechercheReservation"
-                   promptText="🔍 Rechercher par nom..."
-                   alignment="CENTER"
-                   prefWidth="500.0"
-                   style="-fx-background-color: white; -fx-background-radius: 20;
-                          -fx-border-radius: 20; -fx-border-color: #ff8cb3;
-                          -fx-font-size: 14px; -fx-padding: 8 14;" />
-    </HBox>
 
     <!-- ✅ Filtres avancés -->
-    <HBox layoutX="0" layoutY="150" prefWidth="950.0" alignment="CENTER" spacing="20">
-        <ComboBox fx:id="cbFiltreStatut"
-                  promptText="Tous les statuts"
-                  prefWidth="150.0"
+    <HBox spacing="20" alignment="CENTER">
+        <ComboBox fx:id="cbFiltreStatut" promptText="Tous les statuts"
+                  prefWidth="150"
                   style="-fx-background-radius: 20; -fx-border-radius: 20;
                          -fx-border-color: #ff8cb3; -fx-font-size: 13px;" />
-
-        <DatePicker fx:id="dpFiltreDebut"
-                    promptText="Date début"
-                    prefWidth="150.0"
+        <DatePicker fx:id="dpFiltreDebut" promptText="Date début"
+                    prefWidth="150"
                     style="-fx-background-radius: 20; -fx-border-radius: 20;
                            -fx-border-color: #ff8cb3; -fx-font-size: 13px;" />
-
-        <DatePicker fx:id="dpFiltreFin"
-                    promptText="Date fin"
-                    prefWidth="150.0"
+        <DatePicker fx:id="dpFiltreFin" promptText="Date fin"
+                    prefWidth="150"
                     style="-fx-background-radius: 20; -fx-border-radius: 20;
                            -fx-border-color: #ff8cb3; -fx-font-size: 13px;" />
-
         <Button text="Filtrer"
                 onAction="#filtrerReservationsAvance"
                 style="-fx-background-color: #b23b5c;
@@ -78,11 +74,11 @@
                        -fx-padding: 6 20;" />
     </HBox>
 
-    <!-- ✅ Tableau -->
+    <!-- ✅ Tableau des réservations -->
     <TableView fx:id="tableReservations"
-               layoutX="25.0" layoutY="220.0"
-               prefWidth="900.0" prefHeight="550.0"
-               style="-fx-background-color: #ffe6eb; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0.5, 0, 2);">
+               prefHeight="550.0"
+               style="-fx-background-color: #ffe6eb;
+                      -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0.5, 0, 2);">
         <columns>
             <TableColumn fx:id="colNomMateriel" prefWidth="140.0" text="Matériel" />
             <TableColumn fx:id="colDateDebut" prefWidth="140.0" text="Date Début" />
@@ -93,5 +89,4 @@
             <TableColumn fx:id="colAction" prefWidth="200.0" text="Action" />
         </columns>
     </TableView>
-
-</AnchorPane>
+</VBox>
