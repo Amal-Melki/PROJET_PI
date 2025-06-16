@@ -23,6 +23,7 @@
         <!-- ... tes dépendances ... -->
     </dependencies>
 
+
     <build>
         <plugins>
             <!-- JavaFX Maven Plugin -->

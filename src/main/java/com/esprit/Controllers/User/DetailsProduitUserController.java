@@ -33,15 +33,14 @@ public class DetailsProduitUserController {
     @FXML
     private Label productPriceLabel;
 
-    // NEW: Label for Product ID
-    @FXML
-    private Label productIdLabel;
+    // OLD: Label for Product ID - Supprimez ou commentez cette ligne
+    // @FXML
+    // private Label productIdLabel;
 
     private ProduitDerive currentProduit;
     private ServiceProduitDetails serviceProduitDetails;
 
-    // Chemin par défaut de l'image si celle de la DB échoue ou est manquante
-    private static final String DEFAULT_PRODUCT_IMAGE_PATH = "/images/Mug4.jpg"; // Mis à jour pour utiliser Mug4.jpg
+    private static final String DEFAULT_PRODUCT_IMAGE_PATH = "/images/Mug4.jpg";
 
     @FXML
     public void initialize() {
@@ -67,20 +66,18 @@ public class DetailsProduitUserController {
         if (currentProduit != null) {
             System.out.println("DEBUG (Details): Affichage des détails pour le produit: " + currentProduit.getNom() + " (ID: " + currentProduit.getId() + ")");
             productNameLabel.setText(currentProduit.getNom());
-            // NEW: Set the Product ID Label
-            productIdLabel.setText("ID: " + currentProduit.getId());
+            // OLD: Set the Product ID Label - Supprimez ou commentez cette ligne
+            // productIdLabel.setText("ID: " + currentProduit.getId());
             productCategoryLabel.setText("Catégorie: " + currentProduit.getCategorie());
             productDescriptionLabel.setText("Description: " + (currentProduit.getDescription() != null ? currentProduit.getDescription() : "N/A"));
             productPriceLabel.setText(String.format("Prix: %.2f TND", currentProduit.getPrix()));
 
             Image productImage = null;
             String imageUrlFromDb = currentProduit.getImageUrl();
-            String finalImageUrl = null; // Cette variable contiendra l'URL correctement formatée pour Image
+            String finalImageUrl = null;
 
             if (imageUrlFromDb != null && !imageUrlFromDb.trim().isEmpty()) {
                 try {
-                    // 1. Tenter de charger comme ressource interne (ex: /images/mon_image.png)
-                    // Cela suppose que si l'URL dans la DB commence par '/', c'est une ressource interne
                     if (imageUrlFromDb.startsWith("/")) {
                         URL resourceUrl = getClass().getResource(imageUrlFromDb);
                         if (resourceUrl != null) {
@@ -89,45 +86,37 @@ public class DetailsProduitUserController {
                         }
                     }
 
-                    // Si non trouvée comme ressource, tenter de la traiter comme un chemin de fichier ou une URL web
                     if (finalImageUrl == null) {
-                        // 2. Vérifier si c'est un chemin de fichier local (Windows ou Unix)
-                        if (imageUrlFromDb.matches("^[a-zA-Z]:\\\\.*")) { // Chemin Windows (C:\...)
-                            // Convertir le chemin Windows en URL "file:/" avec des slashes
+                        if (imageUrlFromDb.matches("^[a-zA-Z]:\\\\.*")) {
                             finalImageUrl = "file:/" + imageUrlFromDb.replace("\\", "/");
                             System.out.println("DEBUG (Details): Image détectée comme chemin Windows, convertie en: " + finalImageUrl);
-                        } else if (imageUrlFromDb.startsWith("/") && !imageUrlFromDb.startsWith("http")) { // Chemin Unix-like absolu (/home/...)
-                            // Utiliser le protocole file:// pour les chemins Unix-like absolus
+                        } else if (imageUrlFromDb.startsWith("/") && !imageUrlFromDb.startsWith("http")) {
                             finalImageUrl = "file://" + imageUrlFromDb;
                             System.out.println("DEBUG (Details): Image détectée comme chemin Unix-like, convertie en: " + finalImageUrl);
                         } else {
-                            // 3. Sinon, supposer que c'est une URL directe (web ou déjà correctement formatée)
                             finalImageUrl = imageUrlFromDb;
                             System.out.println("DEBUG (Details): Image traitée comme URL directe (web ou autre): " + finalImageUrl);
                         }
                     }
 
-                    // Maintenant, tenter de charger l'image avec l'URL déterminée
                     if (finalImageUrl != null) {
-                        productImage = new Image(finalImageUrl, true); // true pour chargement en arrière-plan
+                        productImage = new Image(finalImageUrl, true);
                         if (productImage.isError()) {
                             System.err.println("ERREUR (Details): Erreur de chargement d'image pour " + currentProduit.getNom() + " (URL finale tentée: " + finalImageUrl + "): " + productImage.getException().getMessage());
-                            productImage = null; // Marquer comme échec pour le fallback
+                            productImage = null;
                         }
                     }
                 } catch (Exception e) {
                     System.err.println("ERREUR (Details): Exception lors du traitement de l'URL d'image pour " + currentProduit.getNom() + " (URL de la DB: " + imageUrlFromDb + "): " + e.getMessage());
                     e.printStackTrace();
-                    productImage = null; // Marquer comme échec pour le fallback
+                    productImage = null;
                 }
             }
 
-            // Fallback vers l'image par défaut si productImage est toujours null ou a des erreurs
             if (productImage == null || productImage.isError()) {
                 try {
                     URL defaultImageUrl = getClass().getResource(DEFAULT_PRODUCT_IMAGE_PATH);
                     if (defaultImageUrl == null) {
-                        // Si l'image par défaut elle-même n'est pas trouvée, c'est une erreur de configuration grave
                         throw new NullPointerException("L'image par défaut n'a pas été trouvée à : " + DEFAULT_PRODUCT_IMAGE_PATH);
                     }
                     productImage = new Image(defaultImageUrl.toExternalForm(), true);
@@ -137,7 +126,7 @@ public class DetailsProduitUserController {
                 } catch (NullPointerException npe) {
                     System.err.println("ERREUR (Details): Le chemin de l'image par défaut est incorrect ou le fichier n'existe pas. Veuillez vérifier: " + DEFAULT_PRODUCT_IMAGE_PATH + " - " + npe.getMessage());
                     npe.printStackTrace();
-                    productImage = null; // Ultime fallback : pas d'image
+                    productImage = null;
                 } catch (Exception e) {
                     System.err.println("ERREUR (Details): Exception lors du chargement de l'image par défaut: " + e.getMessage());
                     e.printStackTrace();
@@ -147,15 +136,14 @@ public class DetailsProduitUserController {
             productImageView.setImage(productImage);
 
         } else {
-            // Gérer le cas où le produit n'est pas trouvé ou est null (aucun ID correspondant en DB)
             System.out.println("DEBUG (Details): Le produit est null, affichage des informations de 'Produit non trouvé'.");
             productNameLabel.setText("Produit non trouvé");
-            productIdLabel.setText(""); // Clear ID label if product is null
+            // OLD: Clear ID label if product is null - Supprimez ou commentez cette ligne
+            // productIdLabel.setText("");
             productCategoryLabel.setText("");
             productDescriptionLabel.setText("Désolé, ce produit n'est pas disponible ou une erreur est survenue lors de sa récupération.");
             productPriceLabel.setText("");
             try {
-                // Tenter de charger l'image par défaut même si le produit est null
                 URL defaultImageUrl = Objects.requireNonNull(getClass().getResource(DEFAULT_PRODUCT_IMAGE_PATH));
                 productImageView.setImage(new Image(defaultImageUrl.toExternalForm()));
             } catch (NullPointerException npe) {
@@ -206,9 +194,6 @@ public class DetailsProduitUserController {
 
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
-                // Assurez-vous que serviceProduitDetails.supprimerDuPanier est la bonne méthode.
-                // Normalement, la suppression du panier serait gérée par un ServicePanier,
-                // mais si ServiceProduitDetails l'implémente aussi, c'est bon.
                 if (serviceProduitDetails.supprimerDuPanier(currentProduit)) {
                     Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
                     successAlert.setTitle("Succès");
