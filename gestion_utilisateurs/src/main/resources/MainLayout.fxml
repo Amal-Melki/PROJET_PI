@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" 
+            xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="com.esprit.controllers.MainLayoutController"
+            style="-fx-background-color: pink;">
+
+    <!-- Left side - Sidebar Container -->
+    <left>
+        <VBox fx:id="sidebarContainer" prefWidth="220"/>
+    </left>
+
+    <!-- Center - Content Area -->
+    <center>
+        <StackPane fx:id="contentArea" style="-fx-background-color: pink;">
+            <!-- Content will be loaded here dynamically -->
+        </StackPane>
+    </center>
+
+</BorderPane> 

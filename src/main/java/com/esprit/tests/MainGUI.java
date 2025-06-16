@@ -1,33 +1,48 @@
 package com.esprit.tests;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
-import java.net.URL;
-import java.util.Objects;
 
 public class MainGUI extends Application {
 
     @Override
     public void start(Stage primaryStage) {
         try {
-            // Load the FXML file for the User interface
-            URL location = getClass().getResource("/views/SelectionInterface.fxml");
-            Parent root = FXMLLoader.load(Objects.requireNonNull(location, "FXML file not found at /views/User/AffichageProduitsUser.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Accueil.fxml"));
+            Parent root = loader.load();
+            Scene scene = new Scene(root);
 
-            primaryStage.setTitle("Découvrez nos Produits");
-            primaryStage.setScene(new Scene(root));
+            primaryStage.setScene(scene);
+            primaryStage.setTitle("🏠 Accueil - Gestion des Ressources");
             primaryStage.show();
         } catch (Exception e) {
-            System.out.println("Erreur lors du chargement du FXML de l'interface utilisateur:");
+            System.out.println("Erreur au démarrage : " + e.getMessage());
             e.printStackTrace();
         }
     }
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    // 🔹 Nouvelle méthode d’ouverture depuis un autre contrôleur
+    public static void showWindow() {
+        Platform.runLater(() -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(MainGUI.class.getResource("/Accueil.fxml"));
+                Parent root = loader.load();
+                Stage stage = new Stage();
+                stage.setTitle("🏠 Accueil - Gestion des Ressources");
+                stage.setScene(new Scene(root));
+                stage.show();
+            } catch (Exception e) {
+                System.err.println("Erreur lors de l'ouverture de l'interface Gestion du Matériel : " + e.getMessage());
+                e.printStackTrace();
+            }
+        });
     }
 }

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="com.esprit.controllers.LoginController"
+            style="-fx-background-color: linear-gradient(to bottom right, #2c3e50, #3498db);">
+    
+    <center>
+        <StackPane>
+            <!-- Login Form Container -->
+            <VBox alignment="CENTER" spacing="20" style="-fx-background-color: rgba(255, 255, 255, 0.95); -fx-background-radius: 20;"
+                  maxWidth="400" maxHeight="600">
+                
+                <padding>
+                    <Insets top="40" right="40" bottom="40" left="40"/>
+                </padding>
+
+                <!-- Logo/Title -->
+                <VBox alignment="CENTER" spacing="10">
+                    <Text text="Bienvenue" style="-fx-fill: #2c3e50;">
+                        <font>
+                            <Font name="Segoe UI Bold" size="28.0"/>
+                        </font>
+                    </Text>
+                    <Text text="Connectez-vous à votre compte" style="-fx-fill: #7f8c8d;">
+                        <font>
+                            <Font name="Segoe UI" size="14.0"/>
+                        </font>
+                    </Text>
+                </VBox>
+
+                <!-- Email Field -->
+                <VBox spacing="5">
+                    <Label text="Email" style="-fx-text-fill: #2c3e50; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+                    <TextField fx:id="txtEmail" 
+                              prefHeight="45" 
+                              style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #bdc3c7; -fx-background-color: white; -fx-font-size: 14px;"/>
+                </VBox>
+
+                <!-- Password Field -->
+                <VBox spacing="5">
+                    <Label text="Mot de passe" style="-fx-text-fill: #2c3e50; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+                    <PasswordField fx:id="txtPassword" 
+                                  prefHeight="45" 
+                                  style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #bdc3c7; -fx-background-color: white; -fx-font-size: 14px;"/>
+                </VBox>
+
+                <!-- Remember Me and Forgot Password -->
+                <HBox alignment="CENTER_LEFT" spacing="20">
+                    <CheckBox fx:id="chkRememberMe" 
+                             text="Se souvenir de moi" 
+                             style="-fx-text-fill: #2c3e50; -fx-font-size: 14px;"/>
+                    <Hyperlink fx:id="lnkForgotPassword" 
+                              text="Mot de passe oublié ?" 
+                              onAction="#handleForgotPassword"
+                              style="-fx-text-fill: #3498db; -fx-font-size: 14px; -fx-border-color: transparent;"/>
+                </HBox>
+
+                <!-- Login Button -->
+                <Button fx:id="btnLogin" 
+                        text="Se connecter" 
+                        prefWidth="300" 
+                        prefHeight="45"
+                        onAction="#handleLogin"
+                        style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px; -fx-background-radius: 10; -fx-cursor: hand;"/>
+
+                <!-- Google Sign-In Button -->
+                <Button fx:id="btnGoogleSignIn" 
+                        text="Se connecter avec Google" 
+                        prefWidth="300" 
+                        prefHeight="45"
+                        onAction="#handleGoogleSignIn"
+                        style="-fx-background-color: white; -fx-text-fill: #2c3e50; -fx-font-weight: bold; -fx-font-size: 16px; -fx-background-radius: 10; -fx-border-color: #bdc3c7; -fx-border-radius: 10; -fx-cursor: hand;"/>
+
+                <!-- Register Link -->
+                <HBox alignment="CENTER" spacing="5">
+                    <Text text="Pas encore de compte ?" style="-fx-fill: #2c3e50; -fx-font-size: 14px;"/>
+                    <Hyperlink fx:id="lnkRegister" 
+                              text="S'inscrire" 
+                              onAction="#handleRegister"
+                              style="-fx-text-fill: #3498db; -fx-font-size: 14px; -fx-font-weight: bold; -fx-border-color: transparent;"/>
+                </HBox>
+            </VBox>
+        </StackPane>
+    </center>
+</BorderPane> 

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import java.lang.String?>
+
+<?import java.net.URL?>
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.esprit.controllers.MesReservationsController">
+   <top>
+      <VBox spacing="10">
+         <Label text="Mes Réservations" styleClass="page-title">
+            <font>
+               <Font name="System Bold" size="24.0" />
+            </font>
+         </Label>
+         <Label text="Visualisez et gérez vos réservations d'espaces" styleClass="page-subtitle" />
+         
+         <HBox spacing="10">
+            <Button fx:id="btnRefresh" text="Actualiser" onAction="#refreshReservations" styleClass="secondary-button">
+               <graphic>
+                  <Label text="🔄" />
+               </graphic>
+            </Button>
+            <Region HBox.hgrow="ALWAYS" />
+<ComboBox fx:id="comboStatusFilter" promptText="Filtrer par statut" />
+         </HBox>
+         
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </padding>
+      </VBox>
+   </top>
+   
+   <center>
+      <VBox spacing="20">
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" />
+         </padding>
+         
+         <TableView fx:id="reservationsTable" VBox.vgrow="ALWAYS">
+            <columns>
+               <TableColumn fx:id="colId" prefWidth="50.0" text="ID" />
+               <TableColumn fx:id="colSpace" prefWidth="120.0" text="Espace" />
+               <TableColumn fx:id="colStartDate" prefWidth="100.0" text="Date Début" />
+               <TableColumn fx:id="colEndDate" prefWidth="100.0" text="Date Fin" />
+               <TableColumn fx:id="colPeople" prefWidth="80.0" text="Personnes" />
+               <TableColumn fx:id="colPhone" prefWidth="100.0" text="Téléphone" />
+               <TableColumn fx:id="colDescription" prefWidth="150.0" text="Description" />
+               <TableColumn fx:id="colStatus" prefWidth="80.0" text="Statut" />
+               <TableColumn fx:id="colActions" prefWidth="100.0" text="Actions" />
+            </columns>
+            <placeholder>
+               <Label text="Aucune réservation trouvée. Réservez un espace depuis la Galerie." />
+            </placeholder>
+         </TableView>
+         
+         <!-- Empty reservations view -->
+         <VBox fx:id="emptyStateContainer" alignment="CENTER" spacing="20" visible="false" managed="false">
+            <Label text="Vous n'avez pas encore de réservations" styleClass="empty-state-title">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <Label text="Commencez par parcourir les espaces disponibles dans la Galerie" styleClass="empty-state-subtitle" />
+            <Button text="Parcourir les Espaces" onAction="#showGalleryView" styleClass="primary-button" />
+            <padding>
+               <Insets top="40" />
+            </padding>
+         </VBox>
+      </VBox>
+   </center>
+   
+   <stylesheets>
+      <URL value="@../styles/dashboard.css" />
+   </stylesheets>
+</BorderPane>

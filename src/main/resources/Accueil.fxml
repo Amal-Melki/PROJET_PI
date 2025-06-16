@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<StackPane xmlns="http://javafx.com/javafx/17"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.esprit.controllers.Accueil"
+           style="-fx-background-color: pink;">
+
+    <!-- Logo en haut à gauche -->
+    <AnchorPane>
+        <ImageView fx:id="logoImage"
+                   fitWidth="120" fitHeight="120"
+                   layoutX="10" layoutY="10"
+                   pickOnBounds="true" preserveRatio="true"
+                    />
+    </AnchorPane>
+
+    <!-- Contenu principal centré -->
+    <VBox alignment="CENTER" spacing="20" prefWidth="600" prefHeight="700">
+        <Text text="Gestion Matériels" style="-fx-fill: white;">
+            <font>
+                <Font name="Segoe UI Bold" size="30.0"/>
+            </font>
+        </Text>
+
+        <Button fx:id="btnAjoutMateriel" prefWidth="260" prefHeight="45" text="➕ Ajouter Matériel"
+                style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold;
+                       -fx-font-size: 14px; -fx-background-radius: 25; -fx-font-family: 'Segoe UI Semibold';"/>
+        <Button fx:id="btnListeMateriels" prefWidth="260" prefHeight="45" text="📄 Liste Matériels"
+                style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold;
+                       -fx-font-size: 14px; -fx-background-radius: 25; -fx-font-family: 'Segoe UI Semibold';"/>
+        <Button fx:id="btnAjoutFournisseur" prefWidth="260" prefHeight="45" text="➕ Ajouter Fournisseur"
+                style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold;
+                       -fx-font-size: 14px; -fx-background-radius: 25; -fx-font-family: 'Segoe UI Semibold';"/>
+        <Button fx:id="btnListeFournisseurs" prefWidth="260" prefHeight="45" text="📄 Liste Fournisseurs"
+                style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold;
+                       -fx-font-size: 14px; -fx-background-radius: 25; -fx-font-family: 'Segoe UI Semibold';"/>
+        <Button fx:id="btnAjoutReservation" prefWidth="260" prefHeight="45" text="➕ Ajouter Réservation"
+                style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold;
+                       -fx-font-size: 14px; -fx-background-radius: 25; -fx-font-family: 'Segoe UI Semibold';"/>
+        <Button fx:id="btnListeReservations" prefWidth="260" prefHeight="45" text="📋 Liste Réservations"
+                style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold;
+                       -fx-font-size: 14px; -fx-background-radius: 25; -fx-font-family: 'Segoe UI Semibold';"/>
+        <Button fx:id="btnAjoutReservationClient" prefWidth="260" prefHeight="45" text="➕ Ajout client Réservations"
+                style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold;
+                       -fx-font-size: 14px; -fx-background-radius: 25; -fx-font-family: 'Segoe UI Semibold';"/>
+        <Button fx:id="btnListeMaterielsClient" prefWidth="260" prefHeight="45" text="📋 Liste materiels client"
+                style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold;
+                       -fx-font-size: 14px; -fx-background-radius: 25; -fx-font-family: 'Segoe UI Semibold';"/>
+        <Button fx:id="btnListeReservationsClient" prefWidth="260" prefHeight="45" text="📋 Liste Reservations client"
+                style="-fx-background-color: #ff8fb3; -fx-text-fill: white; -fx-font-weight: bold;
+                       -fx-font-size: 14px; -fx-background-radius: 25; -fx-font-family: 'Segoe UI Semibold';"/>
+    </VBox>
+
+</StackPane>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import java.lang.String?>
+
+<?import java.net.URL?>
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.esprit.controllers.GestionEspacesController">
+   <top>
+      <VBox spacing="10">
+         <Label text="Gestion des Espaces Événementiels" styleClass="page-title">
+            <font>
+               <Font name="System Bold" size="24.0" />
+            </font>
+         </Label>
+         <Label text="Ajouter, modifier ou supprimer des espaces événementiels. Toutes les modifications seront reflétées dans la vue client." styleClass="page-subtitle" />
+         <HBox spacing="10">
+            <Button fx:id="btnAddSpace" text="Ajouter Nouvel Espace" onAction="#showAddSpaceDialog" styleClass="primary-button">
+               <graphic>
+                  <Label text="+" style="-fx-font-weight: bold;" />
+               </graphic>
+            </Button>
+            <Button fx:id="btnRefresh" text="Actualiser" onAction="#refreshSpacesList" styleClass="secondary-button">
+               <graphic>
+                  <Label text="🔄" />
+               </graphic>
+            </Button>
+         </HBox>
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </padding>
+      </VBox>
+   </top>
+   
+   <center>
+      <VBox spacing="10">
+         <padding>
+            <Insets left="20.0" right="20.0" bottom="20.0" />
+         </padding>
+         
+         <!-- Filter Controls -->
+         <HBox spacing="20" alignment="CENTER_LEFT" styleClass="filter-box">
+            <Label text="Filtrer:" />
+            <ComboBox fx:id="comboTypeFilter" promptText="Type d'Espace" prefWidth="150" />
+            <CheckBox fx:id="checkAvailableOnly" text="Disponibles Uniquement" />
+            <Region HBox.hgrow="ALWAYS" />
+            <TextField fx:id="txtSearch" promptText="Rechercher par nom ou localisation" prefWidth="250">
+               <HBox.margin>
+                  <Insets right="10" />
+               </HBox.margin>
+            </TextField>
+         </HBox>
+         
+         <!-- Spaces Table -->
+         <TableView fx:id="tblSpaces" VBox.vgrow="ALWAYS">
+            <columns>
+               <TableColumn fx:id="colId" text="ID" prefWidth="50" />
+               <TableColumn fx:id="colName" text="Nom" prefWidth="150" />
+               <TableColumn fx:id="colType" text="Type" prefWidth="120" />
+               <TableColumn fx:id="colCapacity" text="Capacité" prefWidth="90" />
+               <TableColumn fx:id="colLocation" text="Localisation" prefWidth="150" />
+               <TableColumn fx:id="colPrice" text="Prix (TND)" prefWidth="100" />
+               <TableColumn fx:id="colAvailability" text="Disponible" prefWidth="100" />
+               <TableColumn fx:id="colImage" text="Image" prefWidth="120" />
+               <TableColumn fx:id="colPhotoUrl" text="URL Photo" prefWidth="180" />
+               <TableColumn fx:id="colActions" text="Actions" prefWidth="180" />
+            </columns>
+            <placeholder>
+               <Label text="Aucun espace trouvé. Ajoutez un nouvel espace pour commencer." />
+            </placeholder>
+         </TableView>
+      </VBox>
+   </center>
+   
+   <stylesheets>
+      <URL value="@../styles/dashboard.css" />
+   </stylesheets>
+</BorderPane>

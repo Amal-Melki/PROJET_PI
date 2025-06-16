@@ -1,4 +1,4 @@
-package com.esprit.Controllers.User;
+package com.esprit.controllers.User;
 
 import com.esprit.modules.produits.ProduitDerive;
 import com.esprit.services.produits.User.ServiceProduitDetails;

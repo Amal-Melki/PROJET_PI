@@ -1,0 +1,10 @@
+Placeholder file for the images directory.
+
+In a production application, this directory would contain real images for each event space, such as:
+- conference_room.jpg
+- garden_event.jpg
+- meeting_room.jpg
+- lounge.jpg
+- etc.
+
+For now, our application will use external placeholder images from public URLs.

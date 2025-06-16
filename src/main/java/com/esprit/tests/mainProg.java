@@ -8,11 +8,10 @@ import java.sql.Date;
 import java.util.List;
 
 public class mainProg {
+
     public static void main(String[] args) {
         ServiceProduitDerive serviceProduit = new ServiceProduitDerive();
 
-
-        // ✅ AJOUT PRODUIT DÉRIVÉ
         ProduitDerive produit = new ProduitDerive(
                 "T-shirt Event",
                 "Vêtements",
@@ -24,13 +23,10 @@ public class mainProg {
         serviceProduit.ajouter(produit);
         System.out.println("Produit ajouté : " + produit.getNom());
 
-        // ✅ AFFICHAGE DES PRODUITS
         System.out.println("\nListe des produits dérivés :");
         List<ProduitDerive> produits = serviceProduit.recuperer();
         for (ProduitDerive p : produits) {
             System.out.println(p);
         }
-
-
     }
 }
