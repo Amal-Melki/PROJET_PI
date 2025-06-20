@@ -34,7 +34,14 @@
                         text="Éditer Profil" 
                         onAction="#handleEditerProfil"
                         style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 8 18; -fx-cursor: hand;"/>
-                <Button fx:id="btnGestionEvenements" 
+
+                <Button fx:id="btnProduits"
+                        text="Catalogue Produits"
+                        onAction="#handleProduits"
+                        style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 8 18; -fx-cursor: hand;"/>
+
+
+                <Button fx:id="btnGestionEvenements"
                         text="Gestion Événements" 
                         onAction="#handleGestionEvenements"
                         style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 8 18; -fx-cursor: hand;"/>

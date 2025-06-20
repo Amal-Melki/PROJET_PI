@@ -17,7 +17,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
+import java.time.LocalDate; // Import correct
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -108,8 +108,9 @@ public class AjoutReservation implements Initializable {
 
         ServiceReservationMateriel serviceReservation = new ServiceReservationMateriel();
         for (ReservationMateriel r : serviceReservation.rechercher()) {
+            // Cette ligne est maintenant correcte car r.getDateFin() et r.getDateDebut() seront des LocalDate
             if (r.getMaterielId() == materiel.getId()
-                    && !(r.getDateFin().toLocalDate().isBefore(dateDebut) || r.getDateDebut().toLocalDate().isAfter(dateFin))) {
+                    && !(r.getDateFin().isBefore(dateDebut) || r.getDateDebut().isAfter(dateFin))) {
                 showAlert(Alert.AlertType.ERROR, "Conflit", "Ce matériel est déjà réservé sur cette période.");
                 return;
             }
@@ -126,8 +127,10 @@ public class AjoutReservation implements Initializable {
                 statut
         );
         reservation.setMontantTotal(montantTotal);
+        // Si vous utilisez 'ajouter' et que idClient est obligatoire, assurez-vous de le définir ici
+        // reservation.setIdClient(votreIdDuClientConnecte);
 
-        serviceReservation.ajouteradmin(reservation);
+        serviceReservation.ajouteradmin(reservation); // Ou serviceReservation.ajouter(reservation); si idClient est géré
         showAlert(Alert.AlertType.INFORMATION, "Succès", "Réservation enregistrée avec succès !");
         resetForm();
     }
@@ -146,6 +149,7 @@ public class AjoutReservation implements Initializable {
         dpFin.setValue(null);
         tfQuantite.clear();
         cbStatut.setValue("EN_ATTENTE");
+        tfMontantTotal.clear();
     }
 
     @FXML
@@ -165,9 +169,13 @@ public class AjoutReservation implements Initializable {
         String quantiteText = tfQuantite.getText().trim();
 
         if (materiel != null && !quantiteText.isEmpty() && quantiteText.matches("\\d+")) {
-            int quantite = Integer.parseInt(quantiteText);
-            double montant = quantite * materiel.getPrix();
-            tfMontantTotal.setText(String.format("%.2f", montant));
+            try {
+                int quantite = Integer.parseInt(quantiteText);
+                double montant = quantite * materiel.getPrix();
+                tfMontantTotal.setText(String.format("%.2f", montant));
+            } catch (NumberFormatException e) {
+                tfMontantTotal.clear();
+            }
         } else {
             tfMontantTotal.clear();
         }

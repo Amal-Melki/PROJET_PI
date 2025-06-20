@@ -4,6 +4,7 @@ import com.esprit.modules.Materiels;
 import com.esprit.modules.ReservationMateriel;
 import com.esprit.services.ServiceMateriel;
 import com.esprit.services.ServiceReservationMateriel;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -16,10 +17,11 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
+
 
 public class AjoutReservationClient implements Initializable {
 
@@ -40,10 +42,8 @@ public class AjoutReservationClient implements Initializable {
     @FXML
     private ImageView logoImage;
 
-    private final int clientId = 1; // ID fictif du client connecté
+    private final int clientId = 1; // ID fictif du client connecté (À gérer si vous avez un vrai système d'authentification)
     private Materiels materielSelectionne;
-
-
 
 
     @Override
@@ -51,6 +51,7 @@ public class AjoutReservationClient implements Initializable {
         tfMontantTotal.setEditable(false);
 
         tfQuantite.textProperty().addListener((obs, oldVal, newVal) -> calculerMontantTotal());
+        cbMateriel.valueProperty().addListener((obs, oldMat, newMat) -> calculerMontantTotal());
 
         cbMateriel.setCellFactory(param -> new ListCell<>() {
             @Override
@@ -68,13 +69,11 @@ public class AjoutReservationClient implements Initializable {
             }
         });
 
-        // ✅ Remplissage automatique si vide
-        if (cbMateriel.getItems().isEmpty()) {
-            List<Materiels> materiels = new ServiceMateriel().rechercher().stream()
-                    .filter(m -> m.getQuantite() > 0 && "DISPONIBLE".equalsIgnoreCase(m.getEtat()))
-                    .toList();
-            cbMateriel.getItems().setAll(materiels);
-        }
+        List<Materiels> materiels = new ServiceMateriel().rechercher().stream()
+                .filter(m -> m.getQuantite() > 0 && "DISPONIBLE".equalsIgnoreCase(m.getEtat()))
+                .collect(Collectors.toList());
+        cbMateriel.getItems().setAll(materiels);
+
         try {
             Image img = new Image(getClass().getResource("/images/logo.png").toExternalForm());
             logoImage.setImage(img);
@@ -99,7 +98,6 @@ public class AjoutReservationClient implements Initializable {
         this.materielSelectionne = m;
         if (cbMateriel != null && m != null) {
             cbMateriel.getSelectionModel().select(m);
-            calculerMontantTotal();
         }
     }
 
@@ -108,9 +106,13 @@ public class AjoutReservationClient implements Initializable {
         String quantiteText = tfQuantite.getText().trim();
 
         if (materiel != null && !quantiteText.isEmpty() && quantiteText.matches("\\d+")) {
-            int quantite = Integer.parseInt(quantiteText);
-            double montant = quantite * materiel.getPrix();
-            tfMontantTotal.setText(String.format("%.2f", montant));
+            try {
+                int quantite = Integer.parseInt(quantiteText);
+                double montant = quantite * materiel.getPrix();
+                tfMontantTotal.setText(String.format("%.2f", montant));
+            } catch (NumberFormatException e) {
+                tfMontantTotal.clear();
+            }
         } else {
             tfMontantTotal.clear();
         }
@@ -118,7 +120,6 @@ public class AjoutReservationClient implements Initializable {
 
     @FXML
     void reserverMateriel() {
-        // 🔄 On récupère directement la sélection actuelle
         Materiels materiel = cbMateriel.getValue();
 
         if (materiel == null || dpDebut.getValue() == null || dpFin.getValue() == null || tfQuantite.getText().trim().isEmpty()) {
@@ -126,13 +127,16 @@ public class AjoutReservationClient implements Initializable {
             return;
         }
 
+        LocalDate dateDebut = dpDebut.getValue();
+        LocalDate dateFin = dpFin.getValue();
+
         LocalDate today = LocalDate.now();
-        if (dpDebut.getValue().isBefore(today)) {
+        if (dateDebut.isBefore(today)) {
             showAlert(Alert.AlertType.ERROR, "Date invalide", "La date de début ne peut pas être antérieure à aujourd’hui.");
             return;
         }
 
-        if (!dpDebut.getValue().isBefore(dpFin.getValue())) {
+        if (!dateDebut.isBefore(dateFin)) {
             showAlert(Alert.AlertType.ERROR, "Erreur de date", "La date de début doit précéder la date de fin.");
             return;
         }
@@ -162,14 +166,32 @@ public class AjoutReservationClient implements Initializable {
             return;
         }
 
-        ReservationMateriel reservation = new ReservationMateriel();
-        reservation.setMaterielId(materiel.getId());
-        reservation.setDateDebut(Date.valueOf(dpDebut.getValue()));
-        reservation.setDateFin(Date.valueOf(dpFin.getValue()));
-        reservation.setQuantiteReservee(quantite);
-        reservation.setStatut("EN_ATTENTE");
-        reservation.setIdClient(clientId);
+        ServiceReservationMateriel serviceReservation = new ServiceReservationMateriel();
+        // CORRECTION ICI : Suppression de `&& r.getId() != reservation.getId()`
+        // car 'reservation' n'est pas encore définie et ce n'est pas une modification.
+        for (ReservationMateriel r : serviceReservation.rechercher()) {
+            if (r.getMaterielId() == materiel.getId()) { // Pas besoin de r.getId() != reservation.getId() pour une nouvelle réservation
+                // Logique de détection de chevauchement de dates
+                if (!(r.getDateFin().isBefore(dateDebut) || r.getDateDebut().isAfter(dateFin))) {
+                    showAlert(Alert.AlertType.ERROR, "Conflit", "Ce matériel est déjà réservé sur cette période.");
+                    return;
+                }
+            }
+        }
 
+        // La variable 'reservation' est déclarée ICI, après la boucle de vérification.
+        ReservationMateriel reservation = new ReservationMateriel(
+                0, // ID à 0, il sera généré par la base de données
+                materiel.getId(),
+                dateDebut,
+                dateFin,
+                quantite,
+                "EN_ATTENTE", // Statut par défaut
+                Double.parseDouble(tfMontantTotal.getText().replace(",", ".")), // Récupérer le montant affiché et convertir
+                clientId // L'ID du client connecté
+        );
+
+        // Appel de la méthode 'ajouter' (celle qui prend id_client)
         new ServiceReservationMateriel().ajouter(reservation);
 
         showAlert(Alert.AlertType.INFORMATION, "Succès", "Réservation enregistrée !");

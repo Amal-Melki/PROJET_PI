@@ -1,10 +1,14 @@
 package com.esprit.tests;
 
+import com.esprit.modules.produits.ProduitDerive;
+import com.esprit.services.produits.Admin.ServiceProduitDerive;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
+import java.util.List;
 
 public class MainGUI extends Application {
 
@@ -14,6 +18,27 @@ public class MainGUI extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        ServiceProduitDerive serviceProduit = new ServiceProduitDerive();
+
+
+        // ✅ AJOUT PRODUIT DÉRIVÉ
+        ProduitDerive produit = new ProduitDerive(
+                "T-shirt Event",
+                "Vêtements",
+                25.99,
+                100,
+                "T-shirt coton avec logo de l'événement",
+                "http://example.com/tshirt.jpg"
+        );
+        serviceProduit.ajouter(produit);
+        System.out.println("Produit ajouté : " + produit.getNom());
+
+        // ✅ AFFICHAGE DES PRODUITS
+        System.out.println("\nListe des produits dérivés :");
+        List<ProduitDerive> produits = serviceProduit.recuperer();
+        for (ProduitDerive p : produits) {
+            System.out.println(p);
+        }
         try {
             // ⚠ Ancienne interface : Ajout Matériel
             // FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjoutMateriel.fxml"));

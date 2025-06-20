@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -64,8 +65,8 @@ public class ModifierReservationClient implements Initializable {
             }
         }
 
-        dpDebut.setValue(r.getDateDebut().toLocalDate());
-        dpFin.setValue(r.getDateFin().toLocalDate());
+        dpDebut.setValue(r.getDateDebut());
+        dpFin.setValue(r.getDateFin());
         tfQuantite.setText(String.valueOf(r.getQuantiteReservee()));
 
 
@@ -131,8 +132,8 @@ public class ModifierReservationClient implements Initializable {
         }
 
         // ✅ Mise à jour des champs
-        reservationToModify.setDateDebut(java.sql.Date.valueOf(dateDebut));
-        reservationToModify.setDateFin(java.sql.Date.valueOf(dateFin));
+        reservationToModify.setDateDebut(Date.valueOf(dateDebut).toLocalDate());
+        reservationToModify.setDateFin(Date.valueOf(dateFin).toLocalDate());
         reservationToModify.setQuantiteReservee(nouvelleQuantite);
 
         reservationToModify.setMontantTotal(nouvelleQuantite * materielAssocie.getPrix());

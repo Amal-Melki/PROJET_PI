@@ -20,6 +20,8 @@ public class SidebarController {
 
     @FXML
     private Button btnReservations;
+    @FXML
+    private Button btnProduits;
     
     @FXML
     private Label lblAdminName;
@@ -81,7 +83,18 @@ public class SidebarController {
             showError("Erreur de navigation", "Le contrôleur principal n'est pas initialisé.");
         }
     }
-    
+    @FXML
+    void handleProduits(ActionEvent event) {
+        if (mainController != null) {
+            if (hasEventAccess()) {
+                mainController.loadContent("/views/products/ListeProduitDerive.fxml");
+            } else {
+                showError("Accès refusé", "Vous n'avez pas les permissions nécessaires pour accéder aux réservations.");
+            }
+        } else {
+            showError("Erreur de navigation", "Le contrôleur principal n'est pas initialisé.");
+        }
+    }
     @FXML
     void handleDeconnexion(ActionEvent event) {
         try {

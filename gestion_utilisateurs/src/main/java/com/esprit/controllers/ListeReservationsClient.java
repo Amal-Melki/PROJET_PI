@@ -57,8 +57,8 @@ public class ListeReservationsClient implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         colNomMateriel.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNomMateriel()));
-        colDateDebut.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDateDebut().toLocalDate().toString()));
-        colDateFin.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDateFin().toLocalDate().toString()));
+        colDateDebut.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDateDebut().toString()));
+        colDateFin.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDateFin().toString()));
         colQuantite.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getQuantiteReservee()).asObject());
         colStatut.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getStatut()));
 
@@ -129,8 +129,8 @@ public class ListeReservationsClient implements Initializable {
         ObservableList<ReservationMateriel> filtres = FXCollections.observableArrayList(data.stream()
                 .filter(r -> r.getNomMateriel().toLowerCase().contains(nom))
                 .filter(r -> statut == null || statut.isEmpty() || r.getStatut().equalsIgnoreCase(statut))
-                .filter(r -> debut == null || !r.getDateDebut().toLocalDate().isBefore(debut))
-                .filter(r -> fin == null || !r.getDateFin().toLocalDate().isAfter(fin))
+                .filter(r -> debut == null || !r.getDateDebut().isBefore(debut))
+                .filter(r -> fin == null || !r.getDateFin().isAfter(fin))
                 .collect(Collectors.toList()));
 
         tableReservations.setItems(filtres);
@@ -173,7 +173,7 @@ public class ListeReservationsClient implements Initializable {
                     }
 
                     // 🚫 Blocage si déjà terminée
-                    if (r.getDateFin().toLocalDate().isBefore(LocalDate.now())) {
+                    if (r.getDateFin().isBefore(LocalDate.now())) {
                         showAlert(Alert.AlertType.WARNING, "Réservation terminée",
                                 "Cette réservation est déjà terminée. Vous ne pouvez plus la modifier ou l'annuler.");
                         return;
@@ -276,8 +276,8 @@ public class ListeReservationsClient implements Initializable {
             boolean matchStatut = (statutFiltre == null || statutFiltre.isEmpty() || r.getStatut().equalsIgnoreCase(statutFiltre));
             boolean matchDate = true;
 
-            if (dateDebut != null && r.getDateDebut().toLocalDate().isBefore(dateDebut)) matchDate = false;
-            if (dateFin != null && r.getDateFin().toLocalDate().isAfter(dateFin)) matchDate = false;
+            if (dateDebut != null && r.getDateDebut().isBefore(dateDebut)) matchDate = false;
+            if (dateFin != null && r.getDateFin().isAfter(dateFin)) matchDate = false;
 
             if (matchNom && matchStatut && matchDate) filtres.add(r);
         }

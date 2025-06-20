@@ -27,6 +27,9 @@ public class NavigationController {
     
     @FXML
     private Button btnEvenements;
+
+    @FXML
+    private Button btnProduits;
     
     @FXML
     private Button btnGestionEvenements;
@@ -171,7 +174,13 @@ public class NavigationController {
             e.printStackTrace();
         }
     }
-    
+
+    @FXML
+    private void handleProduits() {
+        loadView("/views/User/AffichageProduitsUser.fxml");
+        updateButtonStyles(btnProduits);
+    }
+
     @FXML
     private void handleGestionEvenements() {
         loadView("/Evenements.fxml");

@@ -1,15 +1,14 @@
 package com.esprit.modules;
 
-import java.sql.Date;
-import java.time.LocalDate;
+import java.time.LocalDate; // Importer java.time.LocalDate
 
 public class ReservationMateriel {
 
-    private String nomMateriel;
+    private String nomMateriel; // Nom du matériel (utile pour l'affichage)
     private int id;
     private int materielId;
-    private Date dateDebut;
-    private Date dateFin;
+    private LocalDate dateDebut; // <-- Changer le type en LocalDate
+    private LocalDate dateFin;   // <-- Changer le type en LocalDate
     private int quantiteReservee;
     private String statut;
     private double montantTotal;
@@ -18,22 +17,26 @@ public class ReservationMateriel {
     // Constructeurs
     public ReservationMateriel() {}
 
+    // Constructeur complet qui prend des LocalDate pour les dates
     public ReservationMateriel(int id, int materielId, LocalDate dateDebut, LocalDate dateFin, int quantiteReservee, String statut, double montantTotal, int idClient) {
         this.id = id;
         this.materielId = materielId;
-        this.dateDebut = Date.valueOf(dateDebut);
-        this.dateFin = Date.valueOf(dateFin);
+        this.dateDebut = dateDebut; // Ne pas convertir ici, on reçoit déjà un LocalDate
+        this.dateFin = dateFin;     // Ne pas convertir ici, on reçoit déjà un LocalDate
         this.quantiteReservee = quantiteReservee;
         this.statut = statut;
         this.montantTotal = montantTotal;
         this.idClient = idClient;
     }
 
+    // Constructeur simplifié (délègue au constructeur complet)
     public ReservationMateriel(int id, int materielId, LocalDate dateDebut, LocalDate dateFin, int quantiteReservee, String statut) {
+        // Appelle le constructeur complet avec des valeurs par défaut pour montantTotal et idClient
         this(id, materielId, dateDebut, dateFin, quantiteReservee, statut, 0.0, 0);
     }
 
-    // Getters et Setters
+
+    // Getters et Setters - TRÈS IMPORTANT : Ils doivent maintenant utiliser LocalDate
     public String getNomMateriel() {
         return nomMateriel;
     }
@@ -58,19 +61,19 @@ public class ReservationMateriel {
         this.materielId = materielId;
     }
 
-    public Date getDateDebut() {
+    public LocalDate getDateDebut() { // <-- Changer le type de retour en LocalDate
         return dateDebut;
     }
 
-    public void setDateDebut(Date dateDebut) {
+    public void setDateDebut(LocalDate dateDebut) { // <-- Changer le type de paramètre en LocalDate
         this.dateDebut = dateDebut;
     }
 
-    public Date getDateFin() {
+    public LocalDate getDateFin() { // <-- Changer le type de retour en LocalDate
         return dateFin;
     }
 
-    public void setDateFin(Date dateFin) {
+    public void setDateFin(LocalDate dateFin) { // <-- Changer le type de paramètre en LocalDate
         this.dateFin = dateFin;
     }
 
@@ -111,8 +114,8 @@ public class ReservationMateriel {
         return "ReservationMateriel{" +
                 "id=" + id +
                 ", materielId=" + materielId +
-                ", dateDebut=" + dateDebut +
-                ", dateFin=" + dateFin +
+                ", dateDebut=" + dateDebut + // LocalDate s'affichera bien
+                ", dateFin=" + dateFin +     // LocalDate s'affichera bien
                 ", quantiteReservee=" + quantiteReservee +
                 ", statut='" + statut + '\'' +
                 ", montantTotal=" + montantTotal +

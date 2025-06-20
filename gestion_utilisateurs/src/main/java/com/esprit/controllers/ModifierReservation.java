@@ -261,11 +261,11 @@ public class ModifierReservation implements Initializable {
             boolean matchStatut = (statutFiltre == null || statutFiltre.isEmpty() || r.getStatut().equalsIgnoreCase(statutFiltre));
             boolean matchDate = true;
 
-            if (dateDebutFiltre != null && r.getDateDebut().toLocalDate().isBefore(dateDebutFiltre)) {
+            if (dateDebutFiltre != null && r.getDateDebut().isBefore(dateDebutFiltre)) {
                 matchDate = false;
             }
 
-            if (dateFinFiltre != null && r.getDateFin().toLocalDate().isAfter(dateFinFiltre)) {
+            if (dateFinFiltre != null && r.getDateFin().isAfter(dateFinFiltre)) {
                 matchDate = false;
             }
 

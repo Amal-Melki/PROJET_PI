@@ -26,6 +26,13 @@
             onAction="#handleEvenements"
             style="-fx-background-color: white; -fx-text-fill: #ff7fa8; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 20; -fx-cursor: hand;"/>
 
+    <Button fx:id="btnProduits"
+            text="Événements"
+            onAction="#handleProduits"
+            style="-fx-background-color: white; -fx-text-fill: #ff7fa8; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 20; -fx-cursor: hand;"/>
+
+
+
     <!-- Spacer -->
     <Region HBox.hgrow="ALWAYS"/>
 
