@@ -14,7 +14,7 @@ public class BlogServices implements IService<Blog> {
 
     @Override
     public void ajouter(Blog blog) {
-        String query = "INSERT INTO blogs (Titre, Contenu, Image, date_creation, Categorie, latitude, longitude, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO blogs (Titre, Contenu, Image, date_creation, Categorie, latitude, longitude, id_user) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, blog.getTitre());
             statement.setString(2, blog.getContenu());
@@ -33,7 +33,7 @@ public class BlogServices implements IService<Blog> {
 
     @Override
     public void modifier(Blog blog) {
-        String query = "UPDATE blogs SET Titre = ?, Contenu = ?, Image = ?, date_creation = ?, Categorie = ?, latitude = ?, longitude = ? WHERE id = ?";
+        String query = "UPDATE blogs SET Titre = ?, Contenu = ?, Image = ?, date_creation = ?, Categorie = ?, latitude = ?, longitude = ? WHERE id_user = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, blog.getTitre());
             statement.setString(2, blog.getContenu());

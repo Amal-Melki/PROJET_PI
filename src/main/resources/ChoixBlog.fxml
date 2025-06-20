@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.paint.Stop?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.esprit.Controllers.ChoixBlogController"
+            prefWidth="600" prefHeight="700"
+            style="-fx-background-color: #f8f9fa;">
+
+    <!-- Fond avec dégradé -->
+    <Rectangle width="600" height="700">
+        <fill>
+            <LinearGradient startX="0" startY="0" endX="1" endY="1">
+                <stops>
+                    <Stop color="#f5f7fa" offset="0.0"/>
+                    <Stop color="#e4e8f0" offset="1.0"/>
+                </stops>
+            </LinearGradient>
+        </fill>
+    </Rectangle>
+
+    <!-- Carte centrale -->
+    <VBox alignment="CENTER" spacing="30"
+          layoutX="150" layoutY="100"
+          prefWidth="300" prefHeight="500"
+          style="-fx-background-color: white;
+                 -fx-background-radius: 20;
+                 -fx-padding: 40 30;
+                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 15, 0, 0, 5);
+                 -fx-border-radius: 20;
+                 -fx-border-color: rgba(0,0,0,0.05);
+                 -fx-border-width: 1;">
+
+        <!-- Logo -->
+        <StackPane>
+            <Circle radius="50" fill="white"
+                    style="-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);"/>
+            <ImageView fitWidth="60" fitHeight="60" preserveRatio="true">
+                <image>
+                    <Image url="@/images/logo.png" />
+                </image>
+                <effect>
+                    <Glow level="0.3"/>
+                </effect>
+            </ImageView>
+        </StackPane>
+
+        <!-- Titre -->
+        <VBox alignment="CENTER" spacing="10">
+            <Label text="Choix du type de blog"
+                   style="-fx-font-size: 24px;
+                          -fx-font-weight: 800;
+                          -fx-text-fill: #2d3436;
+                          -fx-font-family: 'Segoe UI', Arial, sans-serif;"/>
+            <Separator prefWidth="220" style="-fx-background-color: linear-gradient(to right, transparent, #dfe6e9, transparent);"/>
+        </VBox>
+
+        <!-- Boutons -->
+        <VBox alignment="CENTER" spacing="20">
+            <!-- Bouton Blog Récupération -->
+            <Button text="Blog Récupération" onAction="#ouvrirBlogRecuperer"
+                    prefWidth="220" prefHeight="50"
+                    style="-fx-font-size: 16px;
+                           -fx-font-weight: bold;
+                           -fx-background-color: #00b894;
+                           -fx-text-fill: white;
+                           -fx-background-radius: 25;
+                           -fx-cursor: hand;">
+                <graphic>
+                    <ImageView fitWidth="18" fitHeight="18" preserveRatio="true">
+                        <image>
+                            <Image url="@/images/logo.png" />
+                        </image>
+                    </ImageView>
+                </graphic>
+                <effect>
+                    <DropShadow color="rgba(0,184,148,0.3)" radius="8" spread="0.3"/>
+                </effect>
+            </Button>
+
+            <!-- Bouton Blog Client -->
+            <Button text="Blog Client" onAction="#ouvrirClientBlog"
+                    prefWidth="220" prefHeight="50"
+                    style="-fx-font-size: 16px;
+                           -fx-font-weight: bold;
+                           -fx-background-color: #0984e3;
+                           -fx-text-fill: white;
+                           -fx-background-radius: 25;
+                           -fx-cursor: hand;">
+                <graphic>
+                    <ImageView fitWidth="18" fitHeight="18" preserveRatio="true">
+                        <image>
+                            <Image url="@/images/logo.png" />
+                        </image>
+                    </ImageView>
+                </graphic>
+                <effect>
+                    <DropShadow color="rgba(9,132,227,0.3)" radius="8" spread="0.3"/>
+                </effect>
+            </Button>
+        </VBox>
+
+        <!-- Message -->
+        <Text text="Sélectionnez le type de blog que vous souhaitez consulter"
+              style="-fx-fill: #636e72;
+                     -fx-font-size: 14px;
+                     -fx-font-style: italic;
+                     -fx-text-alignment: center;
+                     -fx-font-family: 'Segoe UI', Arial, sans-serif;"/>
+
+        <!-- Footer -->
+        <VBox alignment="CENTER" spacing="15">
+            <HBox alignment="CENTER" spacing="15">
+                <ImageView fitWidth="20" fitHeight="20" preserveRatio="true">
+                    <image>
+                        <Image url="@/images/logo.png" />
+                    </image>
+                </ImageView>
+                <ImageView fitWidth="20" fitHeight="20" preserveRatio="true">
+                    <image>
+                        <Image url="@/images/logo.png" />
+                    </image>
+                </ImageView>
+                <ImageView fitWidth="20" fitHeight="20" preserveRatio="true">
+                    <image>
+                        <Image url="@/images/logo.png" />
+                    </image>
+                </ImageView>
+            </HBox>
+
+            <HBox alignment="CENTER" spacing="10" style="-fx-padding: 10 0 0 0;">
+                <Text text="Version 2.1" style="-fx-fill: #b2bec3; -fx-font-size: 12px;"/>
+                <Circle radius="2" fill="#b2bec3"/>
+                <Text text="© 2023 Esprit" style="-fx-fill: #b2bec3; -fx-font-size: 12px;"/>
+                <Circle radius="2" fill="#b2bec3"/>
+                <Text text="Confidentialité" style="-fx-fill: #636e72; -fx-font-size: 12px; -fx-cursor: hand;"/>
+            </HBox>
+        </VBox>
+    </VBox>
+</AnchorPane>

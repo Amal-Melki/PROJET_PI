@@ -8,28 +8,29 @@ import java.util.Objects;
 
 public class Commentaire {
     private int id_Commentaire;
+    private int id_user;
     private int id;
-    private int id_Blog;
     private String description;
     private java.sql.Timestamp date_Commentaire;
     private User utilisateur;
+
 
     public Commentaire() {
 
     }
 
-    public Commentaire(int id_Commentaire, int id, int id_Blog, String description, java.sql.Timestamp date_Commentaire) {
+    public Commentaire(int id_Commentaire, int id, int id_user, String description, java.sql.Timestamp date_Commentaire) {
         this.id_Commentaire = id_Commentaire;
         this.id = id;
-        this.id_Blog = id_Blog;
+        this.id_user = id_user;
         this.description = description;
         this.date_Commentaire = date_Commentaire;
     }
 
-    public Commentaire(int id_Commentaire, int id, int id_Blog, String description, java.sql.Timestamp date_Commentaire, User utilisateur) {
+    public Commentaire(int id_Commentaire, int id, int id_user, String description, java.sql.Timestamp date_Commentaire, User utilisateur) {
         this.id_Commentaire = id_Commentaire;
         this.id = id;
-        this.id_Blog = id_Blog;
+        this.id_user = id_user;
         this.description = description;
         this.date_Commentaire = date_Commentaire;
         this.utilisateur = utilisateur;
@@ -68,11 +69,11 @@ public class Commentaire {
     }
 
     public int getId_Blog() {
-        return id_Blog;
+        return id_user;
     }
 
     public void setId_Blog(int id_Blog) {
-        this.id_Blog = id_Blog;
+        this.id_user = id_user;
     }
 
     public User getUtilisateur() {
@@ -88,7 +89,7 @@ public class Commentaire {
         return "Commentaire{" +
                 "id_Commentaire=" + id_Commentaire +
                 ", id=" + id +
-                ", id_Blog=" + id_Blog +
+                ", id_Blog=" + id_user +
                 ", description='" + description + '\'' +
                 ", date_Commentaire=" + date_Commentaire +
                 '}';
@@ -98,11 +99,11 @@ public class Commentaire {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Commentaire that = (Commentaire) o;
-        return id_Commentaire == that.id_Commentaire && id == that.id && id_Blog == that.id_Blog;
+        return id_Commentaire == that.id_Commentaire && id == that.id && id_user == that.id_user;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id_Commentaire, id, id_Blog);
+        return Objects.hash(id_Commentaire, id, id_user);
     }
 }

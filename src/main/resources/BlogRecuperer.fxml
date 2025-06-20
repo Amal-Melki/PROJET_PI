@@ -79,6 +79,10 @@
                                      -fx-font-size: 11px;
                                      -fx-fill: #FF6B9C;"/>
 
+
+
+
+
                         <!-- Image miniature -->
                         <ImageView fx:id="blogImage"
                                    fitWidth="200"
@@ -145,6 +149,7 @@
                                            -fx-font-size: 9px;
                                            -fx-background-radius: 2;
                                            -fx-cursor: hand;"/>
+
                         </HBox>
                     </VBox>
                 </TilePane>

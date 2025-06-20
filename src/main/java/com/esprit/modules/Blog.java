@@ -12,6 +12,7 @@ public class Blog {
     private CategorieEnum categorie;
     private double latitude;
     private double longitude;
+    private int id_user;
 
 
     public Blog(String titre, String contenu, String imagePath, Timestamp date, CategorieEnum categorie) {
@@ -123,6 +124,7 @@ public class Blog {
         if (!(obj instanceof Blog other)) return false;
         return id == other.id;
     }
+
 
 
 }

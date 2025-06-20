@@ -40,8 +40,7 @@ public class RecupererBlog {
     @FXML private TilePane BlogsTilePane;
     @FXML private ComboBox<CategorieEnum> categorieFilterCombo;
     @FXML private Button addBlogButton;
-    @FXML private TextArea apiResponseArea;
-    @FXML private Button  btnTraduire;
+
 
     private final BlogServices blogService = new BlogServices();
     private final LikeService likeService = new LikeService();
@@ -239,12 +238,14 @@ public class RecupererBlog {
         buttonsBox.setAlignment(Pos.CENTER_RIGHT);
 
         // Bouton Like
+        // Bouton Like
         Button likeButton = new Button("♥");
         Label likeCountLabel = new Label();
         try {
-            int likeCount = likeService.getLikeCount(blog.getId());
+            boolean isClient = isCurrentUserClient(); // Déterminer si c'est un client
+            int likeCount = likeService.getLikeCount(blog.getId(), isClient);
             likeCountLabel.setText(String.valueOf(likeCount));
-            if (likeService.hasUserLiked(blog.getId(), currentUserId)) {
+            if (likeService.hasUserLiked(blog.getId(), currentUserId, isClient)) {
                 likeButton.setStyle("-fx-text-fill: red;");
             }
         } catch (Exception e) {
@@ -292,24 +293,25 @@ public class RecupererBlog {
 
         return blogBox;
     }
-
     private void handleLike(Blog blog, Button likeButton, Label likeCountLabel) {
         try {
-            if (likeService.hasUserLiked(blog.getId(), currentUserId)) {
-                likeService.supprimerLike(blog.getId(), currentUserId);
+            boolean isClient = isCurrentUserClient(); // Déterminer si c'est un client
+
+            if (likeService.hasUserLiked(blog.getId(), currentUserId, isClient)) {
+                likeService.supprimerLike(blog.getId(), currentUserId, isClient);
                 likeButton.setStyle("-fx-text-fill: black;");
             } else {
-                likeService.ajouterLike(blog.getId(), currentUserId);
+                likeService.ajouterLike(blog.getId(), currentUserId, isClient);
                 likeButton.setStyle("-fx-text-fill: red;");
             }
-            // Mettre à jour le compteur de likes
-            int newLikeCount = likeService.getLikeCount(blog.getId());
+
+            int newLikeCount = likeService.getLikeCount(blog.getId(), isClient);
             likeCountLabel.setText(String.valueOf(newLikeCount));
+
         } catch (Exception e) {
             showAlert(AlertType.ERROR, "Erreur", "Erreur lors de la gestion du like: " + e.getMessage());
         }
     }
-
     private void handleComment(Blog blog) {
         // Création de la boîte de dialogue
         Dialog<Void> dialog = new Dialog<>();
@@ -427,13 +429,12 @@ public class RecupererBlog {
         }
     }
 
-
-
-
-
-
-
-
+    private boolean isCurrentUserClient() {
+        // Implémentez votre logique pour déterminer si currentUserId est un client
+        // Par exemple :
+        // return userService.isClient(currentUserId);
+        return true; // Temporaire - à adapter
+    }
 }
 
 

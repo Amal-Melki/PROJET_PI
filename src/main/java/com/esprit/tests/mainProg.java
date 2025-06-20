@@ -17,7 +17,7 @@ public class mainProg extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/BlogRecuperer.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ChoixBlog.fxml"));
             Scene scene = new Scene(loader.load());
             primaryStage.setTitle("Gestion de Blog");
             primaryStage.setScene(scene);
