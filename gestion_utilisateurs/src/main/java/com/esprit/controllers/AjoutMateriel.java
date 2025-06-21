@@ -158,13 +158,9 @@ public class AjoutMateriel implements Initializable {
 
     @FXML
     private void retourAccueil() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Accueil.fxml"));
-            Parent root = loader.load();
-            Stage stage = (Stage) btnRetour.getScene().getWindow();
-            stage.setScene(new Scene(root));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Stage currentStage = (Stage) btnRetour.getScene().getWindow();
+        currentStage.close(); // ferme cette fenêtre
+        // l’utilisateur retourne à celle d’avant automatiquement
     }
+
 }

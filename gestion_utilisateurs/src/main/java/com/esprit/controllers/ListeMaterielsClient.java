@@ -161,15 +161,22 @@ public class ListeMaterielsClient implements Initializable {
     @FXML
     void retourAccueil(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Accueil.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Navigation.fxml"));
             Parent root = loader.load();
+
+            NavigationController navController = loader.getController();
+            navController.setAdminMode(false); // si tu veux l’accueil client
+            navController.setCurrentUser(NavigationController.getCurrentClient());
 
             Stage stage = (Stage) btnRetourAccueil.getScene().getWindow();
             stage.setScene(new Scene(root));
-            stage.setTitle("Accueil - Gestion des Ressources");
-            stage.sizeToScene();
+            stage.setMaximized(true); // plein écran comme demandé
+
+            stage.setTitle("EventHub");
+            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 }

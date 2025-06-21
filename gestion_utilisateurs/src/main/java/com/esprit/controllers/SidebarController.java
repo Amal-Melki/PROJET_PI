@@ -1,11 +1,17 @@
 package com.esprit.controllers;
 
 import com.esprit.models.Admin;
+import io.jsonwebtoken.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 public class SidebarController {
 
@@ -22,7 +28,12 @@ public class SidebarController {
     private Button btnReservations;
     @FXML
     private Button btnProduits;
-    
+    @FXML
+    private VBox materielMenu;
+
+    @FXML
+    private Button btnToggleMaterielMenu;
+
     @FXML
     private Label lblAdminName;
 
@@ -123,6 +134,12 @@ public class SidebarController {
         int role = currentAdmin.getRole();
         return role == 0 || role == 1;
     }
+    @FXML
+    private void toggleMaterielMenu() {
+        boolean isVisible = materielMenu.isVisible();
+        materielMenu.setVisible(!isVisible);
+        materielMenu.setManaged(!isVisible);
+    }
 
     private void showError(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -131,4 +148,19 @@ public class SidebarController {
         alert.setContentText(content);
         alert.showAndWait();
     }
-} 
+
+    @FXML
+    private void handleOptionsAvancees(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/OptionsAvancees.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Options avancées");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException | java.io.IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+}

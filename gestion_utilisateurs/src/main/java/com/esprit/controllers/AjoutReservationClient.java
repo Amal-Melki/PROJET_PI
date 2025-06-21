@@ -5,6 +5,7 @@ import com.esprit.modules.ReservationMateriel;
 import com.esprit.services.ServiceMateriel;
 import com.esprit.services.ServiceReservationMateriel;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -41,6 +42,8 @@ public class AjoutReservationClient implements Initializable {
     private Button btnRetour;
     @FXML
     private ImageView logoImage;
+    @FXML private Button btnRetourAccueil;
+
 
     private final int clientId = 1; // ID fictif du client connecté (À gérer si vous avez un vrai système d'authentification)
     private Materiels materielSelectionne;
@@ -207,11 +210,20 @@ public class AjoutReservationClient implements Initializable {
     }
 
     @FXML
-    private void retourAccueil() {
+    void retourAccueil(ActionEvent event) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/Accueil.fxml"));
-            Stage stage = (Stage) btnRetour.getScene().getWindow();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Navigation.fxml"));
+            Parent root = loader.load();
+
+            NavigationController navController = loader.getController();
+            navController.setAdminMode(false); // si tu veux l’accueil client
+            navController.setCurrentUser(NavigationController.getCurrentClient());
+
+            Stage stage = (Stage) btnRetourAccueil.getScene().getWindow();
             stage.setScene(new Scene(root));
+            stage.setMaximized(true);
+            stage.setTitle("EventHub");
+            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }

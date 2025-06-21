@@ -134,19 +134,23 @@ public class LoginController {
     private void openNavigationView(Client client) {
         try {
             System.out.println("Opening navigation view for client: " + client.getNom_suser() + " " + client.getPrenom_user());
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Navigation.fxml"));
             Parent root = loader.load();
-            
             NavigationController controller = loader.getController();
             controller.setAdminMode(false);
             controller.setCurrentUser(client);
-            
+
+// ✅ CHARGE LA VUE ACCUEIL AVEC LE RÔLE
+            controller.chargerAccueilInitial();
+
+
             Stage stage = (Stage) txtEmail.getScene().getWindow();
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.setTitle("EventHub");
             stage.show();
-            
+
             System.out.println("Navigation view opened successfully");
         } catch (IOException e) {
             System.err.println("Error opening navigation view: " + e.getMessage());
@@ -154,6 +158,7 @@ public class LoginController {
             showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible de charger l'application");
         }
     }
+
 
     @FXML
     private void handleForgotPassword() {

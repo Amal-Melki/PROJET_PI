@@ -2,6 +2,7 @@ package com.esprit.controllers;
 
 import com.esprit.models.Admin;
 import com.esprit.models.Client;
+import com.esprit.models.User;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -42,12 +43,23 @@ public class NavigationController {
     
     @FXML
     private ImageView userImageView;
-    
+
+    private static Client currentClient;
+
+    public static void setCurrentClient(Client client) {
+        currentClient = client;
+    }
+
+    public static Client getCurrentClient() {
+        return currentClient;
+    }
+
+
     @FXML
     private Label userNameLabel;
-    
+    private User currentUser;
+
     private boolean isAdmin;
-    private Client currentClient;
     private Admin currentAdmin;
     
     public void setAdminMode(boolean isAdmin) {
@@ -136,9 +148,7 @@ public class NavigationController {
     
     @FXML
     public void initialize() {
-        // Load Accueil view by default
-        handleAccueil();
-        
+
         // Configure user image view
         userImageView.setFitHeight(40);
         userImageView.setFitWidth(40);
@@ -150,7 +160,7 @@ public class NavigationController {
     }
     
     @FXML
-    private void handleAccueil() {
+   public void handleAccueil() {
         loadView("/Accueil.fxml");
         updateButtonStyles(btnAccueil);
     }
@@ -174,6 +184,25 @@ public class NavigationController {
             e.printStackTrace();
         }
     }
+    public void chargerAccueilInitial() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Accueil.fxml"));
+            Parent accueilRoot = loader.load();
+
+            AccueilController accueilController = loader.getController();
+            if (isAdmin && currentAdmin != null) {
+                accueilController.setCurrentUser(currentAdmin);
+            } else if (!isAdmin && currentClient != null) {
+                accueilController.setCurrentUser(currentClient);
+            }
+
+            contentArea.getChildren().clear();       // ✅ StackPane : vider d'abord
+            contentArea.getChildren().add(accueilRoot); // ✅ puis ajouter
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @FXML
     private void handleProduits() {
@@ -237,18 +266,30 @@ public class NavigationController {
             showAlert("Erreur", "Erreur lors du chargement de la page de modification du profil", Alert.AlertType.ERROR);
         }
     }
-    
+
     private void loadView(String fxmlPath) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Parent view = loader.load();
+
+            // ⚠️ Injecter le currentUser dans AccueilController si on charge Accueil.fxml
+            if (fxmlPath.contains("Accueil.fxml")) {
+                AccueilController controller = loader.getController();
+                if (isAdmin && currentAdmin != null) {
+                    controller.setCurrentUser(currentAdmin);
+                } else if (!isAdmin && currentClient != null) {
+                    controller.setCurrentUser(currentClient);
+                }
+            }
+
             contentArea.getChildren().clear();
             contentArea.getChildren().add(view);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    
+
+
     private void updateButtonStyles(Button activeButton) {
         // Reset all buttons to default style
         btnAccueil.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;");
@@ -266,4 +307,5 @@ public class NavigationController {
         alert.setContentText(content);
         alert.showAndWait();
     }
+
 } 

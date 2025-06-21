@@ -210,18 +210,12 @@ public class ModifierMateriel implements Initializable {
     }
 
     @FXML
-    void retourAccueil(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Accueil.fxml"));
-            Parent root = loader.load();
-            Stage stage = (Stage) btnRetourAccueil.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Accueil - Gestion des Ressources");
-            stage.sizeToScene();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private void retourAccueil() {
+        Stage currentStage = (Stage) btnRetourAccueil.getScene().getWindow();
+        currentStage.close(); // ferme cette fenêtre
+        // l’utilisateur retourne à celle d’avant automatiquement
     }
+
 
     private void showAlert(Alert.AlertType type, String titre, String message) {
         Alert alert = new Alert(type);

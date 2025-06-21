@@ -1,5 +1,7 @@
 package com.esprit.controllers;
 
+import com.esprit.models.Admin;
+import com.esprit.models.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -27,8 +29,43 @@ public class AccueilController {
     @FXML private Button btnListeReservationsClient;
     @FXML private ImageView logoImage;
 
+    private User currentUser;
+
+    // ✅ Setter appelé depuis le NavigationController
+    public void setCurrentUser(User user) {
+        this.currentUser = user;
+        ajusterInterfaceSelonRole();
+    }
+
+    // ✅ Masquer/afficher les boutons selon le rôle
+    public void ajusterInterfaceSelonRole() {
+        if (currentUser == null) return;
+
+        boolean isAdmin = currentUser instanceof Admin;
+
+        btnAjoutReservationClient.setVisible(!isAdmin);
+        btnListeMaterielsClient.setVisible(!isAdmin);
+        btnListeReservationsClient.setVisible(!isAdmin);
+
+        btnAjoutMateriel.setVisible(isAdmin);
+        btnListeMateriels.setVisible(isAdmin);
+        btnAjoutFournisseur.setVisible(isAdmin);
+        btnListeFournisseurs.setVisible(isAdmin);
+        btnAjoutReservation.setVisible(isAdmin);
+        btnListeReservations.setVisible(isAdmin);
+    }
+
     @FXML
     public void initialize() {
+        try {
+            if (logoImage != null) {
+                Image img = new Image(getClass().getResource("/images/logo.png").toExternalForm());
+                logoImage.setImage(img);
+            }
+        } catch (Exception e) {
+            System.err.println("Erreur chargement logo : " + e.getMessage());
+        }
+
         if (btnAjoutMateriel != null) btnAjoutMateriel.setOnAction(this::ouvrirAjoutMateriel);
         if (btnListeMateriels != null) btnListeMateriels.setOnAction(this::ouvrirListeMateriels);
         if (btnAjoutFournisseur != null) btnAjoutFournisseur.setOnAction(this::ouvrirAjoutFournisseur);
@@ -38,71 +75,33 @@ public class AccueilController {
         if (btnAjoutReservationClient != null) btnAjoutReservationClient.setOnAction(this::ouvrirAjoutReservationsClient);
         if (btnListeMaterielsClient != null) btnListeMaterielsClient.setOnAction(this::ouvrirListeMaterielsClient);
         if (btnListeReservationsClient != null) btnListeReservationsClient.setOnAction(this::ouvrirListeReservationsClient);
-        if (btnVoirEvenements != null) btnVoirEvenements.setOnAction(e -> handleVoirEvenements());
-
-        try {
-            if (logoImage != null) {
-                Image img = new Image(getClass().getResource("/images/logo.png").toExternalForm());
-                logoImage.setImage(img);
-            }
-        } catch (Exception e) {
-            System.err.println("Erreur lors du chargement de l'image : " + e.getMessage());
-        }
+        if (btnVoirEvenements != null) btnVoirEvenements.setOnAction(this::handleVoirEvenements);
     }
 
     @FXML
-    private void handleVoirEvenements() {
+    private void handleVoirEvenements(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/EvenementsFront.fxml"));
             Parent root = loader.load();
-
-            // Get the current stage
             Stage stage = (Stage) btnVoirEvenements.getScene().getWindow();
-
-            // Set the new scene
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
+            stage.setScene(new Scene(root));
             stage.setTitle("Événements");
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    private void ouvrirAjoutMateriel(ActionEvent e) {
-        changerScene("/AjoutMateriel.fxml", e);
-    }
 
-    private void ouvrirListeMateriels(ActionEvent e) {
-        changerScene("/ModifierMateriel.fxml", e);
-    }
 
-    private void ouvrirAjoutFournisseur(ActionEvent e) {
-        changerScene("/AjoutFournisseur.fxml", e);
-    }
-
-    private void ouvrirListeFournisseurs(ActionEvent e) {
-        changerScene("/ModifierFournisseur.fxml", e);
-    }
-
-    private void ouvrirAjoutReservation(ActionEvent e) {
-        changerScene("/AjoutReservation.fxml", e);
-    }
-
-    private void ouvrirListeReservations(ActionEvent e) {
-        changerScene("/ModifierReservation.fxml", e);
-    }
-
-    private void ouvrirAjoutReservationsClient(ActionEvent e) {
-        changerScene("/AjoutReservationClient.fxml", e);
-    }
-
-    private void ouvrirListeMaterielsClient(ActionEvent e) {
-        changerScene("/ListeMaterielsClient.fxml", e);
-    }
-
-    private void ouvrirListeReservationsClient(ActionEvent e) {
-        changerScene("/ListeReservationsClient.fxml", e);
-    }
+    private void ouvrirAjoutMateriel(ActionEvent e) { changerScene("/AjoutMateriel.fxml", e); }
+    private void ouvrirListeMateriels(ActionEvent e) { changerScene("/ModifierMateriel.fxml", e); }
+    private void ouvrirAjoutFournisseur(ActionEvent e) { changerScene("/AjoutFournisseur.fxml", e); }
+    private void ouvrirListeFournisseurs(ActionEvent e) { changerScene("/ModifierFournisseur.fxml", e); }
+    private void ouvrirAjoutReservation(ActionEvent e) { changerScene("/AjoutReservation.fxml", e); }
+    private void ouvrirListeReservations(ActionEvent e) { changerScene("/ModifierReservation.fxml", e); }
+    private void ouvrirAjoutReservationsClient(ActionEvent e) { changerScene("/AjoutReservationClient.fxml", e); }
+    private void ouvrirListeMaterielsClient(ActionEvent e) { changerScene("/ListeMaterielsClient.fxml", e); }
+    private void ouvrirListeReservationsClient(ActionEvent e) { changerScene("/ListeReservationsClient.fxml", e); }
 
     private void changerScene(String cheminFXML, ActionEvent event) {
         try {
@@ -113,19 +112,6 @@ public class AccueilController {
             stage.show();
         } catch (IOException ex) {
             ex.printStackTrace();
-        }
-    }
-
-    private void changerScene(String cheminFXML, Button sourceButton) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(cheminFXML));
-            Parent root = loader.load();
-            Stage stage = (Stage) sourceButton.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Événements");
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 }

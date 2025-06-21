@@ -8,6 +8,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -249,14 +250,20 @@ public class ListeReservationsClient implements Initializable {
 
 
     @FXML
-    void retourAccueil() {
+    void retourAccueil(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Accueil.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Navigation.fxml"));
             Parent root = loader.load();
+
+            NavigationController navController = loader.getController();
+            navController.setAdminMode(false); // si tu veux l’accueil client
+            navController.setCurrentUser(NavigationController.getCurrentClient());
+
             Stage stage = (Stage) btnRetourAccueil.getScene().getWindow();
             stage.setScene(new Scene(root));
-            stage.setTitle("Accueil");
-            stage.sizeToScene();
+            stage.setMaximized(true);
+            stage.setTitle("EventHub");
+            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
