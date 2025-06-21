@@ -103,23 +103,24 @@
                        -fx-background-radius: 25; -fx-pref-width: 220;
                        -fx-font-family: 'Segoe UI Semibold';"/>
 
-                    <Button fx:id="btnAjoutReservationClient" text="📋 Ajout client Réservations"
-                            style="-fx-background-color: #ff8fb3; -fx-text-fill: white;
-                       -fx-font-weight: bold; -fx-font-size: 14px;
-                       -fx-background-radius: 25; -fx-pref-width: 220;
-                       -fx-font-family: 'Segoe UI Semibold';"/>
+                    <Button fx:id="btnAjoutReservationClient" text="📋 Ajout  Réservations"
+                            style="-fx-background-color: #d1e3ff; -fx-text-fill: #1a1a1a;
+               -fx-font-weight: bold; -fx-font-size: 14px;
+               -fx-background-radius: 25; -fx-pref-width: 220;
+               -fx-font-family: 'Segoe UI Semibold';"/>
 
-                    <Button fx:id="btnListeMaterielsClient" text="📋 Liste materiels client"
-                            style="-fx-background-color: #ff8fb3; -fx-text-fill: white;
-                       -fx-font-weight: bold; -fx-font-size: 14px;
-                       -fx-background-radius: 25; -fx-pref-width: 220;
-                       -fx-font-family: 'Segoe UI Semibold';"/>
+                    <Button fx:id="btnListeMaterielsClient" text="📋 Liste  Matériels"
+                            style="-fx-background-color: #d1e3ff; -fx-text-fill: #1a1a1a;
+               -fx-font-weight: bold; -fx-font-size: 14px;
+               -fx-background-radius: 25; -fx-pref-width: 220;
+               -fx-font-family: 'Segoe UI Semibold';"/>
 
-                    <Button fx:id="btnListeReservationsClient" text="📋 Liste Reservations client"
-                            style="-fx-background-color: #ff8fb3; -fx-text-fill: white;
-                       -fx-font-weight: bold; -fx-font-size: 14px;
-                       -fx-background-radius: 25; -fx-pref-width: 220;
-                       -fx-font-family: 'Segoe UI Semibold';"/>
+                    <Button fx:id="btnListeReservationsClient" text="📋 Liste  Réservations"
+                            style="-fx-background-color: #d1e3ff; -fx-text-fill: #1a1a1a;
+               -fx-font-weight: bold; -fx-font-size: 14px;
+               -fx-background-radius: 25; -fx-pref-width: 220;
+               -fx-font-family: 'Segoe UI Semibold';"/>
+
                 </FlowPane>
             </VBox>
 
