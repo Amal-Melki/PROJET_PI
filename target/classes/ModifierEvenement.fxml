@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.effect.DropShadow?>
+
+<VBox xmlns="http://javafx.com/javafx/17" 
+      xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="com.esprit.controllers.ModifierEvenementController"
+      spacing="24" 
+      style="-fx-background-color: linear-gradient(to bottom right, #f8f9fa, #e9ecef);">
+    <padding>
+        <Insets top="32" right="32" bottom="32" left="32"/>
+    </padding>
+
+    <!-- Header Section -->
+    <VBox spacing="16" style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+        <padding>
+            <Insets top="24" right="24" bottom="24" left="24"/>
+        </padding>
+        <Label text="Modifier l'événement" 
+               style="-fx-text-fill: #2c3e50; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+        <Label text="Modifiez les détails de l'événement" 
+               style="-fx-text-fill: #7f8c8d; -fx-font-size: 14px;"/>
+    </VBox>
+
+    <!-- Form Section -->
+    <VBox spacing="24" style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+        <padding>
+            <Insets top="24" right="24" bottom="24" left="24"/>
+        </padding>
+
+        <GridPane vgap="16" hgap="16">
+            <Label text="Titre:" GridPane.columnIndex="0" GridPane.rowIndex="0"
+                   style="-fx-text-fill: #2c3e50; -fx-font-weight: bold;"/>
+            <TextField fx:id="txtTitle" GridPane.columnIndex="1" GridPane.rowIndex="0"
+                      style="-fx-background-radius: 8; -fx-border-radius: 8; -fx-border-color: #e0e0e0; -fx-border-width: 1; -fx-padding: 8 12 8 12;"/>
+
+            <Label text="Description:" GridPane.columnIndex="0" GridPane.rowIndex="1"
+                   style="-fx-text-fill: #2c3e50; -fx-font-weight: bold;"/>
+            <TextArea fx:id="txtDescription" prefRowCount="3" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1"
+                      style="-fx-background-radius: 8; -fx-border-radius: 8; -fx-border-color: #e0e0e0; -fx-border-width: 1; -fx-padding: 8 12 8 12;"/>
+
+            <Label text="Date de début:" GridPane.columnIndex="0" GridPane.rowIndex="2"
+                   style="-fx-text-fill: #2c3e50; -fx-font-weight: bold;"/>
+            <DatePicker fx:id="dateDebut" GridPane.columnIndex="1" GridPane.rowIndex="2"
+                       style="-fx-background-radius: 8; -fx-border-radius: 8; -fx-border-color: #e0e0e0; -fx-border-width: 1; -fx-padding: 8 12 8 12;"/>
+
+            <Label text="Date de fin:" GridPane.columnIndex="0" GridPane.rowIndex="3"
+                   style="-fx-text-fill: #2c3e50; -fx-font-weight: bold;"/>
+            <DatePicker fx:id="dateFin" GridPane.columnIndex="1" GridPane.rowIndex="3"
+                       style="-fx-background-radius: 8; -fx-border-radius: 8; -fx-border-color: #e0e0e0; -fx-border-width: 1; -fx-padding: 8 12 8 12;"/>
+
+            <Label text="Latitude:" GridPane.columnIndex="0" GridPane.rowIndex="4"
+                   style="-fx-text-fill: #2c3e50; -fx-font-weight: bold;"/>
+            <TextField fx:id="txtLatitude" GridPane.columnIndex="1" GridPane.rowIndex="4"
+                      style="-fx-background-radius: 8; -fx-border-radius: 8; -fx-border-color: #e0e0e0; -fx-border-width: 1; -fx-padding: 8 12 8 12;"/>
+
+            <Label text="Longitude:" GridPane.columnIndex="0" GridPane.rowIndex="5"
+                   style="-fx-text-fill: #2c3e50; -fx-font-weight: bold;"/>
+            <TextField fx:id="txtLongitude" GridPane.columnIndex="1" GridPane.rowIndex="5"
+                      style="-fx-background-radius: 8; -fx-border-radius: 8; -fx-border-color: #e0e0e0; -fx-border-width: 1; -fx-padding: 8 12 8 12;"/>
+
+            <Label text="Catégories:" GridPane.columnIndex="0" GridPane.rowIndex="6"
+                   style="-fx-text-fill: #2c3e50; -fx-font-weight: bold;"/>
+            <TextField fx:id="txtCategories" GridPane.columnIndex="1" GridPane.rowIndex="6"
+                      style="-fx-background-radius: 8; -fx-border-radius: 8; -fx-border-color: #e0e0e0; -fx-border-width: 1; -fx-padding: 8 12 8 12;"/>
+
+            <Label text="Places disponibles:" GridPane.columnIndex="0" GridPane.rowIndex="7"
+                   style="-fx-text-fill: #2c3e50; -fx-font-weight: bold;"/>
+            <TextField fx:id="txtNbrPlaces" GridPane.columnIndex="1" GridPane.rowIndex="7"
+                      style="-fx-background-radius: 8; -fx-border-radius: 8; -fx-border-color: #e0e0e0; -fx-border-width: 1; -fx-padding: 8 12 8 12;"/>
+        </GridPane>
+    </VBox>
+
+    <!-- Buttons Section -->
+    <HBox spacing="16" alignment="CENTER">
+        <Button fx:id="btnModifier" 
+                text="Modifier" 
+                onAction="#handleModifier"
+                style="-fx-background-color: linear-gradient(to right, #3498db, #2980b9); -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 8; -fx-font-family: 'Segoe UI Semibold'; -fx-cursor: hand; -fx-padding: 12 24 12 24; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);"/>
+        <Button fx:id="btnAnnuler" 
+                text="Annuler" 
+                onAction="#handleAnnuler"
+                style="-fx-background-color: linear-gradient(to right, #e74c3c, #c0392b); -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 8; -fx-font-family: 'Segoe UI Semibold'; -fx-cursor: hand; -fx-padding: 12 24 12 24; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);"/>
+    </HBox>
+</VBox> 

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Button?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.esprit.controllers.OptionsAvanceesController"
+      spacing="20" alignment="CENTER"
+      styleClass="menu-container"
+      stylesheets="@options-avancees-style.css">
+
+    <Button fx:id="btnAjouterMateriel" text="➕ Ajouter Matériel" onAction="#handleAjouterMateriel" styleClass="menu-button"/>
+    <Button fx:id="btnAjouterReservation" text="➕ Ajouter Réservation" onAction="#handleAjouterReservation" styleClass="menu-button"/>
+    <Button fx:id="btnListeReservations" text="📋 Liste Réservations" onAction="#handleListeReservations" styleClass="menu-button"/>
+    <Button fx:id="btnListeMateriels" text="📋 Liste des Matériels" onAction="#handleListeMateriels" styleClass="menu-button"/>
+
+</VBox>

@@ -1,0 +1,166 @@
+package com.esprit.controllers;
+
+import com.esprit.models.Admin;
+import io.jsonwebtoken.io.IOException;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+public class SidebarController {
+
+    @FXML
+    private Button btnDashboard;
+
+    @FXML
+    private Button btnUtilisateurs;
+
+    @FXML
+    private Button btnEvenements;
+
+    @FXML
+    private Button btnReservations;
+    @FXML
+    private Button btnProduits;
+    @FXML
+    private VBox materielMenu;
+
+    @FXML
+    private Button btnToggleMaterielMenu;
+
+    @FXML
+    private Label lblAdminName;
+
+    private MainLayoutController mainController;
+    private Admin currentAdmin;
+
+    public void setMainController(MainLayoutController mainController) {
+        this.mainController = mainController;
+    }
+    
+    public void setCurrentAdmin(Admin admin) {
+        this.currentAdmin = admin;
+        if (admin != null && lblAdminName != null) {
+            lblAdminName.setText(admin.getNom_suser() + " " + admin.getPrenom_user());
+        }
+    }
+
+    @FXML
+    void handleDashboard(ActionEvent event) {
+        if (mainController != null) {
+            mainController.loadContent("/Dashboard.fxml");
+        } else {
+            showError("Erreur de navigation", "Le contrôleur principal n'est pas initialisé.");
+        }
+    }
+
+    @FXML
+    void handleUtilisateurs(ActionEvent event) {
+        if (mainController != null) {
+            mainController.loadContent("/Utilisateurs.fxml");
+        } else {
+            showError("Erreur de navigation", "Le contrôleur principal n'est pas initialisé.");
+        }
+    }
+
+    @FXML
+    void handleEvenements(ActionEvent event) {
+        if (mainController != null) {
+            if (hasEventAccess()) {
+                mainController.loadContent("/Evenements.fxml");
+            } else {
+                showError("Accès refusé", "Vous n'avez pas les permissions nécessaires pour accéder aux événements.");
+            }
+        } else {
+            showError("Erreur de navigation", "Le contrôleur principal n'est pas initialisé.");
+        }
+    }
+
+    @FXML
+    void handleReservations(ActionEvent event) {
+        if (mainController != null) {
+            if (hasEventAccess()) {
+                mainController.loadContent("/Reservations.fxml");
+            } else {
+                showError("Accès refusé", "Vous n'avez pas les permissions nécessaires pour accéder aux réservations.");
+            }
+        } else {
+            showError("Erreur de navigation", "Le contrôleur principal n'est pas initialisé.");
+        }
+    }
+    @FXML
+    void handleProduits(ActionEvent event) {
+        if (mainController != null) {
+            if (hasEventAccess()) {
+                mainController.loadContent("/views/products/ListeProduitDerive.fxml");
+            } else {
+                showError("Accès refusé", "Vous n'avez pas les permissions nécessaires pour accéder aux réservations.");
+            }
+        } else {
+            showError("Erreur de navigation", "Le contrôleur principal n'est pas initialisé.");
+        }
+    }
+    @FXML
+    void handleDeconnexion(ActionEvent event) {
+        try {
+            // Load login view
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/Login.fxml"));
+            javafx.scene.Parent root = loader.load();
+            
+            // Get the current stage
+            javafx.stage.Stage stage = (javafx.stage.Stage) btnDashboard.getScene().getWindow();
+            
+            // Set the new scene
+            javafx.scene.Scene scene = new javafx.scene.Scene(root);
+            stage.setScene(scene);
+            stage.setTitle("Connexion");
+            stage.show();
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+            showError("Erreur", "Impossible de se déconnecter");
+        }
+    }
+
+    private boolean hasEventAccess() {
+        if (currentAdmin == null) {
+            return false;
+        }
+        int role = currentAdmin.getRole();
+        return role == 0 || role == 1;
+    }
+    @FXML
+    private void toggleMaterielMenu() {
+        boolean isVisible = materielMenu.isVisible();
+        materielMenu.setVisible(!isVisible);
+        materielMenu.setManaged(!isVisible);
+    }
+
+    private void showError(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
+    @FXML
+    private void handleOptionsAvancees(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/OptionsAvancees.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Options avancées");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException | java.io.IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+}

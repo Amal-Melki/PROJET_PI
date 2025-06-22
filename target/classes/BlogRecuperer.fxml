@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+
+<ScrollPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.esprit.controllers.RecupererBlog"
+            fitToWidth="true"
+            hbarPolicy="NEVER"
+            vbarPolicy="ALWAYS"
+            prefHeight="600"
+            style="-fx-background: #FFF5F7; -fx-border-color: transparent; -fx-padding: 0;">
+
+    <content>
+        <BorderPane style="-fx-background-color: #FFF5F7; -fx-padding: 0;">
+
+            <!-- Top: Barre ultra compacte -->
+            <top>
+                <HBox alignment="CENTER_LEFT" spacing="3" style="-fx-padding: 4 8; -fx-background-color: #FFE5EC;">
+                    <ComboBox fx:id="categorieFilterCombo" promptText="Catégorie"
+                              style="-fx-background-color: white;
+                                     -fx-border-color: #FF6B9C;
+                                     -fx-border-radius: 2;
+                                     -fx-pref-width: 100;
+                                     -fx-font-size: 10px;
+                                     -fx-padding: 2 4;"/>
+
+                    <Button text="Filtrer" onAction="#filterByCategory"
+                            style="-fx-background-color: #FF6B9C;
+                                   -fx-text-fill: white;
+                                   -fx-font-weight: bold;
+                                   -fx-padding: 2 5;
+                                   -fx-background-radius: 2;
+                                   -fx-font-size: 10px;
+                                   -fx-cursor: hand;"/>
+
+                    <Button text="Reset" onAction="#resetFilter"
+                            style="-fx-background-color: #FFD1DC;
+                                   -fx-text-fill: #FF6B9C;
+                                   -fx-font-weight: bold;
+                                   -fx-padding: 2 5;
+                                   -fx-background-radius: 2;
+                                   -fx-font-size: 10px;
+                                   -fx-cursor: hand;"/>
+
+                    <Region HBox.hgrow="ALWAYS"/>
+
+                    <Button fx:id="addBlogButton" text="+" onAction="#openAddBlogWindow"
+                            style="-fx-background-color: #FF6B9C;
+                                   -fx-text-fill: white;
+                                   -fx-font-weight: bold;
+                                   -fx-min-width: 22;
+                                   -fx-min-height: 22;
+                                   -fx-padding: 0;
+                                   -fx-background-radius: 11;
+                                   -fx-font-size: 12px;
+                                   -fx-cursor: hand;"/>
+                </HBox>
+            </top>
+
+            <!-- Centre: Cartes ultra compactes -->
+            <center>
+                <TilePane fx:id="BlogsTilePane" hgap="5" vgap="5" style="-fx-padding: 8;" tileAlignment="TOP_LEFT">
+                    <!-- Template de blog ultra compact -->
+                    <VBox fx:id="blogTemplate" spacing="2" visible="false"
+                          style="-fx-background-color: white;
+                                 -fx-background-radius: 3;
+                                 -fx-padding: 5;
+                                 -fx-border-color: #FFD1DC;
+                                 -fx-border-width: 1;">
+
+                        <!-- Titre -->
+                        <Text fx:id="blogTitle"
+                              style="-fx-font-weight: bold;
+                                     -fx-font-size: 11px;
+                                     -fx-fill: #FF6B9C;"/>
+
+
+
+
+
+                        <!-- Image miniature -->
+                        <ImageView fx:id="blogImage"
+                                   fitWidth="200"
+                                   fitHeight="40"
+                                   preserveRatio="false"
+                                   style="-fx-background-radius: 2; -fx-border-radius: 2;"/>
+
+                        <!-- Catégorie -->
+                        <HBox spacing="2" alignment="CENTER_LEFT" style="-fx-padding: 1 0 0 0;">
+                            <Text fx:id="blogCategory"
+                                  style="-fx-font-size: 10px;
+                                         -fx-fill: #8A4B63;
+                                         -fx-font-weight: 500;"/>
+                        </HBox>
+
+                        <!-- Contenu (1 ligne max) -->
+                        <Text fx:id="blogContent"
+                              wrappingWidth="200"
+                              style="-fx-font-size: 10px;
+                                     -fx-fill: #6D4D5C;
+                                     -fx-padding: 1 0;
+                                     -fx-line-spacing: 1px;"/>
+
+                        <!-- Actions -->
+                        <HBox spacing="2" alignment="CENTER" style="-fx-padding: 2 0 0 0;">
+                            <!-- Like -->
+                            <Button text="♥" fx:id="likeButton"
+                                    style="-fx-background-color: transparent;
+                                           -fx-font-size: 10px;
+                                           -fx-text-fill: #FF6B9C;
+                                           -fx-cursor: hand;
+                                           -fx-padding: 0;"/>
+                            <Label fx:id="likeCount" text="0"
+                                   style="-fx-text-fill: #FF6B9C;
+                                          -fx-font-weight: bold;
+                                          -fx-font-size: 9px;"/>
+
+                            <!-- Comment -->
+                            <Button text="💬" fx:id="commentButton"
+                                    style="-fx-background-color: transparent;
+                                           -fx-font-size: 10px;
+                                           -fx-text-fill: #FF6B9C;
+                                           -fx-cursor: hand;
+                                           -fx-padding: 0 0 0 3;"/>
+
+                            <Region HBox.hgrow="ALWAYS"/>
+
+                            <!-- Modifier / Supprimer -->
+                            <Button text="M" fx:id="modifierButton"
+                                    style="-fx-background-color: #FFE5EC;
+                                           -fx-text-fill: #FF6B9C;
+                                           -fx-font-weight: bold;
+                                           -fx-padding: 0 3;
+                                           -fx-min-width: 20;
+                                           -fx-font-size: 9px;
+                                           -fx-background-radius: 2;
+                                           -fx-cursor: hand;"/>
+                            <Button text="S" fx:id="supprimerButton"
+                                    style="-fx-background-color: #FFE5EC;
+                                           -fx-text-fill: #FF6B9C;
+                                           -fx-font-weight: bold;
+                                           -fx-padding: 0 3;
+                                           -fx-min-width: 20;
+                                           -fx-font-size: 9px;
+                                           -fx-background-radius: 2;
+                                           -fx-cursor: hand;"/>
+
+                        </HBox>
+                    </VBox>
+                </TilePane>
+            </center>
+
+        </BorderPane>
+    </content>
+</ScrollPane>

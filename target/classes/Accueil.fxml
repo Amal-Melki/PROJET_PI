@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.esprit.controllers.AccueilController">
+
+    <top>
+        <AnchorPane>
+            <ImageView fx:id="logoImage"
+                       fitWidth="120" fitHeight="120"
+                       layoutX="10" layoutY="10"
+                       pickOnBounds="true" preserveRatio="true"/>
+
+            <!-- Bouton Choix Blog déplacé ici -->
+            <Button fx:id="btnChoixBlog"
+                    text="Aller à Choix Blog"
+                    onAction="#allerVersChoixBlog"
+                    layoutX="150" layoutY="45"
+                    style="-fx-background-color: #ff8fb3; -fx-text-fill: white;
+                           -fx-font-weight: bold; -fx-font-size: 14px;
+                           -fx-background-radius: 25; -fx-font-family: 'Segoe UI Semibold';"/>
+        </AnchorPane>
+    </top>
+
+    <center>
+        <VBox spacing="30" style="-fx-background-color: white;">
+            <padding>
+                <Insets top="40" right="40" bottom="40" left="40"/>
+            </padding>
+
+            <!-- Welcome Section -->
+            <VBox spacing="10" alignment="CENTER">
+                <Label text="Bienvenue sur notre plateforme d'événements"
+                       style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #333333;"/>
+                <Label text="Découvrez et participez à des événements passionnants"
+                       style="-fx-font-size: 18px; -fx-text-fill: #666666;"/>
+            </VBox>
+
+            <!-- Features Section -->
+            <HBox spacing="30" alignment="CENTER">
+                <VBox spacing="10" alignment="CENTER" style="-fx-background-color: #f8f8f8; -fx-padding: 20; -fx-background-radius: 10;">
+                    <Label text="🎯" style="-fx-font-size: 40px;"/>
+                    <Label text="Événements Diversifiés" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                    <Label text="Un large choix d'événements pour tous les goûts"
+                           style="-fx-text-fill: #666666;" wrapText="true"/>
+                </VBox>
+                <VBox spacing="10" alignment="CENTER" style="-fx-background-color: #f8f8f8; -fx-padding: 20; -fx-background-radius: 10;">
+                    <Label text="📅" style="-fx-font-size: 40px;"/>
+                    <Label text="Gestion Simple" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                    <Label text="Inscription et gestion facile de vos participations"
+                           style="-fx-text-fill: #666666;" wrapText="true"/>
+                </VBox>
+                <VBox spacing="10" alignment="CENTER" style="-fx-background-color: #f8f8f8; -fx-padding: 20; -fx-background-radius: 10;">
+                    <Label text="🔔" style="-fx-font-size: 40px;"/>
+                    <Label text="Notifications" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                    <Label text="Restez informé des derniers événements"
+                           style="-fx-text-fill: #666666;" wrapText="true"/>
+                </VBox>
+            </HBox>
+
+            <!-- Gestion Matériels Section -->
+            <VBox spacing="20" alignment="CENTER">
+                <Text text="Gestion des Matériels" style="-fx-fill: #333;">
+                    <font>
+                        <Font name="Segoe UI Bold" size="28"/>
+                    </font>
+                </Text>
+
+                <FlowPane hgap="20" vgap="15" alignment="CENTER">
+
+                    <Button fx:id="btnAjoutMateriel" text="➕ Ajouter Matériel"
+                            style="-fx-background-color: #ff8fb3; -fx-text-fill: white;
+                           -fx-font-weight: bold; -fx-font-size: 14px;
+                           -fx-background-radius: 25; -fx-pref-width: 220;
+                           -fx-font-family: 'Segoe UI Semibold';"/>
+
+                    <Button fx:id="btnListeMateriels" text="📄 Liste Matériels"
+                            style="-fx-background-color: #ff8fb3; -fx-text-fill: white;
+                           -fx-font-weight: bold; -fx-font-size: 14px;
+                           -fx-background-radius: 25; -fx-pref-width: 220;
+                           -fx-font-family: 'Segoe UI Semibold';"/>
+
+                    <Button fx:id="btnAjoutFournisseur" text="➕ Ajouter Fournisseur"
+                            style="-fx-background-color: #ff8fb3; -fx-text-fill: white;
+                           -fx-font-weight: bold; -fx-font-size: 14px;
+                           -fx-background-radius: 25; -fx-pref-width: 220;
+                           -fx-font-family: 'Segoe UI Semibold';"/>
+
+                    <Button fx:id="btnListeFournisseurs" text="📄 Liste Fournisseurs"
+                            style="-fx-background-color: #ff8fb3; -fx-text-fill: white;
+                           -fx-font-weight: bold; -fx-font-size: 14px;
+                           -fx-background-radius: 25; -fx-pref-width: 220;
+                           -fx-font-family: 'Segoe UI Semibold';"/>
+
+                    <Button fx:id="btnAjoutReservation" text="➕ Ajouter Réservation"
+                            style="-fx-background-color: #ff8fb3; -fx-text-fill: white;
+                           -fx-font-weight: bold; -fx-font-size: 14px;
+                           -fx-background-radius: 25; -fx-pref-width: 220;
+                           -fx-font-family: 'Segoe UI Semibold';"/>
+
+                    <Button fx:id="btnListeReservations" text="📋 Liste Réservations"
+                            style="-fx-background-color: #ff8fb3; -fx-text-fill: white;
+                           -fx-font-weight: bold; -fx-font-size: 14px;
+                           -fx-background-radius: 25; -fx-pref-width: 220;
+                           -fx-font-family: 'Segoe UI Semibold';"/>
+
+                    <Button fx:id="btnAjoutReservationClient" text="📋 Ajout  Réservations"
+                            style="-fx-background-color: #d1e3ff; -fx-text-fill: #1a1a1a;
+                   -fx-font-weight: bold; -fx-font-size: 14px;
+                   -fx-background-radius: 25; -fx-pref-width: 220;
+                   -fx-font-family: 'Segoe UI Semibold';"/>
+
+                    <Button fx:id="btnListeMaterielsClient" text="📋 Liste  Matériels"
+                            style="-fx-background-color: #d1e3ff; -fx-text-fill: #1a1a1a;
+                   -fx-font-weight: bold; -fx-font-size: 14px;
+                   -fx-background-radius: 25; -fx-pref-width: 220;
+                   -fx-font-family: 'Segoe UI Semibold';"/>
+
+                    <Button fx:id="btnListeReservationsClient" text="📋 Liste  Réservations"
+                            style="-fx-background-color: #d1e3ff; -fx-text-fill: #1a1a1a;
+                   -fx-font-weight: bold; -fx-font-size: 14px;
+                   -fx-background-radius: 25; -fx-pref-width: 220;
+                   -fx-font-family: 'Segoe UI Semibold';"/>
+
+                </FlowPane>
+            </VBox>
+
+            <!-- Call to Action -->
+            <VBox spacing="10" alignment="CENTER">
+                <Label text="Prêt à découvrir nos événements ?"
+                       style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #333333;"/>
+                <Button fx:id="btnVoirEvenements"
+                        text="Voir les événements"
+                        style="-fx-background-color: #ff7fa8; -fx-text-fill: white; -fx-font-weight: bold;
+                        -fx-background-radius: 20; -fx-padding: 10 20;"
+                        onAction="#handleVoirEvenements"/>
+            </VBox>
+        </VBox>
+    </center>
+</BorderPane>

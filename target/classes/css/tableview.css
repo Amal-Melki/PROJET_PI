@@ -1,0 +1,92 @@
+/* TableView Styles */
+.table-view {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
+}
+
+/* Column Headers */
+.table-view .column-header {
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 0 0 1 0;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #2c3e50;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 12 8;
+}
+
+/* Table Cells */
+.table-view .table-cell {
+    -fx-text-fill: #2c3e50;
+    -fx-font-size: 13px;
+    -fx-padding: 12 8;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 0 0 1 0;
+}
+
+/* Selected Row */
+.table-view .table-row-cell:selected {
+    -fx-background-color: #e3f2fd;
+}
+
+.table-view .table-row-cell:selected .table-cell {
+    -fx-text-fill: #1976d2;
+}
+
+/* Hover Effect */
+.table-view .table-row-cell:hover {
+    -fx-background-color: #f5f5f5;
+}
+
+/* Alternating Row Colors */
+.table-view .table-row-cell:odd {
+    -fx-background-color: #ffffff;
+}
+
+.table-view .table-row-cell:even {
+    -fx-background-color: #fafafa;
+}
+
+/* Scrollbar Styling */
+.table-view .scroll-bar:vertical {
+    -fx-background-color: #f8f9fa;
+    -fx-pref-width: 12;
+    -fx-padding: 0 2;
+}
+
+.table-view .scroll-bar:vertical .thumb {
+    -fx-background-color: #bdbdbd;
+    -fx-background-radius: 6;
+}
+
+.table-view .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #9e9e9e;
+}
+
+/* Button Column Styling */
+.table-view .button {
+    -fx-background-color: linear-gradient(to right, #3498db, #2980b9);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-background-radius: 6;
+    -fx-padding: 6 12;
+    -fx-cursor: hand;
+}
+
+.table-view .button:hover {
+    -fx-background-color: linear-gradient(to right, #2980b9, #2472a4);
+}
+
+/* Delete Button Styling */
+.table-view .delete-button {
+    -fx-background-color: linear-gradient(to right, #e74c3c, #c0392b);
+}
+
+.table-view .delete-button:hover {
+    -fx-background-color: linear-gradient(to right, #c0392b, #a93226);
+}
