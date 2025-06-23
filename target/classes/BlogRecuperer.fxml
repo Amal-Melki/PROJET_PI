@@ -13,24 +13,33 @@
             hbarPolicy="NEVER"
             vbarPolicy="ALWAYS"
             prefHeight="600"
-            style="-fx-background: #FFF5F7; -fx-border-color: transparent; -fx-padding: 0;">
+            style="-fx-background: white; -fx-border-color: transparent; -fx-padding: 0;">
 
     <content>
-        <BorderPane style="-fx-background-color: #FFF5F7; -fx-padding: 0;">
+        <BorderPane style="-fx-background-color: white; -fx-padding: 0;">
 
-            <!-- Top: Barre ultra compacte -->
+            <!-- Top: Barre avec logo et boutons -->
             <top>
-                <HBox alignment="CENTER_LEFT" spacing="3" style="-fx-padding: 4 8; -fx-background-color: #FFE5EC;">
+                <HBox alignment="CENTER_LEFT" spacing="3" style="-fx-padding: 4 8; -fx-background-color: #E6F2FF;">
+                    <!-- Logo (remplacez le chemin par votre image) -->
+                    <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
+                        <image>
+                            <Image url="/logo.jpg" /> <!-- Modifiez ce chemin selon l'emplacement de votre logo -->
+                        </image>
+                    </ImageView>
+
+                    <Label text="BlogApp" style="-fx-text-fill: #4D90FE; -fx-font-weight: bold; -fx-padding: 0 5 0 2;"/>
+
                     <ComboBox fx:id="categorieFilterCombo" promptText="Catégorie"
                               style="-fx-background-color: white;
-                                     -fx-border-color: #FF6B9C;
+                                     -fx-border-color: #4D90FE;
                                      -fx-border-radius: 2;
                                      -fx-pref-width: 100;
                                      -fx-font-size: 10px;
                                      -fx-padding: 2 4;"/>
 
                     <Button text="Filtrer" onAction="#filterByCategory"
-                            style="-fx-background-color: #FF6B9C;
+                            style="-fx-background-color: #4D90FE;
                                    -fx-text-fill: white;
                                    -fx-font-weight: bold;
                                    -fx-padding: 2 5;
@@ -39,8 +48,8 @@
                                    -fx-cursor: hand;"/>
 
                     <Button text="Reset" onAction="#resetFilter"
-                            style="-fx-background-color: #FFD1DC;
-                                   -fx-text-fill: #FF6B9C;
+                            style="-fx-background-color: #B8D4FF;
+                                   -fx-text-fill: #4D90FE;
                                    -fx-font-weight: bold;
                                    -fx-padding: 2 5;
                                    -fx-background-radius: 2;
@@ -50,7 +59,7 @@
                     <Region HBox.hgrow="ALWAYS"/>
 
                     <Button fx:id="addBlogButton" text="+" onAction="#openAddBlogWindow"
-                            style="-fx-background-color: #FF6B9C;
+                            style="-fx-background-color: #4D90FE;
                                    -fx-text-fill: white;
                                    -fx-font-weight: bold;
                                    -fx-min-width: 22;
@@ -70,18 +79,14 @@
                           style="-fx-background-color: white;
                                  -fx-background-radius: 3;
                                  -fx-padding: 5;
-                                 -fx-border-color: #FFD1DC;
+                                 -fx-border-color: #E6F2FF;
                                  -fx-border-width: 1;">
 
                         <!-- Titre -->
                         <Text fx:id="blogTitle"
                               style="-fx-font-weight: bold;
                                      -fx-font-size: 11px;
-                                     -fx-fill: #FF6B9C;"/>
-
-
-
-
+                                     -fx-fill: #4D90FE;"/>
 
                         <!-- Image miniature -->
                         <ImageView fx:id="blogImage"
@@ -94,7 +99,7 @@
                         <HBox spacing="2" alignment="CENTER_LEFT" style="-fx-padding: 1 0 0 0;">
                             <Text fx:id="blogCategory"
                                   style="-fx-font-size: 10px;
-                                         -fx-fill: #8A4B63;
+                                         -fx-fill: #2A5885;
                                          -fx-font-weight: 500;"/>
                         </HBox>
 
@@ -102,7 +107,7 @@
                         <Text fx:id="blogContent"
                               wrappingWidth="200"
                               style="-fx-font-size: 10px;
-                                     -fx-fill: #6D4D5C;
+                                     -fx-fill: #555555;
                                      -fx-padding: 1 0;
                                      -fx-line-spacing: 1px;"/>
 
@@ -112,11 +117,11 @@
                             <Button text="♥" fx:id="likeButton"
                                     style="-fx-background-color: transparent;
                                            -fx-font-size: 10px;
-                                           -fx-text-fill: #FF6B9C;
+                                           -fx-text-fill: #4D90FE;
                                            -fx-cursor: hand;
                                            -fx-padding: 0;"/>
                             <Label fx:id="likeCount" text="0"
-                                   style="-fx-text-fill: #FF6B9C;
+                                   style="-fx-text-fill: #4D90FE;
                                           -fx-font-weight: bold;
                                           -fx-font-size: 9px;"/>
 
@@ -124,7 +129,7 @@
                             <Button text="💬" fx:id="commentButton"
                                     style="-fx-background-color: transparent;
                                            -fx-font-size: 10px;
-                                           -fx-text-fill: #FF6B9C;
+                                           -fx-text-fill: #4D90FE;
                                            -fx-cursor: hand;
                                            -fx-padding: 0 0 0 3;"/>
 
@@ -132,8 +137,8 @@
 
                             <!-- Modifier / Supprimer -->
                             <Button text="M" fx:id="modifierButton"
-                                    style="-fx-background-color: #FFE5EC;
-                                           -fx-text-fill: #FF6B9C;
+                                    style="-fx-background-color: #E6F2FF;
+                                           -fx-text-fill: #4D90FE;
                                            -fx-font-weight: bold;
                                            -fx-padding: 0 3;
                                            -fx-min-width: 20;
@@ -141,8 +146,8 @@
                                            -fx-background-radius: 2;
                                            -fx-cursor: hand;"/>
                             <Button text="S" fx:id="supprimerButton"
-                                    style="-fx-background-color: #FFE5EC;
-                                           -fx-text-fill: #FF6B9C;
+                                    style="-fx-background-color: #E6F2FF;
+                                           -fx-text-fill: #4D90FE;
                                            -fx-font-weight: bold;
                                            -fx-padding: 0 3;
                                            -fx-min-width: 20;

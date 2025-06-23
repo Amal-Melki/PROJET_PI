@@ -15,41 +15,41 @@
             hbarPolicy="NEVER"
             vbarPolicy="AS_NEEDED"
             prefHeight="600"
-            style="-fx-background: #FFF5F7; -fx-border-color: transparent;">
+            style="-fx-background: white; -fx-border-color: transparent;">
 
     <content>
-        <BorderPane style="-fx-background-color: #FFF5F7;">
+        <BorderPane style="-fx-background-color: white;">
 
             <!-- Top: Logo + Barre de filtrage -->
             <top>
                 <VBox spacing="0">
-                    <!-- Votre logo ajouté ici -->
-                    <AnchorPane style="-fx-background-color: #FFF5F7;">
+                    <!-- Logo -->
+                    <AnchorPane style="-fx-background-color: white;">
                         <ImageView fx:id="logoImage"
                                    fitWidth="120" fitHeight="120"
                                    layoutX="10" layoutY="10"
                                    pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@/images/logo.png" />
+                                <Image url="/logo.jpg" />
                             </image>
                         </ImageView>
                     </AnchorPane>
 
-                    <!-- Barre de filtrage existante -->
-                    <VBox spacing="10" style="-fx-background-color: #FFE5EC; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3); -fx-padding: 15;">
+                    <!-- Barre de filtrage -->
+                    <VBox spacing="10" style="-fx-background-color: #F5F9FF; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3); -fx-padding: 15;">
                         <HBox alignment="CENTER" spacing="10">
                             <ImageView fitWidth="32" fitHeight="32" preserveRatio="true">
                                 <image>
                                     <Image url="@/images/logo.png" />
                                 </image>
                             </ImageView>
-                            <Label text="Blog Client" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #D23369;"/>
+                            <Label text="Blog Client" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2C5BFF;"/>
                         </HBox>
 
                         <HBox alignment="CENTER_LEFT" spacing="10">
                             <TextField fx:id="searchField" promptText="Rechercher..."
                                        style="-fx-background-color: white;
-                                              -fx-border-color: #FFB8D1;
+                                              -fx-border-color: #B8D1FF;
                                               -fx-border-radius: 15;
                                               -fx-background-radius: 15;
                                               -fx-pref-width: 250;
@@ -62,7 +62,7 @@
 
                             <ComboBox fx:id="categorieFilterCombo" promptText="Toutes catégories"
                                       style="-fx-background-color: white;
-                                             -fx-border-color: #FFB8D1;
+                                             -fx-border-color: #B8D1FF;
                                              -fx-border-radius: 15;
                                              -fx-background-radius: 15;
                                              -fx-pref-width: 180;
@@ -74,7 +74,7 @@
                             </ComboBox>
 
                             <Button text="Filtrer" onAction="#filterByCategory"
-                                    style="-fx-background-color: linear-gradient(to right, #FF6B9C, #FF8EAD);
+                                    style="-fx-background-color: linear-gradient(to right, #2C5BFF, #4A7AFF);
                                            -fx-text-fill: white;
                                            -fx-font-weight: bold;
                                            -fx-padding: 7 20;
@@ -88,8 +88,8 @@
 
                             <Button text="Réinitialiser" onAction="#resetFilter"
                                     style="-fx-background-color: white;
-                                           -fx-text-fill: #FF6B9C;
-                                           -fx-border-color: #FFB8D1;
+                                           -fx-text-fill: #2C5BFF;
+                                           -fx-border-color: #B8D1FF;
                                            -fx-border-width: 1;
                                            -fx-font-weight: bold;
                                            -fx-padding: 7 20;
@@ -113,34 +113,34 @@
                           style="-fx-background-color: white;
                                  -fx-background-radius: 10;
                                  -fx-padding: 15;
-                                 -fx-border-color: #FFE5EC;
+                                 -fx-border-color: #E5ECFF;
                                  -fx-border-width: 1;
                                  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0.2, 0, 2);"
                           minWidth="280" maxWidth="300">
 
                         <HBox spacing="10" alignment="CENTER_LEFT">
-                            <Text fx:id="blogTitle" style="-fx-font-weight: bold; -fx-font-size: 15px; -fx-fill: #D23369;" wrappingWidth="180"/>
+                            <Text fx:id="blogTitle" style="-fx-font-weight: bold; -fx-font-size: 15px; -fx-fill: #2C5BFF;" wrappingWidth="180"/>
                             <Region HBox.hgrow="ALWAYS"/>
-                            <Label fx:id="blogDate" style="-fx-font-size: 10px; -fx-text-fill: #8A4B63;"/>
+                            <Label fx:id="blogDate" style="-fx-font-size: 10px; -fx-text-fill: #4B638A;"/>
                         </HBox>
 
-                        <StackPane style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-border-color: #FFE5EC;">
+                        <StackPane style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-border-color: #E5ECFF;">
                             <ImageView fx:id="blogImage"
                                        fitWidth="250"
                                        fitHeight="140"
                                        preserveRatio="true"
                                        style="-fx-background-radius: 6;"/>
-                            <Pane style="-fx-background-color: linear-gradient(to bottom, transparent, rgba(210,51,105,0.3)); -fx-background-radius: 6;"/>
+                            <Pane style="-fx-background-color: linear-gradient(to bottom, transparent, rgba(44,91,255,0.3)); -fx-background-radius: 6;"/>
                         </StackPane>
 
                         <HBox spacing="5" alignment="CENTER_LEFT" style="-fx-padding: 5 0;">
-                            <Label fx:id="blogCategory" style="-fx-font-size: 12px; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 3 8; -fx-background-color: #FF8EAD; -fx-background-radius: 12;"/>
+                            <Label fx:id="blogCategory" style="-fx-font-size: 12px; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 3 8; -fx-background-color: #4A7AFF; -fx-background-radius: 12;"/>
                         </HBox>
 
                         <Text fx:id="blogContent"
                               wrappingWidth="250"
                               style="-fx-font-size: 13px;
-                                     -fx-fill: #6D4D5C;
+                                     -fx-fill: #4D5C6D;
                                      -fx-padding: 5 0;
                                      -fx-line-spacing: 3px;"/>
 
@@ -153,7 +153,7 @@
                                                 <Image url="@/images/logo.png" />
                                             </image>
                                         </ImageView>
-                                        <Label fx:id="likeCount" text="0" style="-fx-text-fill: #FF6B9C; -fx-font-weight: bold; -fx-font-size: 12px;"/>
+                                        <Label fx:id="likeCount" text="0" style="-fx-text-fill: #2C5BFF; -fx-font-weight: bold; -fx-font-size: 12px;"/>
                                     </HBox>
                                 </graphic>
                             </Button>
@@ -166,7 +166,7 @@
                                                 <Image url="@/images/logo.png" />
                                             </image>
                                         </ImageView>
-                                        <Label fx:id="commentCount" text="0" style="-fx-text-fill: #FF6B9C; -fx-font-weight: bold; -fx-font-size: 12px;"/>
+                                        <Label fx:id="commentCount" text="0" style="-fx-text-fill: #2C5BFF; -fx-font-weight: bold; -fx-font-size: 12px;"/>
                                     </HBox>
                                 </graphic>
                             </Button>
@@ -175,11 +175,11 @@
 
                             <Button text="Lire la suite" onAction="#readMore"
                                     style="-fx-background-color: transparent;
-                                           -fx-text-fill: #FF6B9C;
+                                           -fx-text-fill: #2C5BFF;
                                            -fx-font-weight: bold;
                                            -fx-font-size: 12px;
                                            -fx-cursor: hand;
-                                           -fx-border-color: #FF6B9C;
+                                           -fx-border-color: #2C5BFF;
                                            -fx-border-radius: 12;
                                            -fx-border-width: 1;
                                            -fx-padding: 3 12;">
@@ -194,13 +194,13 @@
 
             <!-- Bottom: Pagination -->
             <bottom>
-                <HBox alignment="CENTER" style="-fx-padding: 15; -fx-background-color: #FFE5EC;">
+                <HBox alignment="CENTER" style="-fx-padding: 15; -fx-background-color: #F5F9FF;">
                     <Pagination fx:id="pagination"
                                 style="-fx-page-information-visible: false;
                                        -fx-background-color: transparent;"
                                 maxPageIndicatorCount="5"/>
                     <Button fx:id="addBlogButton" text="+ Nouveau Blog" onAction="#openAddBlogWindow"
-                            style="-fx-background-color: linear-gradient(to right, #FF6B9C, #FF8EAD);
+                            style="-fx-background-color: linear-gradient(to right, #2C5BFF, #4A7AFF);
                                    -fx-text-fill: white;
                                    -fx-font-weight: bold;
                                    -fx-padding: 8 25;

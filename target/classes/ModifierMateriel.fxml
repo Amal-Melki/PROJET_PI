@@ -13,7 +13,7 @@
            xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="com.esprit.controllers.ModifierMateriel"
            prefHeight="750.0" prefWidth="900.0"
-           style="-fx-background-color: #ffc0cb;">
+           style="-fx-background-color: white;">
     <AnchorPane>
         <ImageView fx:id="logoImage"
                    fitWidth="100" fitHeight="100"
@@ -23,8 +23,6 @@
     </AnchorPane>
     <children>
 
-
-
         <!-- ✅ Contenu principal -->
         <VBox spacing="10" alignment="TOP_CENTER"
               prefWidth="900.0" prefHeight="750.0">
@@ -32,9 +30,8 @@
                 <Insets top="20" right="20" bottom="20" left="20"/>
             </padding>
 
-
             <HBox alignment="CENTER">
-                <Text text="Liste des Matériels" style="-fx-fill: white;">
+                <Text text="Liste des Matériels" style="-fx-fill: navy;">
                     <font>
                         <Font name="Segoe UI Bold" size="30.0"/>
                     </font>
@@ -45,7 +42,7 @@
                 <Button fx:id="btnRetourAccueil"
                         text="↩ Retour"
                         onAction="#retourAccueil"
-                        style="-fx-background-color: #ff7fa8; -fx-text-fill: white;
+                        style="-fx-background-color: #2196F3; -fx-text-fill: white;
                                -fx-font-weight: bold; -fx-font-size: 13px;
                                -fx-background-radius: 20; -fx-cursor: hand;
                                -fx-padding: 6 12 6 12;" />
@@ -57,9 +54,9 @@
                 <Button fx:id="btnExporterCSV"
                         text="Exporter en CSV"
                         onAction="#exporterCSV"
-                        style="-fx-background-color: #4CAF50; -fx-text-fill: white;
-                   -fx-font-weight: bold; -fx-background-radius: 20;
-                   -fx-cursor: hand; -fx-padding: 6 12 6 12;" />
+                        style="-fx-background-color: #2196F3; -fx-text-fill: white;
+                               -fx-font-weight: bold; -fx-background-radius: 20;
+                               -fx-cursor: hand; -fx-padding: 6 12 6 12;" />
                 <padding>
                     <Insets top="0" left="20" bottom="0" right="0"/>
                 </padding>
@@ -71,7 +68,7 @@
                            alignment="center"
                            prefWidth="500.0"
                            style="-fx-background-color: white; -fx-background-radius: 20;
-                                  -fx-border-radius: 20; -fx-border-color: #ff8cb3;
+                                  -fx-border-radius: 20; -fx-border-color: navy;
                                   -fx-font-size: 14px; -fx-padding: 8 14;" />
             </HBox>
 
@@ -80,18 +77,18 @@
 
                 <ComboBox fx:id="cbFiltreStatut" promptText="Filtrer par statut"
                           prefWidth="200.0"
-                          style="-fx-background-radius: 15; -fx-border-radius: 15; -fx-border-color: #ff8cb3; -fx-padding: 6;" />
+                          style="-fx-background-radius: 15; -fx-border-radius: 15; -fx-border-color: navy; -fx-padding: 6;" />
                 <ComboBox fx:id="cbFiltreType" promptText="Filtrer par type"
                           prefWidth="200.0"
-                          style="-fx-background-radius: 15; -fx-border-radius: 15; -fx-border-color: #ff8cb3; -fx-padding: 6;" />
+                          style="-fx-background-radius: 15; -fx-border-radius: 15; -fx-border-color: navy; -fx-padding: 6;" />
                 <TextField fx:id="tfFiltreQuantite" promptText="Stock min."
                            prefWidth="120.0"
                            style="-fx-background-color: white; -fx-background-radius: 15;
-                                  -fx-border-radius: 15; -fx-border-color: #ff8cb3;
+                                  -fx-border-radius: 15; -fx-border-color: navy;
                                   -fx-font-size: 13px; -fx-padding: 6 10;" />
                 <Button text="Filtrer"
                         onAction="#filtrerMateriels"
-                        style="-fx-background-color: #a8476c; -fx-text-fill: white;
+                        style="-fx-background-color: #2196F3; -fx-text-fill: white;
                                -fx-font-weight: bold; -fx-background-radius: 15;
                                -fx-cursor: hand; -fx-padding: 6 16;" />
             </HBox>
@@ -107,7 +104,7 @@
                             text="Modifier"
                             onAction="#modifierMateriel"
                             prefWidth="150.0" prefHeight="42.0"
-                            style="-fx-background-color: #ff8cb3;
+                            style="-fx-background-color: #2196F3;
                                    -fx-text-fill: white;
                                    -fx-font-weight: bold;
                                    -fx-font-size: 15px;
@@ -118,7 +115,7 @@
                             text="Supprimer"
                             onAction="#supprimerMateriel"
                             prefWidth="150.0" prefHeight="42.0"
-                            style="-fx-background-color: #e57373;
+                            style="-fx-background-color: #f44336;
                                    -fx-text-fill: white;
                                    -fx-font-weight: bold;
                                    -fx-font-size: 15px;

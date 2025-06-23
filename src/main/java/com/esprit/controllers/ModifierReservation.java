@@ -86,7 +86,7 @@ public class ModifierReservation implements Initializable {
         dpFiltreDebut.valueProperty().addListener((obs, oldVal, newVal) -> filtrerReservationsAvance());
         dpFiltreFin.valueProperty().addListener((obs, oldVal, newVal) -> filtrerReservationsAvance());
         try {
-            Image img = new Image(getClass().getResource("/images/logo.png").toExternalForm());
+            Image img = new Image(getClass().getResource("/logo.jpg").toExternalForm());
             logoImage.setImage(img);
         } catch (Exception e) {
             System.err.println("Erreur lors du chargement de l'image : " + e.getMessage());

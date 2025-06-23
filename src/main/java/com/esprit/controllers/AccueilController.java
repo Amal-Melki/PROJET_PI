@@ -60,14 +60,7 @@ public class AccueilController {
 
     @FXML
     public void initialize() {
-        try {
-            if (logoImage != null) {
-                Image img = new Image(getClass().getResource("/images/logo.png").toExternalForm());
-                logoImage.setImage(img);
-            }
-        } catch (Exception e) {
-            System.err.println("Erreur chargement logo : " + e.getMessage());
-        }
+
 
         if (btnAjoutMateriel != null) btnAjoutMateriel.setOnAction(this::ouvrirAjoutMateriel);
         if (btnListeMateriels != null) btnListeMateriels.setOnAction(this::ouvrirListeMateriels);

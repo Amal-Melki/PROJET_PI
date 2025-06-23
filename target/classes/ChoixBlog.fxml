@@ -57,7 +57,7 @@
                     style="-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);"/>
             <ImageView fitWidth="60" fitHeight="60" preserveRatio="true">
                 <image>
-                    <Image url="@/images/logo.png" />
+                    <Image url="/logo.jpg" />
                 </image>
                 <effect>
                     <Glow level="0.3"/>

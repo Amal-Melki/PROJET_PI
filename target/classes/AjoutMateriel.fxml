@@ -9,7 +9,7 @@
            xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="com.esprit.controllers.AjoutMateriel"
            prefHeight="600.0" prefWidth="700.0"
-           style="-fx-background-color: pink;">
+           style="-fx-background-color: white;">
 
    <!-- ✅ Logo en haut à gauche -->
    <AnchorPane StackPane.alignment="TOP_LEFT">
@@ -17,7 +17,7 @@
                  fitWidth="100" fitHeight="100"
                  layoutX="10" layoutY="10"
                  pickOnBounds="true" preserveRatio="true"
-                  />
+      />
    </AnchorPane>
 
    <!-- ✅ Formulaire principal centré -->
@@ -28,12 +28,12 @@
          <Button fx:id="btnRetour"
                  text="↩ Retour"
                  onAction="#retourAccueil"
-                 style="-fx-background-color: #ff7fa8; -fx-text-fill: white; -fx-font-weight: bold;
+                 style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold;
                            -fx-font-size: 13px; -fx-background-radius: 20; -fx-cursor: hand;" />
       </HBox>
 
       <!-- Titre -->
-      <Text text="Ajout Matériel" style="-fx-fill: white;">
+      <Text text="Ajout Matériel" style="-fx-fill: navy;">
          <font>
             <Font name="Segoe UI Bold" size="32.0"/>
          </font>
@@ -47,60 +47,60 @@
          </columnConstraints>
 
          <Label text="Nom :" GridPane.rowIndex="0" GridPane.columnIndex="0"
-                style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px;" />
+                style="-fx-text-fill: navy; -fx-font-weight: bold; -fx-font-size: 16px;" />
          <TextField fx:id="tfNom" prefWidth="300" GridPane.rowIndex="0" GridPane.columnIndex="1"
-                    style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
+                    style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: navy;" />
 
          <Label text="Type :" GridPane.rowIndex="1" GridPane.columnIndex="0"
-                style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px;" />
+                style="-fx-text-fill: navy; -fx-font-weight: bold; -fx-font-size: 16px;" />
          <ComboBox fx:id="cbType" prefWidth="300" GridPane.rowIndex="1" GridPane.columnIndex="1"
-                   style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
+                   style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: navy;" />
 
          <Label text="Quantité :" GridPane.rowIndex="2" GridPane.columnIndex="0"
-                style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px;" />
+                style="-fx-text-fill: navy; -fx-font-weight: bold; -fx-font-size: 16px;" />
          <TextField fx:id="tfQuantite" prefWidth="300" GridPane.rowIndex="2" GridPane.columnIndex="1"
-                    style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
+                    style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: navy;" />
 
          <Label text="État :" GridPane.rowIndex="3" GridPane.columnIndex="0"
-                style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px;" />
+                style="-fx-text-fill: navy; -fx-font-weight: bold; -fx-font-size: 16px;" />
          <ComboBox fx:id="cbEtat" prefWidth="300" GridPane.rowIndex="3" GridPane.columnIndex="1"
-                   style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
+                   style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: navy;" />
 
          <Label text="Prix :" GridPane.rowIndex="4" GridPane.columnIndex="0"
-                style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px;" />
+                style="-fx-text-fill: navy; -fx-font-weight: bold; -fx-font-size: 16px;" />
          <TextField fx:id="tfPrix" prefWidth="300" GridPane.rowIndex="4" GridPane.columnIndex="1"
-                    style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
+                    style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: navy;" />
 
          <Label text="Description :" GridPane.rowIndex="5" GridPane.columnIndex="0"
-                style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px;" />
+                style="-fx-text-fill: navy; -fx-font-weight: bold; -fx-font-size: 16px;" />
          <TextArea fx:id="taDescription" prefWidth="300" prefRowCount="3"
                    GridPane.rowIndex="5" GridPane.columnIndex="1"
-                   style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: white;" />
+                   style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: navy;" />
       </GridPane>
 
       <Button fx:id="btnImage"
               text="📷 Ajouter une image"
               onAction="#choisirImage"
               prefWidth="300"
-              style="-fx-background-color: #d46a92; -fx-text-fill: white; -fx-font-weight: bold;
+              style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold;
                        -fx-background-radius: 20; -fx-cursor: hand;" />
 
       <Label fx:id="lblImagePath"
              text="Aucune image sélectionnée"
-             style="-fx-text-fill: white; -fx-font-size: 12;" />
+             style="-fx-text-fill: navy; -fx-font-size: 12;" />
 
       <VBox fx:id="imageBox" visible="false" managed="false" alignment="CENTER">
          <ImageView fx:id="imageMateriel"
                     fitWidth="180.0" fitHeight="180.0"
                     preserveRatio="true"
-                    style="-fx-border-color: white; -fx-border-width: 2;" />
+                    style="-fx-border-color: navy; -fx-border-width: 2;" />
       </VBox>
 
       <Button fx:id="btnAjouter"
               text="Ajouter"
               onAction="#addMateriel"
               prefWidth="160.0" prefHeight="45.0"
-              style="-fx-background-color: #ff7fa8; -fx-text-fill: white; -fx-font-weight: bold;
+              style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold;
                        -fx-font-size: 16px; -fx-background-radius: 20; -fx-cursor: hand;" />
    </VBox>
 </StackPane>

@@ -11,7 +11,7 @@
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.esprit.controllers.ModifierReservationClient"
       prefHeight="550.0" prefWidth="750.0"
-      style="-fx-background-color: #ffc0cb;">
+      style="-fx-background-color: white;">
     <AnchorPane>
         <ImageView fx:id="logoImage"
                    fitWidth="100" fitHeight="100"
@@ -26,7 +26,7 @@
                 layoutX="640.0" layoutY="20.0"
                 text="↩ Retour"
                 onAction="#retourAccueil"
-                style="-fx-background-color: #ff7fa8; -fx-text-fill: white;
+                style="-fx-background-color: #2196F3; -fx-text-fill: white;
                        -fx-font-weight: bold; -fx-font-size: 13px;
                        -fx-background-radius: 20; -fx-cursor: hand;
                        -fx-padding: 6 12;" />
@@ -34,7 +34,7 @@
         <!-- Titre -->
         <Text text="Modifier Réservation"
               layoutX="245.0" layoutY="70.0"
-              style="-fx-fill: white;">
+              style="-fx-fill: navy;">
             <font>
                 <Font name="Segoe UI Bold" size="30.0"/>
             </font>
@@ -42,44 +42,44 @@
 
         <!-- Matériel -->
         <Label layoutX="170.0" layoutY="100.0" text="Matériel :"
-               style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
+               style="-fx-text-fill: navy; -fx-font-size: 16px; -fx-font-weight: bold;" />
         <Label fx:id="lblNomMateriel"
                layoutX="310.0" layoutY="95.0" prefWidth="270.0"
-               style="-fx-background-color: white; -fx-border-color: white;
+               style="-fx-background-color: white; -fx-border-color: navy;
                       -fx-background-radius: 10; -fx-border-radius: 10;
                       -fx-padding: 6; -fx-font-size: 14px;" />
 
         <!-- Date début -->
         <Label layoutX="170.0" layoutY="150.0" text="Date début :"
-               style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
+               style="-fx-text-fill: navy; -fx-font-size: 16px; -fx-font-weight: bold;" />
         <DatePicker fx:id="dpDebut"
                     layoutX="310.0" layoutY="145.0" prefWidth="270.0"
                     style="-fx-background-radius: 10; -fx-border-radius: 10;
-                           -fx-border-color: white;" />
+                           -fx-border-color: navy;" />
 
         <!-- Date fin -->
         <Label layoutX="170.0" layoutY="200.0" text="Date fin :"
-               style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
+               style="-fx-text-fill: navy; -fx-font-size: 16px; -fx-font-weight: bold;" />
         <DatePicker fx:id="dpFin"
                     layoutX="310.0" layoutY="195.0" prefWidth="270.0"
                     style="-fx-background-radius: 10; -fx-border-radius: 10;
-                           -fx-border-color: white;" />
+                           -fx-border-color: navy;" />
 
         <!-- Quantité -->
         <Label layoutX="170.0" layoutY="250.0" text="Quantité :"
-               style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
+               style="-fx-text-fill: navy; -fx-font-size: 16px; -fx-font-weight: bold;" />
         <TextField fx:id="tfQuantite"
                    layoutX="310.0" layoutY="245.0" prefWidth="270.0"
                    style="-fx-background-radius: 10; -fx-border-radius: 10;
-                          -fx-border-color: white;" />
+                          -fx-border-color: navy;" />
 
         <!-- Montant total -->
         <Label layoutX="170.0" layoutY="300.0" text="Montant total :"
-               style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
+               style="-fx-text-fill: navy; -fx-font-size: 16px; -fx-font-weight: bold;" />
         <TextField fx:id="tfMontantTotal"
                    layoutX="310.0" layoutY="295.0" prefWidth="270.0" editable="false"
                    style="-fx-background-color: #f4f4f4; -fx-background-radius: 10;
-                          -fx-border-radius: 10; -fx-border-color: white;
+                          -fx-border-radius: 10; -fx-border-color: navy;
                           -fx-font-size: 14px;" />
 
         <!-- Bouton Enregistrer -->
@@ -88,7 +88,7 @@
                 text="Enregistrer"
                 onAction="#modifierReservation"
                 prefWidth="120.0" prefHeight="40.0"
-                style="-fx-background-color: #ff7fa8; -fx-text-fill: white;
+                style="-fx-background-color: #2196F3; -fx-text-fill: white;
                        -fx-font-weight: bold; -fx-font-size: 15px;
                        -fx-background-radius: 20; -fx-cursor: hand;" />
 
